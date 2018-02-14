@@ -1,2 +1,4 @@
-# upstream
-Isometric game concept
+# Upstream
+
+## Info
+pre-alpha
