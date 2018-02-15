@@ -1,6 +1,6 @@
 (ns upstream.server.gameserver
-  (:require [clojure.core.async :as async])
-  (:require [upstream.gamestate.gsmanager :as manager])
+  (:require [upstream.gamestate.gsmanager :as manager]
+            [clojure.core.async :as async])
   (:gen-class))
 
 (require '[clojure.java.io :as io])

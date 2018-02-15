@@ -1,15 +1,29 @@
-(ns upstream.gamestate.gsmanager (:gen-class))
+(ns upstream.gamestate.gsmanager
+  (:require [upstream.gamestate.states.menustate :as menu]
+            [upstream.gamestate.states.levelone :as level]
+            [upstream.gamestate.states.loadstate :as loadstate])
+  (:gen-class))
 
-;EXAMPLE gamestate format
-;{:update-handler update-fn (takes gr object)
-; :key-press-handler key-pressed-fn (takes key code)
-; :key-release-handler key-released-fn (takes key code)
-;}
 ;atom for current index and global list of game states
+
+(def current-game-state (atom 0))
+(def STATES
+  (list {:update-handler #(menu/update-and-draw-menu %)
+     :key-press-handler menu/keypressed-menu
+     :key-release-handler menu/keyreleased-menu}
+
+    {:update-handler loadstate/update-and-draw-load
+     :key-press-handler loadstate/keypressed-load
+     :key-release-handler loadstate/keyreleased-load}
+
+    {:update-handler level/update-and-draw-level-one
+     :key-press-handler level/keypressed-level-one
+     :key-release-handler level/keyreleased-level-one}))
 
 (defn update-and-draw
   "Update and Draw the current game state"
-  [gr])
+  [gr]
+  ((:update-handler (nth STATES (deref current-game-state))) gr))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"
@@ -26,11 +40,9 @@
 (defn keypressed
     "respond to keypress event"
     [key]
-    (cond
-      (= key :p) (println "test-press")))
+    ((:key-press-handler (nth STATES (deref current-game-state))) key))
 
 (defn keyreleased
     "respond to keyrelease event"
     [key]
-    (cond
-      (= key :p) (println "test-release")))
+    ((:key-release-handler (nth STATES (deref current-game-state))) key))
