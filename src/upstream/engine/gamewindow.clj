@@ -25,7 +25,7 @@
                   :id :panel
                   :items [canvas])
         frame (sawcore/frame
-                  :title "DarwinSport 2018"
+                  :title "Upstream 0.1.0"
                   :width width
                   :height height
                   :content panel
@@ -35,7 +35,8 @@
                             (fn [e] (let [k (.getKeyCode e)]
                                 (state/keypressed (control-keys k))))
                            :key-released
-                            (fn [e] e)]
+                            (fn [e] (let [k (.getKeyCode e)]
+                                (state/keyreleased (control-keys k))))]
                   :on-close :exit)
         ;delay 20 is around 50 fps
         main-loop (sawcore/timer (fn [e] (sawcore/repaint! frame)) :delay 20 :start? false)]
