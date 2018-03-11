@@ -3,7 +3,6 @@
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
-PLAYER='\xE2\x9A\xBD'
 WRENCH='\xF0\x9F\x94\xA7'
 
 JAVA_RUNTIME=`/usr/libexec/java_home -v 1.8`
@@ -11,7 +10,7 @@ JAVA_RUNTIME=`/usr/libexec/java_home -v 1.8`
 #check lein installation
 if command -v lein >/dev/null 2>&1; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
-  lein uberjar
+  lein uberjar || exit 1  #don't attempt to package failed jar
 else
   printf "${WRENCH}  Error: ${YELLOW}lein${NC} not installed, aborting: 1 \n"
   exit 1
@@ -26,6 +25,5 @@ javapackager -deploy \
     -name "Upstream" \
     -title "Upstream" \
     -Bruntime=${JAVA_RUNTIME} \
-    -Bicon=resources/app/Upstream.icns
-
+    -Bicon=resources/app/Upstream.icns && \
 printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
