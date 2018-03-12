@@ -1,7 +1,11 @@
 # Upstream
 
 ## Info
-pre-alpha
 
+## Build info
+- Install [lein](https://leiningen.org/#install).
+- Clone git repo
+- To build upstream.app: ``` ./build.sh ```.
 
-## Current base image multiplicationL 4x
+## Resource Specifications
+- Fullscreen resource resolution is 350x200 (all resources are scaled by 4 for a final resolution of 1400x800)

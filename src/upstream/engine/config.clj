@@ -5,6 +5,7 @@
 (def WINDOW-HEIGHT 800)
 
 ;2x multiplier on base resolution
+;TODO: should be 4?
 (def TILE-WIDTH 128)
 (def TILE-HEIGHT 64)
 
