@@ -14,13 +14,24 @@
 (def paralax-preset
   ;todo: width not hardcoded
   (list
-    {:image (util/load-image "menus/menu_paralax/menu_paralax4x_1.png") :dx 0}
-    {:image (util/load-image "menus/menu_paralax/menu_paralax4x_2.png") :dx 0.1}
-    {:image (util/load-image "menus/menu_paralax/menu_paralax4x_3.png") :dx 0.5}
-    {:image (util/load-image "menus/menu_paralax/menu_paralax4x_4.png") :dx 1}
-    {:image (util/load-image "menus/menu_paralax/menu_paralax4x_5.png") :dx 2}))
+    {:image (util/load-image "menus/menu_paralax/paralax4x_0.png") :dx 0}
+    {:image (util/load-image "menus/menu_paralax/paralax4x_1.png") :dx 0.2}
+    {:image (util/load-image "menus/menu_paralax/paralax4x_2.png") :dx 0.5}
+    {:image (util/load-image "menus/menu_paralax/paralax4x_3.png") :dx 0.85}
+    {:image (util/load-image "menus/menu_paralax/paralax4x_4.png") :dx 1.35}
+    {:image (util/load-image "menus/menu_paralax/paralax4x_5.png") :dx 2.25}))
 
-(paralax/register-layers paralax-preset config/WINDOW-WIDTH)
+(defn init-menu
+  "init elements"
+  []
+  (paralax/register-layers paralax-preset config/WINDOW-WIDTH))
+
+(defn update-menu
+  "update"
+  []
+  (do
+  (paralax/update-layers)
+  true))
 
 (def menu-selectable-fields
   (list
@@ -29,24 +40,17 @@
     {:y 80 :field "About"}
     {:y 100 :field "Quit"}))
 
-(defn update-and-draw-menu
+(defn draw-menu
   "update and draw handler for menu state"
   [gr]
-  (paralax/update-layers)
-  (paralax/render-layers gr)
-        ; (sawgr/draw gr
-        ;   (sawgr/image-shape 0 0
-        ;     screen-1)
-        ;     (sawgr/style))
-        )
-
+  (paralax/render-layers gr))
 
 (defn keypressed-menu
   "key press handler for menu"
   [key]
 
   )
-;
+
 (defn keyreleased-menu
   "key release handler for menu"
   [key]

@@ -1,6 +1,25 @@
-(ns upstream.gamestate.states.levelone (:gen-class))
+(ns upstream.gamestate.states.levelone
+  (:require [upstream.engine.config :as config])
+  (:gen-class))
 
-(defn update-and-draw-level-one
+(def game-state (atom config/STARTING-STATE)) ;hmmm
+
+(defn init-level-one
+  [])
+
+(defn update-via-server
+  "receive state from server rather than internal"
+  [server-state]
+  (reset! game-state server-state))
+
+(defn update-level-one
+  "update"
+  []
+  (let [state (deref game-state)]
+
+  true))
+
+(defn draw-level-one
   "update and draw handler for level one"
   [gr]
   )

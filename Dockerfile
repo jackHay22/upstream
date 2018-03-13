@@ -1,10 +1,10 @@
-FROM hypriot/rpi-java
+FROM openjdk:alpine
 
-MAINTAINER Jack Hay
+MAINTAINER Jack Hay "https://github.com/jackHay22"
 
-ADD target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
-ADD run.sh /run.sh
+COPY target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
+COPY run.sh /run.sh
 
 EXPOSE 5555
 
-ENTRYPOINT ./run.sh
+ENTRYPOINT ["./run.sh"]

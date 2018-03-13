@@ -14,7 +14,7 @@
 
 (defn start-window
   "initialize the game window"
-  [width height]
+  [width height title]
   (let [canvas (sawcore/canvas
                   :id :canvas
                   :background :red
@@ -25,7 +25,7 @@
                   :id :panel
                   :items [canvas])
         frame (sawcore/frame
-                  :title "Upstream 0.1.0"
+                  :title title
                   :width width
                   :height height
                   :content panel

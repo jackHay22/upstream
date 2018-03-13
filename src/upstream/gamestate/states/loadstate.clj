@@ -1,9 +1,27 @@
-(ns upstream.gamestate.states.loadstate (:gen-class))
+(ns upstream.gamestate.states.loadstate
+  (:require [upstream.gamestate.utils.staticscreen :as screen]
+            [upstream.utilities.images :as util])
+  (:gen-class))
 
-(defn update-and-draw-load
+(def ttl (atom 300))
+
+(defn init-load
+  "perform all necessary resource loads"
+  []
+  (screen/register-screen-image (util/load-image "menus/temp_splash.png")))
+
+(defn draw-load
   "update and draw handler for load"
   [gr]
-  )
+  (screen/draw-screen gr))
+
+(defn update-load
+  "update load state"
+  []
+  (let [current-ttl (deref ttl)]
+    (if (> current-ttl 0)
+      (do (swap! ttl dec) true)
+      false)))
 
 (defn keypressed-load
   "key press handler for load"

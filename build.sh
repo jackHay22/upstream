@@ -7,7 +7,6 @@ WRENCH='\xF0\x9F\x94\xA7'
 
 JAVA_RUNTIME=`/usr/libexec/java_home -v 1.8`
 
-
 #check lein installation
 if command -v lein >/dev/null 2>&1; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
@@ -31,8 +30,8 @@ if [ $# -eq 0 ]; then
   printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
-  docker build --tag upstream_server .
-  docker run -i -t upstream_server:latest \bin\bash
+  docker build --tag upstream_server . || exit 1
+  docker run -i -t upstream_server:latest /bin/bash #problem?
   printf "${WRENCH}  ${RED}upstream_server:latest${NC} created. \n"
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
