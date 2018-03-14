@@ -18,5 +18,5 @@
 
 ## TODO:
 
-![HAY](jackHay22.github.com/upstream/blob/master/resources/app/company_logo.png)
+![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/company_logo.png)
 Upstream Copyright © 2018 Jack Hay.
