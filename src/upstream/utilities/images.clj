@@ -23,6 +23,15 @@
         new-h (* new-w (/ current-h current-w))]
         (sawicon/icon (.getScaledInstance loaded new-w new-h Image/SCALE_DEFAULT))))
 
+(defn load-image-scale-by-factor
+  "load a raw image by a set scale"
+  [image scale]
+  (let [loaded (javax.imageio.ImageIO/read
+                  (clojure.java.io/resource image))
+        w (* scale (.getWidth loaded))
+        h (* scale (.getHeight loaded))]
+    (sawicon/icon (.getScaledInstance loaded w h Image/SCALE_DEFAULT))))
+
 (defn draw-image
   "take image, gr, x,y, draw"
   [img gr x y]

@@ -5,6 +5,7 @@
 
 (def WINDOW-WIDTH (atom 1400)) ;set by dynamic screen maximization
 (def WINDOW-HEIGHT (atom 800)) ;set by dynamic screen maximization
+(def HEIGHT-BUFFER 100)
 (def WINDOW-TITLE "Upstream")
 
 ;4x multiplier on base resolution

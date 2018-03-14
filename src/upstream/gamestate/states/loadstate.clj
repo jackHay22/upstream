@@ -4,7 +4,7 @@
             [upstream.utilities.images :as util])
   (:gen-class))
 
-(def ttl (atom 100))
+(def ttl (atom 75))
 
 (defn init-load
   "perform all necessary resource loads"

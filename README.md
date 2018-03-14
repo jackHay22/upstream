@@ -1,13 +1,14 @@
 # Upstream
 
 ## Info
-- Game made using clojure started in Dublin, Ireland in 2018.
+- Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018.
+- For more information, read the docs
 
 ## App build info
 - Install [lein](https://leiningen.org/#install).
 - Clone git repo
-- To build upstream.app: ``` ./build.sh ```.
-- For container server mode: ``` ./build.sh -server ``` (broken)
+- To build upstream.app: ``` ./build.sh ``` (requires ``` lein ```, ``` javapackager ```)
+- For container server mode: ``` ./build.sh -server ``` (broken) (requires ``` lein ```, ``` docker ```)
 
 ## Docker
 - Raspberry pi use: ``` FROM hypriot/rpi-java ```
@@ -17,6 +18,12 @@
 - Fullscreen resource resolution is 350x200 (all resources are scaled based on java max window calculation)
 
 ## TODO:
+[] Better resource loading at boot
+[] Tile engine
+[] Better reactive scaling
+[] Art
+[] Multicast server config
+[] Figure out docker X11 server
 
+## Upstream Copyright © 2018 Jack Hay.
 ![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/company_logo.png)
-Upstream Copyright © 2018 Jack Hay.

@@ -8,12 +8,12 @@
 (import java.awt.Toolkit)
 
 (defn -main
-  "main"
+  "entrypoint"
   [& args]
   ;(if (> (count args) 0)
   (let [screenSize (.getScreenSize (Toolkit/getDefaultToolkit))]
     (reset! config/WINDOW-WIDTH (.width screenSize))
-    (reset! config/WINDOW-HEIGHT (- (.height screenSize) 100))
+    (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))
     (gsm/init-gsm)
     (engine/start-window config/WINDOW-TITLE)
   ;(server/start-welcome-server config/SERVER-LISTEN-PORT)
