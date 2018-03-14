@@ -3,12 +3,12 @@
             [upstream.utilities.images :as util])
   (:gen-class))
 
-(def ttl (atom 300))
+(def ttl (atom 100))
 
 (defn init-load
   "perform all necessary resource loads"
   []
-  (screen/register-screen-image (util/load-image "menus/temp_splash.png")))
+  (screen/register-screen-image (util/load-image "menus/temp_splash2.png")))
 
 (defn draw-load
   "update and draw handler for load"

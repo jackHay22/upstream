@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [seesaw.core :as sawcore]
             [seesaw.graphics :as sawgr]
+            [upstream.engine.config :as config]
             [upstream.gamestate.gsmanager :as state]))
 
 (def control-keys {java.awt.event.KeyEvent/VK_UP :up
@@ -12,13 +13,20 @@
                    java.awt.event.KeyEvent/VK_ENTER :enter
                    java.awt.event.KeyEvent/VK_P :p})
 
+(import java.awt.Toolkit)
+(def screenSize (.getScreenSize (Toolkit/getDefaultToolkit)))
+(reset! config/WINDOW-WIDTH (.width screenSize))
+(reset! config/WINDOW-HEIGHT (- (.height screenSize) 100))
+
+;TODO: reset in config
+
 (defn start-window
   "initialize the game window"
-  [width height title]
+  [title]
   (let [canvas (sawcore/canvas
                   :id :canvas
                   :background :red
-                  :size [width :by height]
+                  :size [@config/WINDOW-WIDTH :by @config/WINDOW-HEIGHT]
                   :paint (fn [c g]
                            (state/update-and-draw g)))
         panel (sawcore/vertical-panel
@@ -26,8 +34,8 @@
                   :items [canvas])
         frame (sawcore/frame
                   :title title
-                  :width width
-                  :height height
+                  :width @config/WINDOW-WIDTH
+                  :height @config/WINDOW-HEIGHT
                   :content panel
                   :resizable? false
                   :id :frame

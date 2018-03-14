@@ -1,8 +1,10 @@
 (ns upstream.engine.config
   (:gen-class))
 
-(def WINDOW-WIDTH 1400)
-(def WINDOW-HEIGHT 800)
+(import '(java.awt Color Font))
+
+(def WINDOW-WIDTH (atom 1400)) ;set by dynamic screen maximization
+(def WINDOW-HEIGHT (atom 800)) ;set by dynamic screen maximization
 (def WINDOW-TITLE "Upstream")
 
 ;4x multiplier on base resolution
@@ -14,3 +16,6 @@
 
 (def SERVER-LISTEN-PORT 4000)
 (def SERVER-DATA-PORTS '(4001 4002 4003 4004))
+
+(def MENU-TEXT-COLOR (Color. 252 144 91))
+(def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))

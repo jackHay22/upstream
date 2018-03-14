@@ -31,7 +31,7 @@ if [ $# -eq 0 ]; then
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   docker build --tag upstream_server . || exit 1
-  docker run -i -t upstream_server:latest /bin/bash #problem?
+  docker run -t upstream_server:latest #problem with X11 server (xvfb)
   printf "${WRENCH}  ${RED}upstream_server:latest${NC} created. \n"
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"

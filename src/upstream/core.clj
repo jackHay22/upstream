@@ -8,6 +8,6 @@
   "main"
   [& args]
   ;(if (> (count args) 0)
-  (engine/start-window config/WINDOW-WIDTH config/WINDOW-HEIGHT config/WINDOW-TITLE)
+  (engine/start-window config/WINDOW-TITLE)
   ;(server/start-welcome-server config/SERVER-LISTEN-PORT)
   )

@@ -7,9 +7,7 @@
     [seesaw.icon :as sawicon])
   (:gen-class))
 
-(import '(java.awt Color Font))
-(def text-color (Color. 191 53 47))
-(def text-font (Font. "SansSerif" Font/PLAIN 20))
+(def title-image (util/load-image "menus/menu_title.png"))
 
 (def paralax-preset
   ;todo: width not hardcoded
@@ -21,10 +19,17 @@
     {:image (util/load-image "menus/menu_paralax/paralax4x_4.png") :dx 1.35}
     {:image (util/load-image "menus/menu_paralax/paralax4x_5.png") :dx 2.25}))
 
+(def menu-selectable-fields
+  (list
+    {:y 425 :field "Start"}
+    {:y 525 :field "Online"}
+    {:y 625 :field "About"}
+    {:y 725 :field "Quit"}))
+
 (defn init-menu
   "init elements"
   []
-  (paralax/register-layers paralax-preset config/WINDOW-WIDTH))
+  (paralax/register-layers paralax-preset @config/WINDOW-WIDTH))
 
 (defn update-menu
   "update"
@@ -33,17 +38,22 @@
   (paralax/update-layers)
   true))
 
-(def menu-selectable-fields
-  (list
-    {:y 40 :field "Start"}
-    {:y 60 :field "Online"}
-    {:y 80 :field "About"}
-    {:y 100 :field "Quit"}))
+
+(defn draw-menu-options
+  "draw the menu options"
+  [gr fields]
+  (doseq [option fields]
+    (.setColor gr config/MENU-TEXT-COLOR)
+    (.setFont gr config/MENU-TEXT-FONT)
+    (.drawString gr (:field option) 550 (:y option))))
 
 (defn draw-menu
   "update and draw handler for menu state"
   [gr]
-  (paralax/render-layers gr))
+  (paralax/render-layers gr)
+  (util/draw-image title-image gr 0 0)
+  (draw-menu-options gr menu-selectable-fields)
+  )
 
 (defn keypressed-menu
   "key press handler for menu"
