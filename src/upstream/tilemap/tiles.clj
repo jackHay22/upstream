@@ -9,8 +9,9 @@
 
 ;render frame
 ;TODO: more with overlap etc...
-(def display-tiles-across (+ (int (/ params/WINDOW-WIDTH params/TILE-WIDTH)) 2))
-(def display-tiles-down (+ (int (/ params/WINDOW-HEIGHT params/TILE-HEIGHT)) 2))
+;TODO: load these in init function for updated width
+(def display-tiles-across (+ (int (/ @params/WINDOW-WIDTH params/TILE-WIDTH)) 2))
+(def display-tiles-down (+ (int (/ @params/WINDOW-HEIGHT params/TILE-HEIGHT)) 2))
 
 (def fix-bounds
   "take values and protect against overrun and underrun"

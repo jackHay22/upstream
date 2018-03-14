@@ -1,5 +1,6 @@
 (ns upstream.gamestate.states.loadstate
   (:require [upstream.gamestate.utils.staticscreen :as screen]
+            [upstream.engine.config :as config]
             [upstream.utilities.images :as util])
   (:gen-class))
 
@@ -8,7 +9,9 @@
 (defn init-load
   "perform all necessary resource loads"
   []
-  (screen/register-screen-image (util/load-image "menus/temp_splash2.png")))
+  (screen/register-screen-image
+    (util/load-image-scale-by-width
+      "menus/temp_splash2.png" @config/WINDOW-WIDTH)))
 
 (defn draw-load
   "update and draw handler for load"

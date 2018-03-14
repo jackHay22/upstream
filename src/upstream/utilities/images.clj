@@ -13,12 +13,15 @@
       (javax.imageio.ImageIO/read
           (clojure.java.io/resource loc))))
 
-
-
-(defn scale-loaded-instance
-  "return scaled version of image"
-  [image new-h new-w]
-  (.getScaledInstance image new-h new-w Image/SCALE_DEFAULT))
+(defn load-image-scale-by-width
+  "take image, rescale by new x"
+  [image new-w]
+  (let [loaded (javax.imageio.ImageIO/read
+                  (clojure.java.io/resource image))
+        current-w (.getWidth loaded)
+        current-h (.getHeight loaded)
+        new-h (* new-w (/ current-h current-w))]
+        (sawicon/icon (.getScaledInstance loaded new-w new-h Image/SCALE_DEFAULT))))
 
 (defn draw-image
   "take image, gr, x,y, draw"

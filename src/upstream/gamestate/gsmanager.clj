@@ -7,6 +7,7 @@
 ;atom for current index and global list of game states
 
 (def current-game-state (atom 0))
+(def RUNNING (atom false))
 
 (def STATES
   (list
@@ -29,19 +30,24 @@
      :init-fn #(level/init-level-one)}))
 
 ;on startup
-((:init-fn (nth STATES (deref current-game-state))))
-((:init-fn (nth STATES 1)))
+(defn init-gsm
+  "perform resource loads"
+  []
+  (do
+    ((:init-fn (nth STATES (deref current-game-state))))
+    ((:init-fn (nth STATES 1)))
+    (reset! RUNNING true)))
 
 (defn update-and-draw
   "Update and Draw the current game state"
   [gr]
+  (if @RUNNING
   (let [current-state-number (deref current-game-state)]
   (if ((:update-handler (nth STATES current-state-number)))
       ((:draw-handler (nth STATES current-state-number)) gr)
       (do
         ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
-        (swap! current-game-state inc))))) ;potential issue here with atom update timing if trying to init new state
-      ;TODO (major) -- atomic swap is super slow (try to get state passed around continuously)
+        (swap! current-game-state inc))))))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"

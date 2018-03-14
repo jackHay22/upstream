@@ -13,19 +13,12 @@
                    java.awt.event.KeyEvent/VK_ENTER :enter
                    java.awt.event.KeyEvent/VK_P :p})
 
-(import java.awt.Toolkit)
-(def screenSize (.getScreenSize (Toolkit/getDefaultToolkit)))
-(reset! config/WINDOW-WIDTH (.width screenSize))
-(reset! config/WINDOW-HEIGHT (- (.height screenSize) 100))
-
-;TODO: reset in config
-
 (defn start-window
   "initialize the game window"
   [title]
   (let [canvas (sawcore/canvas
                   :id :canvas
-                  :background :red
+                  :background :black
                   :size [@config/WINDOW-WIDTH :by @config/WINDOW-HEIGHT]
                   :paint (fn [c g]
                            (state/update-and-draw g)))
