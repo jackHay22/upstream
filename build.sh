@@ -30,8 +30,9 @@ if [ $# -eq 0 ]; then
   printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
-  docker build --tag upstream_server . || exit 1
-  docker run -t upstream_server:latest #problem with X11 server (xvfb)
+  docker build --tag upstream_server . || exit 1 #GUI will fail
+  #docker run -t upstream_server:latest #problem with X11 server (xvfb)
+  #docker run -p 5900 -t upstream_server:latest x11vnc -forever -usepw -create
   printf "${WRENCH}  ${RED}upstream_server:latest${NC} created. \n"
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"

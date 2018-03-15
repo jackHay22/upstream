@@ -5,7 +5,6 @@
   (:gen-class))
 
 ;atom for current index and global list of game states
-
 (def current-game-state (atom 0))
 (def RUNNING (atom false))
 
@@ -35,7 +34,6 @@
   []
   (do
     ((:init-fn (nth STATES (deref current-game-state))))
-    ((:init-fn (nth STATES 1)))
     (reset! RUNNING true)))
 
 (defn update-and-draw
@@ -46,13 +44,13 @@
   (if ((:update-handler (nth STATES current-state-number)))
       ((:draw-handler (nth STATES current-state-number)) gr)
       (do
+        ((:init-fn (nth STATES (+ current-state-number 1))))
         ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
         (swap! current-game-state inc))))))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"
   [updated-player-state]
-
   ;return game state
   "{:state :test}")
 

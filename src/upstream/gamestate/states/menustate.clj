@@ -1,14 +1,16 @@
 (ns upstream.gamestate.states.menustate
   (:require
-    [seesaw.graphics :as sawgr]
     [upstream.gamestate.utils.paralax :as paralax]
+    [upstream.gamestate.utils.staticscreen :as screen]
+    [upstream.gamestate.utils.menuoptions :as menu]
     [upstream.utilities.images :as util]
-    [upstream.engine.config :as config]
-    [seesaw.icon :as sawicon])
+    [upstream.engine.config :as config])
   (:gen-class))
 
-;TODO: scaling?
-(def title-image (util/load-image-scale-by-width "menus/menu_title.png" @config/WINDOW-WIDTH))
+(defn load-title-image
+  "load title image at init"
+  []
+  (util/load-image-scale-by-width "menus/menu_title.png" @config/WINDOW-WIDTH))
 
 (def start? (atom false))
 (def about? (atom false))
@@ -29,7 +31,8 @@
     {:image (load-scaled "menus/menu_paralax/paralax_4.png") :dx 1.35}
     {:image (load-scaled "menus/menu_paralax/paralax_5.png") :dx 2.25})))
 
-(def menu-selectable-fields
+(defn load-menu-selectable-fields
+  []
   (let [width @config/WINDOW-WIDTH
         load-scaled (fn [img]
             (util/load-image-scale-by-width img width))]
@@ -46,36 +49,30 @@
 (defn init-menu
   "init elements"
   []
+  (screen/clear-registered)
+  (screen/register-screen-image (load-title-image))
+  (menu/register-menu-options (load-menu-selectable-fields))
   (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))
 
 (defn update-menu
   "update"
   []
   (do
-  (paralax/update-layers)
-  true))
-
-
-(defn draw-menu-options
-  "draw the menu options"
-  [gr fields]
-  (doseq [option fields]
-    (util/draw-image (:deselected option) gr 0 0)))
+    (paralax/update-layers)
+    true))
 
 (defn draw-menu
   "update and draw handler for menu state"
   [gr]
   (paralax/render-layers gr)
-  (util/draw-image title-image gr 0 0)
-  ;(draw-menu-options gr menu-selectable-fields)
-  ;TODO: needs to have updated width
-  )
+  (screen/draw-screen gr)
+  (menu/draw-menu-options gr))
 
 (defn keypressed-menu
   "key press handler for menu"
   [key]
-
-  )
+  ;TODO: returns integer value to be used by gamestate (0 for arrows, 1 for start, -1 for exit, 2 for about, 3 for multiplayer)
+  (menu/keypressed-menu-option key))
 
 (defn keyreleased-menu
   "key release handler for menu"

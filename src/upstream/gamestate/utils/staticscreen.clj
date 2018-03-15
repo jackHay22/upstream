@@ -1,22 +1,23 @@
 (ns upstream.gamestate.utils.staticscreen
-  (:require [seesaw.graphics :as sawgr])
+  (:require [upstream.utilities.images :as utils])
   (:gen-class))
 
-(def img (atom 0))
+(def img-list (atom '()))
 
 (defn register-screen-image
   "register image"
   [new]
-  (reset! img new))
+    (swap! img-list conj new))
 
-(defn keypressed-load
-  [key])
-
-(defn keyreleased-load
-  [key])
+(defn clear-registered
+  "clear registered screen images"
+  []
+  (reset! img-list '()))
 
 (defn draw-screen
   "draw image"
   [gr]
-  (sawgr/draw gr
-      (sawgr/image-shape 0 0 (deref img)) (sawgr/style)))
+  (let [layer-list @img-list]
+    (if (not (empty? layer-list))
+      (doseq [layer layer-list]
+        (utils/draw-image layer gr 0 0)))))

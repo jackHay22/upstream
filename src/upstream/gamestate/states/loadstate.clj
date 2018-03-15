@@ -4,7 +4,7 @@
             [upstream.utilities.images :as util])
   (:gen-class))
 
-(def ttl (atom 75))
+(def ttl (atom config/LOAD-SCREEN-TTL))
 
 (defn init-load
   "perform all necessary resource loads"
@@ -28,12 +28,7 @@
 
 (defn keypressed-load
   "key press handler for load"
-  [key]
-
-  )
-;
+  [key])
 (defn keyreleased-load
   "key release handler for load"
-  [key]
-
-  )
+  [key])
