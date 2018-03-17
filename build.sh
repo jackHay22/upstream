@@ -14,9 +14,15 @@ if command -v lein >/dev/null 2>&1; then
 else
   printf "${WRENCH}  Warning: ${YELLOW}lein${NC} not installed, attempting to download with homebrew... \n"
   if command -v brew >/dev/null 2>&1; then
+    printf "${WRENCH}  Using brew to install ${YELLOW}lein${NC}... \n"
     brew install leiningen || exit 1
   else
-    printf "${WRENCH}  Error: ${YELLOW}brew${NC} not installed, could not install leingingen... \n"
+    printf "${WRENCH}  Warning: ${YELLOW}brew${NC} not installed, trying to download now... \n"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    printf "${WRENCH}  Using brew to install ${YELLOW}lein${NC}... \n"
+    brew install leiningen || exit 1
+    printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
+    lein uberjar || exit 1
   fi
   exit 1
 fi
