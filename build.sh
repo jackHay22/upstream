@@ -12,7 +12,12 @@ if command -v lein >/dev/null 2>&1; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
   lein uberjar || exit 1  #don't attempt to package failed jar
 else
-  printf "${WRENCH}  Error: ${YELLOW}lein${NC} not installed, aborting: 1 \n"
+  printf "${WRENCH}  Warning: ${YELLOW}lein${NC} not installed, attempting to download with homebrew... \n"
+  if command -v brew >/dev/null 2>&1; then
+    brew install leiningen || exit 1
+  else
+    printf "${WRENCH}  Error: ${YELLOW}brew${NC} not installed, could not install leingingen... \n"
+  fi
   exit 1
 fi
 if [ $# -eq 0 ]; then
