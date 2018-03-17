@@ -62,7 +62,8 @@
 (defn keypressed
     "respond to keypress event"
     [key]
-    ((:key-press-handler (nth STATES (deref current-game-state))) key))
+    (let [result ((:key-press-handler (nth STATES (deref current-game-state))) key)]
+      (if result (reset! current-game-state result)))) ;TODO: init next state
 
 (defn keyreleased
     "respond to keyrelease event"
