@@ -5,8 +5,7 @@
 - For more information, read the docs
 
 ## App build info
-- Install [lein](https://leiningen.org/#install)  (Note: build script will attempt to download with homebrew).
-- Clone git repo
+- Install [lein](https://leiningen.org/#install)  (Note: build script will attempt to download with [homebrew](https://brew.sh/) if not installed).
 - To build upstream.app: ``` ./build.sh ``` (requires ``` lein ```, ``` javapackager ```)
 - For container server mode: ``` ./build.sh -server ``` (broken) (requires ``` lein ```, ``` docker ```)
 
