@@ -11,8 +11,8 @@
   []
   (screen/register-screen-image
     (util/load-image-scale-by-width
-      "menus/temp_splash2.png" @config/WINDOW-WIDTH) true) ;true for fade functionality
-  (screen/register-fade-increment (/ 1.0 @ttl)))
+      "menus/temp_splash2.png" @config/WINDOW-WIDTH))
+  (screen/register-fade-increment (/ 1.0 (/ @ttl config/LOAD-SCREEN-FADE-DIVISION)) 1))
 
 (defn draw-load
   "update and draw handler for load"
@@ -24,12 +24,18 @@
   []
   (let [current-ttl (deref ttl)]
     (if (> current-ttl 0)
-      (do (swap! ttl dec) true)
-      false)))
+      (do
+        (swap! ttl dec)
+        (if (and
+              (>= (/ config/LOAD-SCREEN-TTL 4) current-ttl)
+              (not (screen/fade-started?)))
+            (screen/start-screen-fade))
+        true) false)))
 
 (defn keypressed-load
   "key press handler for load"
   [key])
+
 (defn keyreleased-load
   "key release handler for load"
   [key])

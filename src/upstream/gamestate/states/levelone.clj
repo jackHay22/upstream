@@ -15,7 +15,7 @@
 (defn update-level-one
   "update"
   []
-  (let [state (deref game-state)]
+  (let [state @game-state]
 
   true))
 

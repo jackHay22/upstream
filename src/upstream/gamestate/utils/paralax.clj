@@ -1,7 +1,5 @@
 (ns upstream.gamestate.utils.paralax
-  (:require
-    [seesaw.graphics :as sawgr]
-    [seesaw.icon :as sawicon])
+  (:require [upstream.utilities.images :as utils])
   (:gen-class))
 
 (def paralax-state (atom '()))
@@ -25,7 +23,5 @@
   "render all registered layers (twice)"
   [gr]
   (doseq [layer (deref paralax-state)]
-    (sawgr/draw gr
-      (sawgr/image-shape (:x layer) 0 (:image layer)) (sawgr/style))
-    (sawgr/draw gr
-      (sawgr/image-shape (- (:x layer) (:width layer)) 0 (:image layer)) (sawgr/style))))
+    (utils/draw-image (:image layer) gr (:x layer) 0)
+    (utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)))

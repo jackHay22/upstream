@@ -50,16 +50,14 @@
   "init elements"
   []
   (screen/clear-registered)
-  (screen/register-screen-image (load-title-image) false)
+  (screen/register-screen-image (load-title-image))
   (menu/register-menu-options (load-menu-selectable-fields))
   (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))
 
 (defn update-menu
   "update"
   []
-  (do
-    (paralax/update-layers)
-    true))
+  (do (paralax/update-layers) true))
 
 (defn draw-menu
   "update and draw handler for menu state"
