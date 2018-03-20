@@ -11,7 +11,7 @@
   []
   (screen/register-screen-image
     (util/load-image-scale-by-width
-      "menus/temp_splash2.png" @config/WINDOW-WIDTH) false) ;true for fade functionality
+      "menus/temp_splash2.png" @config/WINDOW-WIDTH) true) ;true for fade functionality
   (screen/register-fade-increment (/ 1.0 @ttl)))
 
 (defn draw-load

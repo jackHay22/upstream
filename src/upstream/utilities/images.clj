@@ -42,8 +42,9 @@
 (defn draw-image-alpha
   "take image, gr, x, y, alpha value, draw"
   [img gr x y a]
-  (do
-    (.setComposite gr (.derive AlphaComposite/SrcOver (min a 1)))
-    (draw-image img gr x y)
-    ;TODO: derive not working
-    (.setComposite gr (.derive AlphaComposite/SrcOver 0))))
+  (let [alpha-fn #(.setComposite gr
+                    (AlphaComposite/getInstance AlphaComposite/SRC_OVER %))]
+    (do
+      (alpha-fn (min a 1))
+      (draw-image img gr x y)
+      (alpha-fn 0))))

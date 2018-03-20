@@ -17,12 +17,12 @@
 - Fullscreen resource resolution is 350x200 (all resources are scaled based on java max window calculation)
 
 ## TODO:
-[] Better resource loading at boot
-[] Tile engine
-[] Better reactive scaling
-[] Art
-[] Multicast server config
-[] Figure out docker X11 server
+[ ] Better resource loading at boot
+[ ] Tile engine
+[ ] Better reactive scaling
+[ ] Art
+[ ] Multicast server config
+[ ] Figure out docker X11 server
 
 ## Upstream Copyright © 2018 Jack Hay.
 ![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/company_logo.png)
