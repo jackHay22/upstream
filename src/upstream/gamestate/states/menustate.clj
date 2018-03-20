@@ -50,7 +50,7 @@
   "init elements"
   []
   (screen/clear-registered)
-  (screen/register-screen-image (load-title-image))
+  (screen/register-screen-image (load-title-image) false)
   (menu/register-menu-options (load-menu-selectable-fields))
   (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))
 

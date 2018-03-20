@@ -5,6 +5,7 @@
   (:gen-class))
 
 (import java.awt.Image)
+(import java.awt.AlphaComposite)
 
 (defn load-image
     "load an image from resources"
@@ -37,3 +38,12 @@
   [img gr x y]
   (sawgr/draw gr
     (sawgr/image-shape x y img) (sawgr/style)))
+
+(defn draw-image-alpha
+  "take image, gr, x, y, alpha value, draw"
+  [img gr x y a]
+  (do
+    (.setComposite gr (.derive AlphaComposite/SrcOver (min a 1)))
+    (draw-image img gr x y)
+    ;TODO: derive not working
+    (.setComposite gr (.derive AlphaComposite/SrcOver 0))))
