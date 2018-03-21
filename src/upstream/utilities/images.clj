@@ -45,6 +45,6 @@
   (let [alpha-fn #(.setComposite gr
                     (AlphaComposite/getInstance AlphaComposite/SRC_OVER %))]
     (do
-      (alpha-fn (max a 0))
+      (alpha-fn (min (max a 0) 1))
       (draw-image img gr x y)
       (alpha-fn 0))))

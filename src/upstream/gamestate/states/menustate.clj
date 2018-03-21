@@ -12,6 +12,10 @@
   []
   (util/load-image-scale-by-width "menus/menu_title.png" @config/WINDOW-WIDTH))
 
+(defn load-overlay
+  []
+  (util/load-image-scale-by-width "menus/menu_overlay.png" @config/WINDOW-WIDTH))
+
 (def start? (atom false))
 (def about? (atom false))
 (def online? (atom false))
@@ -50,14 +54,19 @@
   "init elements"
   []
   (screen/clear-registered)
-  (screen/register-screen-image (load-title-image))
+  (screen/register-screen-image {:image (load-title-image) :fade? false})
+  (screen/register-screen-image {:image (load-overlay) :fade? true})
+  (screen/register-fade-increment (/ 1.0 (/ config/LOAD-SCREEN-TTL config/LOAD-SCREEN-FADE-DIVISION)) 1)
+  (screen/start-screen-fade)
   (menu/register-menu-options (load-menu-selectable-fields))
   (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))
 
 (defn update-menu
   "update"
   []
-  (do (paralax/update-layers) true))
+  (do
+    (paralax/update-layers)
+    true))
 
 (defn draw-menu
   "update and draw handler for menu state"

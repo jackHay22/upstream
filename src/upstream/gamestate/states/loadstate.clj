@@ -10,8 +10,8 @@
   "perform all necessary resource loads"
   []
   (screen/register-screen-image
-    (util/load-image-scale-by-width
-      "menus/temp_splash2.png" @config/WINDOW-WIDTH))
+    {:image (util/load-image-scale-by-width
+      "menus/temp_splash2.png" @config/WINDOW-WIDTH) :fade? true})
   (screen/register-fade-increment (/ 1.0 (/ @ttl config/LOAD-SCREEN-FADE-DIVISION)) 1))
 
 (defn draw-load

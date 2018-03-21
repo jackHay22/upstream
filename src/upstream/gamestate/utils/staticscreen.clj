@@ -10,12 +10,12 @@
 (defn register-screen-image
   "register image"
   [new]
-    (swap! img-list conj new))
+    (swap! img-list conj (assoc new :draw? true)))
 
 (defn start-screen-fade
   "start to fade screen"
   []
-  (reset! fade? true))
+    (reset! fade? true))
 
 (defn fade-started? [] @fade?)
 
@@ -37,17 +37,24 @@
 (defn draw-screen-alpha
   "draw screen with alpha"
   [layer gr]
-  (let [update-a (- @img-alpha @alpha-inc)]
-    (do
-      (reset! img-alpha update-a)
-      (utils/draw-image-alpha layer gr 0 0 update-a))))
+    (let [update-a (- @img-alpha @alpha-inc)]
+      (if (and (>= update-a 0) (<= update-a 1))
+        (do
+          (reset! img-alpha update-a)
+          (utils/draw-image-alpha (:image layer) gr 0 0 update-a)
+          layer)
+        (assoc layer :draw? false))))
 
 (defn draw-screen
   "draw image"
   [gr]
   (let [layer-list @img-list]
     (if (not (empty? layer-list))
-      (doseq [layer layer-list]
-        (if @fade?
-          (draw-screen-alpha layer gr)
-          (utils/draw-image layer gr 0 0))))))
+      (reset! img-list (doall
+        (map (fn [layer]
+          (if (:draw? layer)
+            (if (:fade? layer)
+              (draw-screen-alpha layer gr)
+            (do
+              (utils/draw-image (:image layer) gr 0 0)
+              layer)))) layer-list))))))

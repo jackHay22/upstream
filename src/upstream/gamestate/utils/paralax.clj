@@ -14,7 +14,7 @@
 (defn update-layers
   "update all registered layers"
   []
-  (let [layers (deref paralax-state)]
+  (let [layers @paralax-state]
     (reset! paralax-state
       (map #(assoc % :x
         (if (> (:x %) (:width %)) 0 (+ (:x %) (:dx %)))) layers))))
@@ -22,6 +22,6 @@
 (defn render-layers
   "render all registered layers (twice)"
   [gr]
-  (doseq [layer (deref paralax-state)]
+  (doseq [layer @paralax-state]
     (utils/draw-image (:image layer) gr (:x layer) 0)
     (utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)))
