@@ -1,4 +1,5 @@
 # Upstream
+![HAY](https://github.com/jackHay22/upstream/blob/master/resources/menus/menu_title.png)
 
 ## Info
 - Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018.
@@ -17,12 +18,19 @@
 - Fullscreen resource resolution is 350x200 (all resources are scaled based on java max window calculation)
 
 ## TODO:
-[ ] Better resource loading at boot
-[ ] Tile engine
-[ ] Better reactive scaling
-[ ] Art
-[ ] Multicast server config
-[ ] Figure out docker X11 server
+- [ ] Better resource loading at boot (optimize game loads)
+- [ ] Fix resolution of menu options
+- [ ] Tile engine
+- [x] Better reactive scaling
+- [ ] Art, art, art
+- [ ] Multicast server config (and setting up game to respond to server driven state updates)
+- [ ] Figure out docker X11 server
+- [ ] Music from nick
+- [ ] Pause menu
+- [ ] Layer driven tilemap (terrain, obstacles @ height, layers that render behind player and then in front of player)
+- [ ] Dynamic grass, bushes, trees
+- [ ] Water (boats)
+- [ ] Enemy AI (big time)
+- [ ] More art
 
 ## Upstream Copyright © 2018 Jack Hay.
-![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/company_logo.png)
