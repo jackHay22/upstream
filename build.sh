@@ -10,6 +10,7 @@ JAVA_RUNTIME=`/usr/libexec/java_home -v 1.8`
 #check lein installation
 if command -v lein >/dev/null 2>&1; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
+  lein deps
   lein uberjar || exit 1  #don't attempt to package failed jar
 else
   printf "${WRENCH}  Warning: ${YELLOW}lein${NC} not installed, attempting to download with homebrew... \n"
@@ -22,6 +23,7 @@ else
     printf "${WRENCH}  Using brew to install ${YELLOW}lein${NC}... \n"
     brew install leiningen || exit 1
     printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
+    lein deps
     lein uberjar || exit 1
   fi
   exit 1
