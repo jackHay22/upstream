@@ -56,6 +56,6 @@
           (if (:draw? layer)
             (if (and @fade? (:fade? layer))
               (draw-screen-alpha layer gr)
-              (do ;TODO: non fade layers not drawing immediately? (side effect problem?)
+              (do
                 (utils/draw-image (:image layer) gr 0 0) layer))
             layer)) layer-list))))))

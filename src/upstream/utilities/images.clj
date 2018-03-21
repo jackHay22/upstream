@@ -36,8 +36,8 @@
 (defn draw-image
   "take image, gr, x,y, draw"
   [img gr x y]
-  (sawgr/draw gr
-    (sawgr/image-shape x y img) (sawgr/style)))
+    (sawgr/draw gr
+      (sawgr/image-shape x y img) (sawgr/style)))
 
 (defn draw-image-alpha
   "take image, gr, x, y, alpha value, draw"
@@ -47,4 +47,4 @@
     (do
       (alpha-fn (min (max a 0) 1))
       (draw-image img gr x y)
-      (alpha-fn 0))))
+      (alpha-fn 1))))
