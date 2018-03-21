@@ -9,6 +9,7 @@ pom.xml.asc
 *.jar
 *.class
 /.lein-*
+.vagrant*
 /.nrepl-port
 .hgignore
 .hg/

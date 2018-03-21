@@ -21,7 +21,7 @@ else
     printf "${WRENCH}  Warning: ${YELLOW}brew${NC} not installed, trying to download now... \n"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     printf "${WRENCH}  Using brew to install ${YELLOW}lein${NC}... \n"
-    brew install leiningen || exit 1
+    brew install leiningen || exit 1 #note: this is not the preferred way to install lein
     printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
     lein deps
     lein uberjar || exit 1
