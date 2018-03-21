@@ -8,7 +8,7 @@
 (def fade? (atom false))
 
 (defn register-screen-image
-  "register image"
+  "register image: takes map with image and :fade? param"
   [new]
     (swap! img-list conj (assoc new :draw? true)))
 
@@ -17,7 +17,9 @@
   []
     (reset! fade? true))
 
-(defn fade-started? [] @fade?)
+(defn fade-started? [] @fade?) ;TODO: use?
+
+;TODO: fade not working correctly...other static images don't draw correctly, fade delay broken
 
 (defn clear-registered
   "clear registered screen images"
