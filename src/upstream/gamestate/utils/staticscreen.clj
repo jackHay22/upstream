@@ -55,7 +55,7 @@
       (reset! img-list (doall
         (map (fn [layer]
           (if (:draw? layer)
-            (if (:fade? layer)
+            (if (and @fade? (:fade? layer))
               (draw-screen-alpha layer gr)
             (do
               (utils/draw-image (:image layer) gr 0 0)
