@@ -16,7 +16,7 @@
   "start to fade screen"
   [] (reset! fade? true))
 
-(defn fade-started? [] @fade?) ;TODO: use?
+(defn fade-started? [] @fade?)
 
 (defn clear-registered
   "clear registered screen images"
