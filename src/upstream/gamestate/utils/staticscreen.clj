@@ -14,12 +14,9 @@
 
 (defn start-screen-fade
   "start to fade screen"
-  []
-    (reset! fade? true))
+  [] (reset! fade? true))
 
 (defn fade-started? [] @fade?) ;TODO: use?
-
-;TODO: fade not working correctly...other static images don't draw correctly, fade delay broken
 
 (defn clear-registered
   "clear registered screen images"
@@ -31,10 +28,12 @@
 
 (defn register-fade-increment
   "update screen"
-  [inc initial]
+  [inc]
   (do
     (reset! alpha-inc inc)
-    (reset! img-alpha initial)))
+    (if (> inc 0)
+      (reset! img-alpha 1)
+      (reset! img-alpha 0))))
 
 (defn draw-screen-alpha
   "draw screen with alpha"
@@ -57,6 +56,6 @@
           (if (:draw? layer)
             (if (and @fade? (:fade? layer))
               (draw-screen-alpha layer gr)
-            (do
-              (utils/draw-image (:image layer) gr 0 0)
-              layer)))) layer-list))))))
+              (do ;TODO: non fade layers not drawing immediately? (side effect problem?)
+                (utils/draw-image (:image layer) gr 0 0) layer))
+            layer)) layer-list))))))
