@@ -1,4 +1,3 @@
-# Upstream
 ![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/readme_title.png)
 
 ## Info
