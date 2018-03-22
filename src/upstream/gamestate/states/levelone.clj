@@ -1,5 +1,6 @@
 (ns upstream.gamestate.states.levelone
-  (:require [upstream.engine.config :as config])
+  (:require [upstream.engine.config :as config]
+            [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
 (def game-state (atom config/STARTING-STATE)) ;hmmm

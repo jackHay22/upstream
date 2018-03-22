@@ -7,12 +7,38 @@
 (import java.awt.Image)
 (import java.awt.AlphaComposite)
 
+(defn load-sub-image
+  "gets a subimage the size of a tile from the big image"
+  [loc]
+  ;only perform load once, returns fn
+  (let [loaded-resource (javax.imageio.ImageIO/read
+      (clojure.java.io/resource loc))]
+    (fn [x y w h]
+      ;convert 'subimaged' BufferedImage instance to seesaw icon
+      (sawicon/icon
+        (.getSubimage loaded-resource x y w h)))))
+
+(defn scale-loaded-image-by-width
+  "scale loaded image, wrap with icon"
+  [img new-w]
+  (sawicon/icon
+    (.getScaledInstance img
+      new-w (* new-w (/ (.getHeight img) (.getWidth img)))
+      Image/SCALE_DEFAULT)))
+
 (defn load-image
     "load an image from resources"
     [loc]
     (sawicon/icon
       (javax.imageio.ImageIO/read
           (clojure.java.io/resource loc))))
+
+(defn get-image-dim
+  "take resouce and get tuple of w,h"
+  [path]
+  (let [resource (javax.imageio.ImageIO/read
+                  (clojure.java.io/resource path))]
+      (list (.getWidth resource) (.getHeight resource))))
 
 (defn load-image-scale-by-width
   "take image, rescale by new x"

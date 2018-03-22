@@ -10,8 +10,9 @@
 
 ;4x multiplier on base resolution
 ;full screen pixel resolution is 350x200
-(def TILE-WIDTH 128)
-(def TILE-HEIGHT 64)
+(def TILES-ACROSS 20)
+(def ORIGINAL-TILE-WIDTH 64)
+(def ORIGINAL-TILE-HEIGHT 32)
 
 (def STARTING-STATE {:test 0})
 (def LOAD-SCREEN-TTL 100)
