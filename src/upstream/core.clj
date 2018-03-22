@@ -11,6 +11,10 @@
   "entrypoint"
   [& args]
   ;(if (> (count args) 0)
+  
+  ;potential opengl performance acceleration
+  (System/setProperty "sun.java2d.opengl" "true")
+
   (let [screenSize (.getScreenSize (Toolkit/getDefaultToolkit))]
     (reset! config/WINDOW-WIDTH (.width screenSize))
     (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))

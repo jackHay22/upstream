@@ -6,7 +6,9 @@
 (def game-state (atom config/STARTING-STATE)) ;hmmm
 
 (defn init-level-one
-  [])
+  "load resources"
+  []
+  )
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -17,7 +19,6 @@
   "update"
   []
   (let [state @game-state]
-
   true))
 
 (defn draw-level-one
