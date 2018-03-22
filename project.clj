@@ -4,7 +4,7 @@
                  [seesaw "1.4.5"]
                  [org.clojure/core.async "0.3.443"]]
   :main ^:skip-aot upstream.core
-  :jvm-opts ["-Xdock:name=Upstream"]
+  ;:jvm-opts ["-Xdock:name=Upstream"]
   ;:uberjar-name "upstream-standalone.jar"
   ;:jvm-opts ["-Xmx1g" "-server"]
   :target-path "target/%s"

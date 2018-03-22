@@ -15,10 +15,10 @@
 ## App build info
 ### OSX build
 - To build upstream.app: ``` ./build.sh ``` (requires ``` lein ```, ``` javapackager ```)
-- For container server mode: ``` ./build.sh -server ``` (broken) (requires ``` lein ```, ``` docker ```)
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
 ### Linux build
 - Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in project file and make sure [lein](https://leiningen.org/#install) is installed separately from build script.
+- Run ``` ./build.sh -linuxserver ``` (broken) (requires ``` lein ```, ``` docker ```)
 - Note: there are potentially other problems .
 
 ### Windows build
@@ -27,12 +27,12 @@
 ## Vagrant Ubuntu VM
 - Requires ``` vagrant, x11 ```.
 - Comment out ``` -Xdock:name=Upstream ``` in ``` project.clj ```.
-- Run: ``` vagrant up; vagrant ssh ```
+- Run: ``` vagrant up -provision```
 - Once in VM, check for the following installations (potentially made through vagrant): ``` xauth ```, ``` x11-apps ```.
 - Recompile with change made to ``` project.clj ```.
 - Jar should now run in x11 window.
 - NOTE: app stalls in load state
-  
+
 ## Docker
 - Definitely broken
 - Raspberry pi use: ``` FROM hypriot/rpi-java ```
