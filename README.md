@@ -13,25 +13,29 @@
 - Here is a method for [drawing an image](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/utilities/images.clj#L36) to a graphics object using the clojure library seesaw (Note: namespace includes [seesaw](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/utilities/images.clj#L3) and so does the [project file](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/project.clj#L4) as a dependency).
 
 ## App build info
+
 ### OSX build
 - To build upstream.app: ``` ./build.sh ``` (requires ``` lein ```, ``` javapackager ```)
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
-### Linux build
-- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in project file and make sure [lein](https://leiningen.org/#install) is installed separately from build script.
-- Run ``` ./build.sh -linuxserver ``` (broken) (requires ``` lein ```, ``` docker ```)
-- Note: there are potentially other problems .
+
+### Linux server build
+- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in project file and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: specify -server as jvm optimization arg)
+- Run ``` ./build.sh -linuxserver ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
+  - This will build and push a new image to AWS ECR
+- Then start the vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (Testing)
+- Or just run the following (still may need x11 server running):
+
+```
+docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
+docker run --rm \
+           -e DISPLAY=unix$DISPLAY \
+           -v /tmp/.X11-unix:/tmp/.X11-unix \
+           upstream_server:latest
+```
+- Note: there are potentially other problems.
 
 ### Windows build
 - Not tested
-
-## Vagrant Ubuntu VM
-- Requires ``` vagrant, x11 ```.
-- Comment out ``` -Xdock:name=Upstream ``` in ``` project.clj ```.
-- Run: ``` vagrant up -provision```
-- Once in VM, check for the following installations (potentially made through vagrant): ``` xauth ```, ``` x11-apps ```.
-- Recompile with change made to ``` project.clj ```.
-- Jar should now run in x11 window.
-- NOTE: app stalls in load state
 
 ## Docker
 - Definitely broken
