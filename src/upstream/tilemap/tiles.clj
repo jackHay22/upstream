@@ -4,35 +4,16 @@
     [upstream.utilities.images :as images])
   (:gen-class))
 
-(defn init-tile-map
-  "take tilemap resource and master tilemap document"
-  [tilemap-path tiles-master-path original-tile-width window-tiles-across]
-  (let [sub-image-loader-fn (images/load-sub-image tiles-master-path)
-        tiles-master-dim (images/get-image-dim tiles-master-path)
-        master-tiles-across (/ (first tiles-master-dim) original-tile-width)
-        master-tiles-down (/ (second tiles-master-dim) (/ original-tile-width 2))]
-        ;using images/scale-loaded-image-by-width img new-width-scale after split
-        ;(map
-          ;#(images/scale-loaded-image-by-width % new-tile-width)
-          ;(split-master
-                ;sub-image-loader-fn
-                ;master-tiles-across
-                ;master-tiles-down
-                ;config/ORIGINAL-TILE-WIDTH (remove) --> generalize to different layers
-                ;config/ORIGINAL-TILE-HEIGHT (remove)
-                ;))
-    )
-  )
-
 (defn parse-map-file
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
   or '(:image :sound :height :blocked?))"
   [path fields]
   (map (fn [line]
-      (map #(Integer. %)
-        (map #(clojure.string/split % #",")
+        (map
+          (fn [sub-line] (zipmap fields (map #(Integer. %)
+                 (clojure.string/split sub-line #","))))
         (clojure.string/split line #" ")))
-      (clojure.string/split-lines (slurp path)))))
+      (clojure.string/split-lines (slurp path))))
 
 (defn get-tile
   "given (loaded map), get x,y tile"
@@ -47,3 +28,28 @@
       (map (fn [r]
            (map (fn [c]
               (load-fn c r tile-width tile-height)) x-coords)) y-coords))))
+
+(defn init-tile-map
+  "take tilemap resource and master tilemap document"
+  [tilemap-path tiles-master-path original-tile-width window-tiles-across & fields]
+  (let [sub-image-loader-fn (images/load-sub-image tiles-master-path)
+        tiles-master-dim (images/get-image-dim tiles-master-path)
+        master-tiles-across (/ (first tiles-master-dim) original-tile-width)
+        master-tiles-down (/ (second tiles-master-dim) (/ original-tile-width 2))
+        new-tile-width (/ @config/WINDOW-WIDTH window-tiles-across)]
+        {:images (map #(images/scale-loaded-image-by-width % new-tile-width)
+                       (split-master
+                         sub-image-loader-fn
+                         master-tiles-across
+                         master-tiles-down
+                         original-tile-width
+                         (/ original-tile-width 2)))
+          :map (parse-map-file tilemap-path fields)}))
+
+(defn render-map
+  "render a tilemap/set in loaded form (as tilemap is rendered, system
+    will render game entities by providing an x value to any subscribing
+    systems)"
+  [tilemap overlap-handler]
+
+  )

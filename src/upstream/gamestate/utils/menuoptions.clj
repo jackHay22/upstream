@@ -40,7 +40,7 @@
         ;TODO: some problem with :up selection
     (cond (= key :up) (do (update-currently-selected! (rem (- state-index 1) (count current-state))) false)
           (= key :down) (do (update-currently-selected! (rem (+ state-index 1) (count current-state))) false)
-          (= key :enter) state-index)))
+          (= key :enter) 2))) ;state-index))) (hardcoded for now)
 
 (defn keyreleased-menu-option
   "key release handler for menu"

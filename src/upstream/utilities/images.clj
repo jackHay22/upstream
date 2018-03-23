@@ -12,11 +12,11 @@
   [loc]
   ;only perform load once, returns fn
   (let [loaded-resource (javax.imageio.ImageIO/read
-      (clojure.java.io/resource loc))]
+                          (clojure.java.io/resource loc))]
     (fn [x y w h]
       ;convert 'subimaged' BufferedImage instance to seesaw icon
-      (sawicon/icon
-        (.getSubimage loaded-resource x y w h)))))
+      ;(sawicon/icon
+        (.getSubimage loaded-resource x y w h))))
 
 (defn scale-loaded-image-by-width
   "scale loaded image, wrap with icon"

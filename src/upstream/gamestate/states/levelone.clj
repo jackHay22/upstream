@@ -8,6 +8,10 @@
 (defn init-level-one
   "load resources"
   []
+  (println "loading l1")
+  (tiles/init-tile-map "resources/maps/basic_template.txt"
+                 "tiles/unit_blank.png"
+                 64 config/TILES-ACROSS :image :sound)
   )
 
 (defn update-via-server

@@ -10,7 +10,7 @@
 
 ;4x multiplier on base resolution
 ;full screen pixel resolution is 350x200
-(def TILES-ACROSS 20)
+(def TILES-ACROSS 20) ;base layer
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
 
