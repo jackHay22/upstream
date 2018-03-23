@@ -30,24 +30,25 @@
 (defn set-position
     "set tile-map position: based off player loc"
     [x y tile-map]
-    (let [fix-bounds (fn [dim min]
+    (let [relative-x (- (/ @config/WINDOW-WIDTH 2) x)
+          relative-y (- (/ @config/WINDOW-HEIGHT 2) y)
+          fix-bounds (fn [dim min]
                          (cond (> dim 0)   0
                                (< dim min) min
                                :else       dim))
           tile-width (:tile-width tile-map)
-          bounds-x (fix-bounds x
+          bounds-x (fix-bounds relative-x
                       (- (/ @config/WINDOW-WIDTH (:scale tile-map))
                          (* (:tiles-down tile-map) tile-width)))
-          bounds-y (fix-bounds y
+          bounds-y (fix-bounds relative-y
                     (- (/ @config/WINDOW-HEIGHT (:scale tile-map))
                        (* (:tiles-across tile-map) (/ tile-width 2))))]
-          ;(println bounds-x)
           ;TODO: figure out this mess
     (merge tile-map
-    {:position-x bounds-x
-     :position-y bounds-y
-     :start-display-x (int (/ (- bounds-x) tile-width))
-     :start-display-y (int (/ (- bounds-y) (/ tile-width 2)))})))
+      {:position-x bounds-x
+       :position-y bounds-y
+       :start-display-x (int (/ (- bounds-x) tile-width))
+       :start-display-y (int (/ (- bounds-y) (/ tile-width 2)))})))
 
 (defn split-master
   "split master image into list of images (1 dimensional)"

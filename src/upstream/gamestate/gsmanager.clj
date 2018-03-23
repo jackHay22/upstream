@@ -5,7 +5,7 @@
   (:gen-class))
 
 ;atom for current index and global list of game states
-(def current-game-state (atom 0))
+(def current-game-state (atom 2))
 (def RUNNING (atom false))
 
 (def STATES
