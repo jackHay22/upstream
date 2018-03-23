@@ -44,12 +44,24 @@
                          master-tiles-down
                          original-tile-width
                          (/ original-tile-width 2)))
+          :display-across (+ window-tiles-across 2)
+          :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ 2 new-tile-width)))
+          :tile-width new-tile-width
           :map (parse-map-file tilemap-path fields)}))
 
 (defn render-map
   "render a tilemap/set in loaded form (as tilemap is rendered, system
     will render game entities by providing an x value to any subscribing
     systems)"
-  [tilemap overlap-handler]
+  [tilemap overlap-handler] ;handler is only necessary for l1, l2, etc... not l0
+  (let [images (:images tilemap)
+        map-contents (:map tilemap)
+        start-draw-x 0 ;hardcoded for testing
+        start-draw-y 0 ;hardcoded for testing
+        ;TODO: incorporate handler, movement based on player loc
+        ]
+        ;(doseq [x (range start-draw-x (* n))]
 
+          ;)
+        )
   )

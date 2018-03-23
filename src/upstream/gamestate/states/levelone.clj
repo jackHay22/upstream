@@ -3,12 +3,12 @@
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
-(def game-state (atom config/STARTING-STATE)) ;hmmm
+(def game-state (atom config/STARTING-STATE))
+(def tile-map-layers (atom '()))
 
 (defn init-level-one
   "load resources"
   []
-  (println "loading l1")
   (tiles/init-tile-map "resources/maps/basic_template.txt"
                  "tiles/unit_blank.png"
                  64 config/TILES-ACROSS :image :sound)
@@ -22,12 +22,14 @@
 (defn update-level-one
   "update"
   []
+  ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state]
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
+  ; (doall ) (tiles/render-map %) @tile-map-layers
   )
 
 (defn keypressed-level-one
