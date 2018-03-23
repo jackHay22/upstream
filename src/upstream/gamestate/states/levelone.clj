@@ -4,15 +4,16 @@
   (:gen-class))
 
 (def game-state (atom config/STARTING-STATE))
-(def tile-map-layers (atom '()))
+(def tile-map-layers (atom 0))
 
 (defn init-level-one
   "load resources"
   []
-  (tiles/init-tile-map "resources/maps/basic_template.txt"
+  (reset! tile-map-layers
+  (tiles/init-tile-map "maps/basic_template.txt"
                  "tiles/unit_blank.png"
                  64 config/TILES-ACROSS :image :sound)
-  )
+  ))
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -29,6 +30,7 @@
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
+  (tiles/render-map gr @tile-map-layers 0)
   ; (doall ) (tiles/render-map %) @tile-map-layers
   )
 

@@ -1,6 +1,7 @@
 (ns upstream.tilemap.tiles
   (:require
     [upstream.engine.config :as config]
+    [clojure.java.io :as io]
     [upstream.utilities.images :as images])
   (:gen-class))
 
@@ -8,12 +9,13 @@
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
   or '(:image :sound :height :blocked?))"
   [path fields]
-  (map (fn [line]
+  (with-open [reader (clojure.java.io/reader (io/resource path))]
+    (map (fn [line]
         (map
           (fn [sub-line] (zipmap fields (map #(Integer. %)
                  (clojure.string/split sub-line #","))))
         (clojure.string/split line #" ")))
-      (clojure.string/split-lines (slurp path))))
+      (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
 
 (defn get-tile
   "given (loaded map), get x,y tile"
@@ -53,15 +55,20 @@
   "render a tilemap/set in loaded form (as tilemap is rendered, system
     will render game entities by providing an x value to any subscribing
     systems)"
-  [tilemap overlap-handler] ;handler is only necessary for l1, l2, etc... not l0
+  [gr tilemap overlap-handler] ;handler is only necessary for l1, l2, etc... not l0
   (let [images (:images tilemap)
         map-contents (:map tilemap)
         start-draw-x 0 ;hardcoded for testing
         start-draw-y 0 ;hardcoded for testing
         ;TODO: incorporate handler, movement based on player loc
         ]
-        ;(doseq [x (range start-draw-x (* n))]
-
-          ;)
-        )
+        (doseq [x (range start-draw-x (:display-across tilemap))]
+          (let [map-entry (nth (first map-contents) x)]
+            (images/draw-image
+              (nth images (:image map-entry))
+               gr (* x (:tile-width tilemap)) 0)
+          )
+        ))
   )
+
+  ;(if (= x 10) (fn) )

@@ -10,7 +10,7 @@
 
 ;4x multiplier on base resolution
 ;full screen pixel resolution is 350x200
-(def TILES-ACROSS 20) ;base layer
+(def TILES-ACROSS 10) ;base layer
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
 
@@ -23,3 +23,13 @@
 
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
+
+;(def x (atom 0))
+;loop
+
+; (if (> @x 100)
+;   (do
+;     (println @x)
+;     (reset! x 0))
+;     (swap! x inc)
+; )
