@@ -23,13 +23,3 @@
 
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
-
-;(def x (atom 0))
-;loop
-
-; (if (> @x 100)
-;   (do
-;     (println @x)
-;     (reset! x 0))
-;     (swap! x inc)
-; )

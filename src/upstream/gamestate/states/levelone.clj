@@ -5,6 +5,8 @@
 
 (def game-state (atom config/STARTING-STATE))
 (def tile-map-layers (atom 0))
+(def this-x (atom 50))
+(def this-y (atom 50))
 
 (defn init-level-one
   "load resources"
@@ -24,12 +26,18 @@
   "update"
   []
   ;entities: create overlap handler with subscribers?, send to tilemap at render
-  (let [state @game-state]
+  (let [state @game-state
+        current-x @this-x
+        current-y @this-y]
+    (reset! this-x (+ current-x 10))
+    (reset! this-y (+ current-y 10))
+    (reset! tile-map-layers (tiles/set-position @this-x @this-y @tile-map-layers))
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
+  ;(println @tile-map-layers)
   (tiles/render-map gr @tile-map-layers 0)
   ; (doall ) (tiles/render-map %) @tile-map-layers
   )

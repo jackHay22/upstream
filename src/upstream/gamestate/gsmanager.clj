@@ -5,7 +5,7 @@
   (:gen-class))
 
 ;atom for current index and global list of game states
-(def current-game-state (atom 2))
+(def current-game-state (atom 0))
 (def RUNNING (atom false))
 
 (def STATES
@@ -63,7 +63,8 @@
     "respond to keypress event"
     [key]
     (let [result ((:key-press-handler (nth STATES (deref current-game-state))) key)]
-      (if result (reset! current-game-state result)))) ;TODO: init next state
+      ;(if result (reset! current-game-state result)))) ;TODO: init next state
+      ))
 
 (defn keyreleased
     "respond to keyrelease event"

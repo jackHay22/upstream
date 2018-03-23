@@ -5,21 +5,49 @@
     [upstream.utilities.images :as images])
   (:gen-class))
 
+(def position-x (atom -40))
+(def position-y (atom -40))
+(def start-display-x (atom 1))
+(def start-display-y (atom 1))
+
 (defn parse-map-file
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
   or '(:image :sound :height :blocked?))"
   [path fields]
   (with-open [reader (clojure.java.io/reader (io/resource path))]
     (map (fn [line]
-        (map
-          (fn [sub-line] (zipmap fields (map #(Integer. %)
-                 (clojure.string/split sub-line #","))))
+        (map (fn [sub-line]
+                 (zipmap fields (map #(Integer. %)
+                  (clojure.string/split sub-line #","))))
         (clojure.string/split line #" ")))
       (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
 
 (defn get-tile
-  "given (loaded map), get x,y tile"
+  "given (loaded map), get x,y tile: {:image _ ...}"
   [loaded-map x y])
+
+
+(defn set-position
+    "set tile-map position: based off player loc"
+    [x y tile-map]
+    (let [fix-bounds (fn [dim min]
+                         (cond (> dim 0)   0
+                               (< dim min) min
+                               :else       dim))
+          tile-width (:tile-width tile-map)
+          bounds-x (fix-bounds x
+                      (- (/ @config/WINDOW-WIDTH (:scale tile-map))
+                         (* (:tiles-down tile-map) tile-width)))
+          bounds-y (fix-bounds y
+                    (- (/ @config/WINDOW-HEIGHT (:scale tile-map))
+                       (* (:tiles-across tile-map) (/ tile-width 2))))]
+          ;(println bounds-x)
+          ;TODO: figure out this mess
+    (merge tile-map
+    {:position-x bounds-x
+     :position-y bounds-y
+     :start-display-x (int (/ (- bounds-x) tile-width))
+     :start-display-y (int (/ (- bounds-y) (/ tile-width 2)))})))
 
 (defn split-master
   "split master image into list of images (1 dimensional)"
@@ -47,8 +75,15 @@
                          original-tile-width
                          (/ original-tile-width 2)))
           :display-across (+ window-tiles-across 2)
-          :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ 2 new-tile-width)))
+          :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ new-tile-width 4)))
           :tile-width new-tile-width
+          :scale (/ new-tile-width original-tile-width)
+          :position-x 0
+          :position-y 0
+          :tiles-down 45
+          :tiles-across 45 ;TODO: fix
+          :start-display-x 0
+          :start-display-y 0
           :map (parse-map-file tilemap-path fields)}))
 
 (defn render-map
@@ -58,17 +93,20 @@
   [gr tilemap overlap-handler] ;handler is only necessary for l1, l2, etc... not l0
   (let [images (:images tilemap)
         map-contents (:map tilemap)
-        start-draw-x 0 ;hardcoded for testing
-        start-draw-y 0 ;hardcoded for testing
+        tile-width (:tile-width tilemap)
+        start-draw-x (:start-display-x tilemap)
+        start-draw-y (:start-display-y tilemap)
+        offset-fn (fn [x y]
+                      (+ (* x tile-width)
+                         (if (even? y)
+                             (/ tile-width 2) 0)))
         ;TODO: incorporate handler, movement based on player loc
         ]
-        (doseq [x (range start-draw-x (:display-across tilemap))]
-          (let [map-entry (nth (first map-contents) x)]
+        (doseq [x (range start-draw-x (+ start-draw-x (:display-across tilemap)))
+                y (range start-draw-y (+ start-draw-y (:display-down tilemap)))]
+          (let [map-entry (nth (nth map-contents y) x)
+                r-loc (int (+ (* y (/ tile-width 4)) (:position-y tilemap)))
+                c-loc (int (+ (offset-fn x y) (:position-x tilemap)))]
             (images/draw-image
               (nth images (:image map-entry))
-               gr (* x (:tile-width tilemap)) 0)
-          )
-        ))
-  )
-
-  ;(if (= x 10) (fn) )
+               gr c-loc r-loc)))))
