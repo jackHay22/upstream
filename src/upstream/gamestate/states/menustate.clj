@@ -28,12 +28,12 @@
         load-scaled (fn [img]
             (util/load-image-scale-by-width img width))]
   (list
-    {:image (load-scaled "menus/menu_paralax/paralax_0.png") :dx 0}
-    {:image (load-scaled "menus/menu_paralax/paralax_1.png") :dx 0.2}
-    {:image (load-scaled "menus/menu_paralax/paralax_2.png") :dx 0.5}
-    {:image (load-scaled "menus/menu_paralax/paralax_3.png") :dx 0.85}
-    {:image (load-scaled "menus/menu_paralax/paralax_4.png") :dx 1.35}
-    {:image (load-scaled "menus/menu_paralax/paralax_5.png") :dx 2.25})))
+    {:image (load-scaled "menus/menu_paralax/paralax2_0.png") :dx 0}
+    {:image (load-scaled "menus/menu_paralax/paralax2_1.png") :dx 0.2}
+    {:image (load-scaled "menus/menu_paralax/paralax2_2.png") :dx 0.4}
+    {:image (load-scaled "menus/menu_paralax/paralax2_3.png") :dx 0.5}
+    {:image (load-scaled "menus/menu_paralax/paralax2_4.png") :dx 0.6}
+    {:image (load-scaled "menus/menu_paralax/paralax2_5.png") :dx 1.6})))
 
 (defn load-menu-selectable-fields
   []

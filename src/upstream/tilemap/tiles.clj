@@ -5,11 +5,6 @@
     [upstream.utilities.images :as images])
   (:gen-class))
 
-(def position-x (atom -40))
-(def position-y (atom -40))
-(def start-display-x (atom 1))
-(def start-display-y (atom 1))
-
 (defn parse-map-file
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
   or '(:image :sound :height :blocked?))"
