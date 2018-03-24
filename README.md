@@ -46,6 +46,7 @@ docker run --rm \
 - Fullscreen resource resolution is 350x200 (all resources are scaled based on java max window calculation)
 
 ## TODO:
+- [ ] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
 - [ ] Rework tiles/set-position
 - [ ] Link tile layer movement
 - [ ] General tilemap refactor (clean up hardcoded stuff)
