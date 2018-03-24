@@ -13,6 +13,7 @@
 (def TILES-ACROSS 10) ;base layer
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
+(def COMPUTED-SCALE (atom 1)) ;TODO
 
 (def STARTING-STATE {:test 0})
 (def LOAD-SCREEN-TTL 100)

@@ -12,10 +12,14 @@
   "load resources"
   []
   (reset! tile-map-layers
-  (tiles/init-tile-map "maps/basic_template.txt"
-                 "tiles/unit_blank.png"
+    (list
+        (tiles/init-tile-map "maps/basic_template.txt"
+                 "tiles/test_sheet.png"
                  64 config/TILES-ACROSS :image :sound)
-  ))
+        (tiles/init-tile-map "maps/super_block_demo.txt"
+                 "tiles/test_superblock.png"
+                 292 config/TILES-ACROSS :image :sound)
+  )))
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -30,14 +34,19 @@
         current-x @this-x]
     (reset! this-x (+ current-x 1))
 
-    (reset! tile-map-layers (tiles/set-position @this-x @this-y @tile-map-layers))
+    (reset! tile-map-layers
+      (doall
+        (map #(tiles/set-position @this-x @this-y %)
+       @tile-map-layers)))
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
   ;(println @tile-map-layers)
-  (tiles/render-map gr @tile-map-layers 0)
+  (doall
+    (map
+    #(tiles/render-map gr % 0) @tile-map-layers))
   ; (doall ) (tiles/render-map %) @tile-map-layers
   )
 

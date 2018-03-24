@@ -17,8 +17,10 @@
   (with-open [reader (clojure.java.io/reader (io/resource path))]
     (map (fn [line]
         (map (fn [sub-line]
-                 (zipmap fields (map #(Integer. %)
-                  (clojure.string/split sub-line #","))))
+                  (let [location-set
+                          (zipmap fields (map #(Integer. %)
+                            (clojure.string/split sub-line #",")))]
+                  (assoc location-set :draw? (not (= -1 ((first fields) location-set))))))
         (clojure.string/split line #" ")))
       (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
 
@@ -30,6 +32,7 @@
 (defn set-position
     "set tile-map position: based off player loc"
     [x y tile-map]
+    ;TODO: rework
     (let [relative-x (- (/ @config/WINDOW-WIDTH 2) x)
           relative-y (- (/ @config/WINDOW-HEIGHT 2) y)
           fix-bounds (fn [dim min]
@@ -78,7 +81,7 @@
           :display-across (+ window-tiles-across 2)
           :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ new-tile-width 4)))
           :tile-width new-tile-width
-          :scale (/ new-tile-width original-tile-width)
+          :scale (/ new-tile-width original-tile-width) ;TODO: @/config/COMPUTED-SCALE
           :position-x 0
           :position-y 0
           :tiles-down 45
@@ -87,11 +90,18 @@
           :start-display-y 0
           :map (parse-map-file tilemap-path fields)}))
 
+(defn check-handler
+  "check fo handler criteria, draw if applicable"
+  [gr handler-set y1 y2]
+  (if (and (> (:y handler-set) y1) (< (:y handler-set) y2))
+    ((:handler gr))))
+
 (defn render-map
   "render a tilemap/set in loaded form (as tilemap is rendered, system
     will render game entities by providing an x value to any subscribing
     systems)"
-  [gr tilemap overlap-handler] ;handler is only necessary for l1, l2, etc... not l0
+  [gr tilemap overlap-handler-set] ;handler is only necessary for l1, l2, etc... not l0
+  ;overlap handler: {:y :fn}
   (let [images (:images tilemap)
         map-contents (:map tilemap)
         tile-width (:tile-width tilemap)
@@ -108,6 +118,7 @@
           (let [map-entry (nth (nth map-contents y) x)
                 r-loc (int (+ (* y (/ tile-width 4)) (:position-y tilemap)))
                 c-loc (int (+ (offset-fn x y) (:position-x tilemap)))]
-            (images/draw-image
-              (nth images (:image map-entry))
-               gr c-loc r-loc)))))
+            (if (:draw? map-entry)
+              (images/draw-image
+                (nth images (:image map-entry))
+                gr c-loc r-loc))))))

@@ -46,9 +46,11 @@ docker run --rm \
 - Fullscreen resource resolution is 350x200 (all resources are scaled based on java max window calculation)
 
 ## TODO:
+- [ ] Rework tiles/set-position
+- [ ] Link tile layer movement
+- [ ] General tilemap refactor (clean up hardcoded stuff)
 - [ ] Better resource loading at boot (optimize game loads)
 - [ ] Fix resolution of menu options
-- [ ] Tile engine
 - [x] Better reactive scaling
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)
