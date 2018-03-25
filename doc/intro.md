@@ -22,7 +22,10 @@
  :spacing-paradigm SPACING-STANDARD
  :tiles-data (list
                 {:img "tiles/test_sheet.png"
-                 :width ORIGINAL-TILE-WIDTH
-                 :height ORIGINAL-TILE-HEIGHT})
+                 :tile-width ORIGINAL-TILE-WIDTH
+                 :tile-height ORIGINAL-TILE-HEIGHT}
+                {:img "tiles/list_load_test.png"
+                 :tile-width 64
+                 :tile-height 32})
  :loaded-map-fields (list :image :sound)}
  ```

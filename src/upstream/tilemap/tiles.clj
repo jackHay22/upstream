@@ -23,7 +23,6 @@
   "given (loaded map), get x,y tile: {:image _ ...}"
   [loaded-map x y])
 
-
 (defn set-position
     "set tile-map position: based off player loc"
     [x y tile-map]
@@ -63,26 +62,27 @@
   "take tilemap resource and master tilemap document"
   [tilemap-set]
     ;TODO: correct loading with mapcat
+  (let [map-load (parse-map-file
+                    (:map-path tilemap-set)
+                    (:loaded-map-fields tilemap-set))]
+  ;return transformed resource
   {:loaded-images (mapcat (fn [block]
                                 (let [block-loader (images/sub-image-loader (:img block))]
-                                      (split-master
-                                        block-loader
-                                        (:tile-width block)
-                                        (:tile-height block))))
+                                      (split-master block-loader
+                                        (:tile-width block) (:tile-height block))))
                             (:tiles-data tilemap-set))
    :tile-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
    :position-x 0
    :position-y 0
    :start-display-x 0
    :start-display-y 0
-   :tiles-down (:map-tiles-across tilemap-set)
-   :tiles-across (:map-tiles-down tilemap-set)
+   :tiles-down (count map-load)
+   :tiles-across (count (first map-load))
+   ;TODO: broken
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
    ;TODO: improve
    :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set)) 4)))
-   :map (parse-map-file
-            (:map-path tilemap-set)
-            (:loaded-map-fields tilemap-set))})
+   :map map-load}))
 
 (defn check-handler
   "check fo handler criteria, draw if applicable"
