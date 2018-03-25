@@ -3,19 +3,20 @@
 
 (import '(java.awt Color Font))
 
-(def WINDOW-WIDTH (atom 1400)) ;set by dynamic screen maximization
-(def WINDOW-HEIGHT (atom 800)) ;set by dynamic screen maximization
-(def HEIGHT-BUFFER 100)
+(def WINDOW-WIDTH (atom 0)) ;set by dynamic screen maximization
+(def WINDOW-HEIGHT (atom 0)) ;set by dynamic screen maximization
+(def HEIGHT-BUFFER 100) ;fit doc at bottom of screen
+(def VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
 
-;4x multiplier on base resolution
-;full screen pixel resolution is 350x200
-(def TILES-ACROSS 10) ;base layer
+(def TILES-ACROSS 10) ;base layer (and map unit for all layers)
+(def SPACING-STANDARD 64)
+(def SPACING-MINIMAL 4)
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
-(def COMPUTED-SCALE (atom 1)) ;TODO
+(def COMPUTED-SCALE (atom 1))
 
-(def STARTING-STATE {:test 0})
+(def STARTING-GAME-STATE {:test 0})
 (def LOAD-SCREEN-TTL 100)
 (def LOAD-SCREEN-FADE-DIVISION 4)
 
@@ -24,3 +25,30 @@
 
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
+
+(def LEVEL-ONE-TILEMAPS
+  ;Note: load order matters for correct map indexing
+  ;spacing defines whether additional layers are drawn in relation to
+  ; the base layer grid
+    (list
+      {:map-path "maps/basic_template.txt"
+       :spacing-paradigm SPACING-STANDARD
+       :map-tiles-across 45
+       :map-tiles-down 45
+       :tiles-data (list
+                      {:img "tiles/test_sheet.png"
+                       :tile-width ORIGINAL-TILE-WIDTH
+                       :tile-height ORIGINAL-TILE-HEIGHT})
+       :loaded-map-fields (list :image :sound)}
+      {:map-path "maps/super_block_demo.txt"
+       :spacing-paradigm SPACING-STANDARD
+       :map-tiles-across 45
+       :map-tiles-down 45
+       :tiles-data (list
+                       {:img "tiles/test_superblock.png"
+                        :tile-width 292
+                        :tile-height 270}
+                       {:img "tiles/list_load_test.png"
+                        :tile-width 64
+                        :tile-height 32})
+       :loaded-map-fields (list :image :height :blocked?)}))

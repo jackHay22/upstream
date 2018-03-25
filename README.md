@@ -1,16 +1,10 @@
 ![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/readme_title.png)
 
 ## Info
-- Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018.
-- For more information, read the docs
+_Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 
 ## Getting started
-- The core draw-loop for the game is found [here](https://github.com/jackHay22/upstream/blob/master/src/upstream/engine/gamewindow.clj).
-- The function that is called when the canvas repaints is [here](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/engine/gamewindow.clj#L24) where state is the gamestate manager namespace.  The [update-and-draw](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/gamestate/gsmanager.clj#L39) function receives a java Graphics object.
-- The Gamestate manager calls the draw/update functions for the current [state](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/gamestate/gsmanager.clj#L8), ``` @current-game-state ```.
-- Each gamestate is defined in its own namespace and uses the graphics object to draw to the screen.
-- Here is a method for [loading an image](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/utilities/images.clj#L10) which takes a resource path (i.e. ``` "menus/menu_title.png" ```).
-- Here is a method for [drawing an image](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/utilities/images.clj#L36) to a graphics object using the clojure library seesaw (Note: namespace includes [seesaw](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/src/upstream/utilities/images.clj#L3) and so does the [project file](https://github.com/jackHay22/upstream/blob/344ae8c62e00350f3b923db6651b24b75fbe9570/project.clj#L4) as a dependency).
+[Getting started and technical documentation](doc/intro.md).
 
 ## App build info
 
@@ -34,21 +28,22 @@ docker run --rm \
 ```
 - Note: there are potentially other problems.
 
+### Store build artifact
+- Run ``` ./build -saveartifact ``` (requires ``` aws ``` cli and bucket permissions for ``` s3://upstream-build-archive ```) to upload standalone jar to a versioned s3 bucket.
+- Note: will not build native app
+
 ### Windows build
-- Not tested
+- _Not tested_
 
 ## Docker
 - Definitely broken
 - Raspberry pi use: ``` FROM hypriot/rpi-java ```
 - Note: there is currently a problem running app in container.  I am currently trying to use an X11 server for graphics.
 
-## Resource Specifications
-- Fullscreen resource resolution is 350x200 (all resources are scaled based on java max window calculation)
-
 ## TODO:
-- [ ] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
+- [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
 - [ ] Rework tiles/set-position
-- [ ] Link tile layer movement
+- [x] Link tile layer movement
 - [ ] General tilemap refactor (clean up hardcoded stuff)
 - [ ] Better resource loading at boot (optimize game loads)
 - [ ] Fix resolution of menu options

@@ -27,7 +27,6 @@ else
     lein deps
     lein uberjar || exit 1
   fi
-  exit 1
 fi
 if [ $# -eq 0 ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} app package... ${YELLOW}${1}${NC} \n"
@@ -42,13 +41,18 @@ if [ $# -eq 0 ]; then
       -Bruntime=${JAVA_RUNTIME} \
       -Bicon=resources/app/Upstream.icns && \
   printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
+elif [ "$1" == "-saveartifact" ]; then
+  printf "${WRENCH}  Uploading ${RED}Upstream${NC} jar build to AWS s3 as: ${YELLOW}s3://upstream-build-archive/upstream-archive-build.jar${NC} using s3 versioning scheme. \n"
+  aws s3 cp \
+  target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
+  s3://upstream-build-archive/upstream-archive-build.jar
 elif [ "$1" == "-linuxserver" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   docker build --tag upstream_server . || exit 1
   printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC}. \n"
   docker tag upstream_server:latest 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest
   printf "${WRENCH}  Pushing ${YELLOW}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECS_RESOURCE_URI${NC}. \n"
-  docker push 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest
+  #docker push 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest
   printf "${WRENCH}  ${RED}upstream_server:latest${NC} pushed. \n"
   # docker run --rm \
   #            -e DISPLAY=unix$DISPLAY \

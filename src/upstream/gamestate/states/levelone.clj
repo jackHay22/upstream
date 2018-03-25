@@ -3,7 +3,7 @@
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
-(def game-state (atom config/STARTING-STATE))
+(def game-state (atom config/STARTING-GAME-STATE))
 (def tile-map-layers (atom 0))
 (def this-x (atom 50))
 (def this-y (atom 50))
@@ -12,14 +12,7 @@
   "load resources"
   []
   (reset! tile-map-layers
-    (list
-        (tiles/init-tile-map "maps/basic_template.txt"
-                 "tiles/test_sheet.png"
-                 64 config/TILES-ACROSS :image :sound)
-        (tiles/init-tile-map "maps/super_block_demo.txt"
-                 "tiles/test_superblock.png"
-                 292 config/TILES-ACROSS :image :sound)
-  )))
+    (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS))))
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -35,19 +28,15 @@
     (reset! this-x (+ current-x 1))
 
     (reset! tile-map-layers
-      (doall
-        (map #(tiles/set-position @this-x @this-y %)
+      (doall (map #(tiles/set-position @this-x @this-y %)
        @tile-map-layers)))
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
-  ;(println @tile-map-layers)
-  (doall
-    (map
-    #(tiles/render-map gr % 0) @tile-map-layers))
-  ; (doall ) (tiles/render-map %) @tile-map-layers
+  (doall (map #(tiles/render-map gr % 0) @tile-map-layers))
+
   )
 
 (defn keypressed-level-one
