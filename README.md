@@ -41,6 +41,8 @@ docker run --rm \
 - Note: there is currently a problem running app in container.  I am currently trying to use an X11 server for graphics.
 
 ## TODO:
+- [ ] Fix problems with gsmanager state changes from key presses
+- [ ] Async resource loads through calls to state/init
 - [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
 - [ ] Rework tiles/set-position
 - [x] Link tile layer movement

@@ -27,14 +27,11 @@
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
 
 (def LEVEL-ONE-TILEMAPS
-  ;Note: load order matters for correct map indexing
-  ;spacing defines whether additional layers are drawn in relation to
-  ; the base layer grid
+    ;if images are loaded using list functionality, factor in indices of previous
+    ;images in list for current
     (list
       {:map-path "maps/basic_template.txt"
        :spacing-paradigm SPACING-STANDARD
-       :map-tiles-across 45
-       :map-tiles-down 45
        :tiles-data (list
                       {:img "tiles/test_sheet.png"
                        :tile-width ORIGINAL-TILE-WIDTH
@@ -42,8 +39,6 @@
        :loaded-map-fields (list :image :sound)}
       {:map-path "maps/super_block_demo.txt"
        :spacing-paradigm SPACING-STANDARD
-       :map-tiles-across 45
-       :map-tiles-down 45
        :tiles-data (list
                        {:img "tiles/test_superblock.png"
                         :tile-width 292

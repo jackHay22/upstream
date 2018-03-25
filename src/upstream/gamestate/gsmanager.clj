@@ -5,7 +5,7 @@
   (:gen-class))
 
 ;atom for current index and global list of game states
-(def current-game-state (atom 2))
+(def current-game-state (atom 0))
 (def RUNNING (atom false))
 
 (def STATES
@@ -28,13 +28,21 @@
      :key-release-handler #(level/keyreleased-level-one %)
      :init-fn #(level/init-level-one)}))
 
+(defn start-subsequent-loads
+  "take other init functions and load in new thread"
+  [states]
+    (.start
+      (Thread. #(doseq [s states] ((:init-fn s))))))
 ;on startup
 (defn init-gsm
   "perform resource loads"
   []
-  (do
-    ((:init-fn (nth STATES (deref current-game-state))))
-    (reset! RUNNING true)))
+  (let [current-state @current-game-state]
+    (do
+      ((:init-fn (nth STATES current-state)))
+      (reset! RUNNING true)
+      ;TODO: this is causing a load state problem
+      (start-subsequent-loads (rest STATES)))))
 
 (defn update-and-draw
   "Update and Draw the current game state"
@@ -44,7 +52,7 @@
   (if ((:update-handler (nth STATES current-state-number)))
       ((:draw-handler (nth STATES current-state-number)) gr)
       (do
-        ((:init-fn (nth STATES (+ current-state-number 1))))
+        ;((:init-fn (nth STATES (+ current-state-number 1))))
         ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
         (swap! current-game-state inc))))))
 
@@ -63,8 +71,7 @@
     "respond to keypress event"
     [key]
     (let [result ((:key-press-handler (nth STATES (deref current-game-state))) key)]
-      ;(if result (reset! current-game-state result)))) ;TODO: init next state
-      ))
+      (if result (reset! current-game-state result)))) ;TODO: init next state
 
 (defn keyreleased
     "respond to keyrelease event"
