@@ -4,7 +4,6 @@
             [upstream.gamestate.states.loadstate :as loadstate])
   (:gen-class))
 
-;atom for current index and global list of game states
 (def current-game-state (atom 0))
 (def RUNNING (atom false))
 
@@ -31,30 +30,27 @@
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
   [states]
-    (.start
-      (Thread. #(doseq [s states] ((:init-fn s))))))
-;on startup
+    (.start (Thread. #(doseq [s states] ((:init-fn s))))))
+
 (defn init-gsm
   "perform resource loads"
   []
-  (let [current-state @current-game-state]
-    (do
-      ((:init-fn (nth STATES current-state)))
-      (reset! RUNNING true)
-      ;TODO: this is causing a load state problem
-      (start-subsequent-loads (rest STATES)))))
+  (do
+    ((:init-fn (nth STATES @current-game-state)))
+    (reset! RUNNING true)
+    ;TODO: this is causing a load state problem: both load state and menu state share static screen
+    (start-subsequent-loads (rest STATES))))
 
 (defn update-and-draw
   "Update and Draw the current game state"
   [gr]
   (if @RUNNING
-  (let [current-state-number (deref current-game-state)]
-  (if ((:update-handler (nth STATES current-state-number)))
-      ((:draw-handler (nth STATES current-state-number)) gr)
-      (do
-        ;((:init-fn (nth STATES (+ current-state-number 1))))
-        ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
-        (swap! current-game-state inc))))))
+    (let [current-state-number @current-game-state]
+          (if ((:update-handler (nth STATES current-state-number)))
+              ((:draw-handler (nth STATES current-state-number)) gr)
+              (do
+                ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
+                (swap! current-game-state inc))))))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"
@@ -70,10 +66,10 @@
 (defn keypressed
     "respond to keypress event"
     [key]
-    (let [result ((:key-press-handler (nth STATES (deref current-game-state))) key)]
-      (if result (reset! current-game-state result)))) ;TODO: init next state
+    (if ((:key-press-handler (nth STATES @current-game-state)) key)
+        (reset! current-game-state result)))
 
 (defn keyreleased
     "respond to keyrelease event"
     [key]
-    ((:key-release-handler (nth STATES (deref current-game-state))) key))
+    ((:key-release-handler (nth STATES @current-game-state)) key))

@@ -42,7 +42,8 @@ docker run --rm \
 
 ## TODO:
 - [ ] Fix problems with gsmanager state changes from key presses
-- [ ] Async resource loads through calls to state/init
+- [ ] Fix conflict between load state and menu state using static screen
+- [x] Async resource loads through calls to state/init
 - [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
 - [ ] Rework tiles/set-position
 - [x] Link tile layer movement

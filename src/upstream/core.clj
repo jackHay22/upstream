@@ -10,8 +10,6 @@
 (defn -main
   "entrypoint"
   [& args]
-  ;(if (> (count args) 0)
-
   ;potential opengl performance acceleration
   (System/setProperty "sun.java2d.opengl" "true")
 
