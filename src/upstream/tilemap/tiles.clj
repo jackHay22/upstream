@@ -66,11 +66,12 @@
                     (:map-path tilemap-set)
                     (:loaded-map-fields tilemap-set))]
   ;return transformed resource
-  {:loaded-images (mapcat (fn [block]
+  {:loaded-images (if (not config/HEADLESS-SERVER?)
+                        (mapcat (fn [block]
                                 (let [block-loader (images/sub-image-loader (:img block))]
                                       (split-master block-loader
                                         (:tile-width block) (:tile-height block))))
-                            (:tiles-data tilemap-set))
+                            (:tiles-data tilemap-set)))
    :tile-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
    :position-x 0
    :position-y 0

@@ -15,20 +15,15 @@
     (do
       (logger/write-log "Starting in -server mode.")
       (reset! config/HEADLESS-SERVER? true)
-      (gsm/init-gsm)
+      (gsm/init-gsm 2) ;skip straight to l1 mode
       (server/start-welcome-server config/SERVER-LISTEN-PORT)
       (engine/start-headless))
-
-      ;ELSE
-      (do
-      ;potential opengl performance acceleration
+    (do
       (System/setProperty "sun.java2d.opengl" "true")
-
       (let [screenSize (.getScreenSize (Toolkit/getDefaultToolkit))]
-        ;various config setup changes
         (reset! config/WINDOW-WIDTH (.width screenSize))
         (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))
         (reset! config/COMPUTED-SCALE (/ (/ (.width screenSize) config/TILES-ACROSS)
                                      config/ORIGINAL-TILE-WIDTH))
-        (gsm/init-gsm)
+        (gsm/init-gsm 0)
         (engine/start-window config/WINDOW-TITLE)))))

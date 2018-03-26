@@ -35,8 +35,9 @@
 
 (defn init-gsm
   "perform resource loads"
-  []
+  [starting-state]
   (do
+    (reset! current-game-state starting-state)
     (logger/write-log "Starting gamestate manager in state:" @current-game-state)
     ((:init-fn (nth STATES @current-game-state)))
     (reset! RUNNING true)
@@ -58,13 +59,13 @@
   "update without drawing"
   []
   (if @RUNNING
-    (let [current-state-number @current-game-state]
-          (if (not ((:update-handler (nth STATES current-state-number))))
-              (swap! current-game-state inc)))))
+      (if (not ((:update-handler (nth STATES @current-game-state))))
+          (swap! current-game-state inc))))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"
   [updated-player-state]
+  ;needs to check for valid code from user and authenticate information
   ;return game state
   "{:state :test}")
 

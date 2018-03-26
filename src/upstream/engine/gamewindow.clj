@@ -54,6 +54,3 @@
     (state/update-no-draw)
     (Thread/sleep 20)
     (recur)))
-  ; (.start
-  ;   (sawcore/timer
-  ;     (fn [e] (state/update-no-draw)) :delay 20 :start? false)))

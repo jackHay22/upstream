@@ -13,19 +13,16 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
 
 ### Linux server build
-- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in project file and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: specify -server as jvm optimization arg)
+- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in project file and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
 - Run ``` ./build.sh -linuxserver ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
   - This will build and push a new image to AWS ECR
 - Then start the vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (Testing)
 - Or just run the following (still may need x11 server running):
-
 ```
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
-docker run --rm \
-           -e DISPLAY=unix$DISPLAY \
-           -v /tmp/.X11-unix:/tmp/.X11-unix \
-           upstream_server:latest
+docker run upstream_server:latest
 ```
+- Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
 - Note: there are potentially other problems.
 
 ### Store build artifact
@@ -54,7 +51,6 @@ docker run --rm \
 - [x] Better reactive scaling
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)
-- [ ] Figure out docker X11 server
 - [ ] Music from nick
 - [ ] Pause menu
 - [ ] Layer driven tilemap (terrain, obstacles @ height, layers that render behind player and then in front of player)
