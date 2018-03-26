@@ -33,7 +33,7 @@ docker run upstream_server:latest
 - _Not tested_
 
 ## Docker
-- For logging into ECS: ```aws ecr get-login --region us-east-2 --no-include-email``` (This step should be done in build script automatically)
+- For logging into ECS: ```aws ecr get-login --region us-east-2 --no-include-email``` (This step will be done in build script automatically)
 
 ## TODO:
 - [ ] AWS lambda function for automated ecr cleanup

@@ -4,7 +4,7 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 WRENCH='\xF0\x9F\x94\xA7'
-ECS_RESOURCE_URI='190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server'
+ECR_RESOURCE_URI='190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server'
 
 JAVA_RUNTIME=`/usr/libexec/java_home -v 1.8`
 
@@ -54,11 +54,11 @@ elif [ "$1" == "-linuxserver" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   docker build --tag upstream_server . || exit 1
   printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
-  docker tag upstream_server:latest 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest
+  docker tag upstream_server:latest ${ECR_RESOURCE_URI}:latest
   printf "${WRENCH}  Trying ECR login for ${YELLOW}--region us-east-2${NC}. \n"
   eval $(aws ecr get-login --region us-east-2 --no-include-email)
-  printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECS_RESOURCE_URI${NC}... \n"
-  docker push 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest || exit 1
+  printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECR_RESOURCE_URI${NC}... \n"
+  docker push ${ECR_RESOURCE_URI}:latest || exit 1
   printf "${WRENCH}  ECR: ${RED}upstream_server:latest${NC} pushed. \n"
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
