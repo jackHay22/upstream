@@ -53,11 +53,13 @@ elif [ "$1" == "-saveartifact" ]; then
 elif [ "$1" == "-linuxserver" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   docker build --tag upstream_server . || exit 1
-  printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC}. \n"
+  printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
   docker tag upstream_server:latest 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest
-  printf "${WRENCH}  Pushing ${YELLOW}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECS_RESOURCE_URI${NC}... \n"
+  printf "${WRENCH}  Trying ECR login for ${YELLOW}--region us-east-2${NC}. \n"
+  eval $(aws ecr get-login --region us-east-2 --no-include-email)
+  printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECS_RESOURCE_URI${NC}... \n"
   docker push 190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest || exit 1
-  printf "${WRENCH}  ${RED}upstream_server:latest${NC} pushed. \n"
+  printf "${WRENCH}  ECR: ${RED}upstream_server:latest${NC} pushed. \n"
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
   exit 1

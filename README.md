@@ -33,11 +33,10 @@ docker run upstream_server:latest
 - _Not tested_
 
 ## Docker
-- Definitely broken
-- Raspberry pi use: ``` FROM hypriot/rpi-java ```
-- Note: there is currently a problem running app in container.  I am currently trying to use an X11 server for graphics.
+- For logging into ECS: ```aws ecr get-login --region us-east-2 --no-include-email``` (This step should be done in build script automatically)
 
 ## TODO:
+- [ ] AWS lambda function for automated ecr cleanup
 - [ ] Prevent image loads in tilemap for ```-server``` mode.
 - [ ] Fix problems with gsmanager state changes from key presses
 - [ ] Fix conflict between load state and menu state using static screen
