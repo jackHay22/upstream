@@ -1,6 +1,6 @@
 ![HAY](https://github.com/jackHay22/upstream/blob/master/resources/app/readme_title.png)
 
-## Info
+##
 _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 
 ## Getting started
