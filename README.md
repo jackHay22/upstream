@@ -17,7 +17,7 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 - Run ``` ./build.sh -linuxserver ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
   - This will build and push a new image to AWS ECR
 - Optional: start a vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
-- Or just run the following (still may need x11 server running):
+- Or just run the following:
 ```
 eval $(aws ecr get-login --region us-east-2 --no-include-email)
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest

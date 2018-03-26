@@ -1,0 +1,65 @@
+{"AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Upstream Server Deployment stack",
+
+  "Resources" : {
+    "ECSQuickstartSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Enable HTTP access via SSH",
+        "SecurityGroupIngress" : [
+          {"IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : { "Ref" : "SSHLocation"}}
+        ]
+      }
+    },
+    "ECSIamInstanceProfile" : {
+      "Type" : "AWS::IAM::InstanceProfile",
+      "Properties" : {
+        "Path" : "/",
+        "Roles" : [{ "Ref" : "ECSQuickstartRole" }]
+      }
+    },
+
+    "ECSQuickstartRole" : {
+      "Type" : "AWS::IAM::Role",
+      "Properties" : {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Effect" : "Allow",
+            "Principal" : {
+              "Service" : [ "ec2.amazonaws.com" ]
+            },
+            "Action" : [ "sts:AssumeRole" ]
+          } ]
+       },
+      "Path" : "/",
+      "Policies" : [ {
+        "PolicyName" : "ECSQuickstart",
+        "PolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Effect" : "Allow",
+            "Action" : "ecs:*",
+            "Resource" : "*"
+          } ]
+       }
+       } ]
+      }
+    }
+  },
+  "Type" : "AWS::ECS::TaskDefinition",
+  "Properties" : {
+    "containerDefinitions": [
+      {
+        "name": "UpstreamServer",
+        "image": "190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest",
+        "memory": 256,
+        "cpu": 10,
+        "essential": true
+      }
+    ],
+    "family": "upstreamserver",
+    "taskRoleArn": "arn:aws:iam::190175714341:role/AmazonECSTaskS3BucketRole"
+  }
+}
