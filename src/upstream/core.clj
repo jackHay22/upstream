@@ -14,6 +14,7 @@
   (if (and (> (count args) 0) (= (first args) "-server"))
     (do
       (logger/write-log-all "Starting in -server mode.")
+      (logger/write-log "Logs sending to Sumologic endpt: " config/SUMOLOGIC-ENDPOINT)
       (reset! config/HEADLESS-SERVER? true)
       (gsm/init-gsm 2) ;skip straight to l1 mode
       (server/start-welcome-server config/SERVER-LISTEN-PORT)

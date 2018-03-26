@@ -13,17 +13,17 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
 
 ### Linux server build
-- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in project file and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
+- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
 - Run ``` ./build.sh -linuxserver ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
   - This will build and push a new image to AWS ECR
-- Then start the vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (Testing)
+- Optional: start a vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
 - Or just run the following (still may need x11 server running):
 ```
+eval $(aws ecr get-login --region us-east-2 --no-include-email)
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
 docker run upstream_server:latest
 ```
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
-- Note: there are potentially other problems.
 
 ### Store build artifact
 - Run ``` ./build -saveartifact ``` (requires ``` aws ``` cli and bucket permissions for ``` s3://upstream-build-archive ```) to upload standalone jar to a versioned s3 bucket.
@@ -31,9 +31,6 @@ docker run upstream_server:latest
 
 ### Windows build
 - _Not tested_
-
-## Docker
-- For logging into ECS: ```aws ecr get-login --region us-east-2 --no-include-email``` (This step will be done in build script automatically)
 
 ## TODO:
 - [ ] AWS lambda function for automated ecr cleanup
