@@ -66,8 +66,8 @@
 (defn keypressed
     "respond to keypress event"
     [key]
-    (if ((:key-press-handler (nth STATES @current-game-state)) key)
-        (reset! current-game-state result)))
+    (let [result ((:key-press-handler (nth STATES @current-game-state)) key)]
+      (if result (reset! current-game-state result))))
 
 (defn keyreleased
     "respond to keyrelease event"

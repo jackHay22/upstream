@@ -1,5 +1,5 @@
 (ns upstream.gamestate.states.levelone
-  (:require [upstream.engine.config :as config]
+  (:require [upstream.config :as config]
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 

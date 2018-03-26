@@ -2,7 +2,7 @@
   (:gen-class)
   (:require [seesaw.core :as sawcore]
             [seesaw.graphics :as sawgr]
-            [upstream.engine.config :as config]
+            [upstream.config :as config]
             [upstream.gamestate.gsmanager :as state]))
 
 (def control-keys {java.awt.event.KeyEvent/VK_UP :up

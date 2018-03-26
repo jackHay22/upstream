@@ -1,6 +1,6 @@
 (ns upstream.tilemap.tiles
   (:require
-    [upstream.engine.config :as config]
+    [upstream.config :as config]
     [clojure.java.io :as io]
     [upstream.utilities.images :as images])
   (:gen-class))

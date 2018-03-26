@@ -1,6 +1,6 @@
 (ns upstream.gamestate.states.loadstate
   (:require [upstream.gamestate.utils.staticscreen :as screen]
-            [upstream.engine.config :as config]
+            [upstream.config :as config]
             [upstream.utilities.images :as util])
   (:gen-class))
 

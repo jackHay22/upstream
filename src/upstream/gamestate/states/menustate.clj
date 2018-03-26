@@ -4,7 +4,7 @@
     [upstream.gamestate.utils.staticscreen :as screen]
     [upstream.gamestate.utils.menuoptions :as menu]
     [upstream.utilities.images :as util]
-    [upstream.engine.config :as config])
+    [upstream.config :as config])
   (:gen-class))
 
 (defn load-title-image

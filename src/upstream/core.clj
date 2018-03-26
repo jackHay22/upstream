@@ -1,6 +1,6 @@
 (ns upstream.core
   (:require [upstream.engine.gamewindow :as engine]
-            [upstream.engine.config :as config]
+            [upstream.config :as config]
             [upstream.gamestate.gsmanager :as gsm]
             [upstream.server.gameserver :as server])
   (:gen-class))

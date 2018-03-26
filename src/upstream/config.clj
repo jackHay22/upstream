@@ -1,4 +1,4 @@
-(ns upstream.engine.config
+(ns upstream.config
   (:gen-class))
 
 (import '(java.awt Color Font))
