@@ -46,3 +46,14 @@
     (sawcore/native!)
     (sawcore/show! frame)
     (.start main-loop)))
+
+(defn start-headless
+  "start update timer without creating window"
+  []
+  (loop []
+    (state/update-no-draw)
+    (Thread/sleep 20)
+    (recur)))
+  ; (.start
+  ;   (sawcore/timer
+  ;     (fn [e] (state/update-no-draw)) :delay 20 :start? false)))

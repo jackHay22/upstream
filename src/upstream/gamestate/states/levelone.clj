@@ -11,6 +11,7 @@
 (defn init-level-one
   "load resources"
   []
+  ;TODO: configure for server mode
   (reset! tile-map-layers
     (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS))))
 

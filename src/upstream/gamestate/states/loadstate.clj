@@ -9,10 +9,12 @@
 (defn init-load
   "perform all necessary resource loads"
   []
-  (screen/register-screen-image
-    {:image (util/load-image-scale-by-width
+  (if (not @config/HEADLESS-SERVER?)
+  (do
+    (screen/register-screen-image
+      {:image (util/load-image-scale-by-width
       "menus/temp_splash3.png" @config/WINDOW-WIDTH) :fade? true})
-  (screen/register-fade-increment (/ 1.0 (/ @ttl config/LOAD-SCREEN-FADE-DIVISION))))
+  (screen/register-fade-increment (/ 1.0 (/ @ttl config/LOAD-SCREEN-FADE-DIVISION))))))
 
 (defn draw-load
   "update and draw handler for load"

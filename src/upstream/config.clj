@@ -3,6 +3,8 @@
 
 (import '(java.awt Color Font))
 
+(def HEADLESS-SERVER? (atom false))
+
 (def WINDOW-WIDTH (atom 0)) ;set by dynamic screen maximization
 (def WINDOW-HEIGHT (atom 0)) ;set by dynamic screen maximization
 (def HEIGHT-BUFFER 100) ;fit doc at bottom of screen

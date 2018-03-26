@@ -1,5 +1,6 @@
 (ns upstream.server.gameserver
   (:require [upstream.gamestate.gsmanager :as manager]
+            [upstream.utilities.log :as logger]
             [clojure.core.async :as async])
   (:gen-class))
 
@@ -49,5 +50,6 @@
 (defn start-welcome-server
     "start and accept a connection to a tcp socket server for establishing data conn"
     [port] (let [socket (ServerSocket. port)]
+        (logger/write-log "Starting server on port:" port)
         ;use socket to create async persistent server
         (do (persistent-server-establish socket) socket)))

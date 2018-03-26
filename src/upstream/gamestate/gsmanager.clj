@@ -1,6 +1,7 @@
 (ns upstream.gamestate.gsmanager
   (:require [upstream.gamestate.states.menustate :as menu]
             [upstream.gamestate.states.levelone :as level]
+            [upstream.utilities.log :as logger]
             [upstream.gamestate.states.loadstate :as loadstate])
   (:gen-class))
 
@@ -36,6 +37,7 @@
   "perform resource loads"
   []
   (do
+    (logger/write-log "Starting gamestate manager in state:" @current-game-state)
     ((:init-fn (nth STATES @current-game-state)))
     (reset! RUNNING true)
     ;TODO: this is causing a load state problem: both load state and menu state share static screen
@@ -51,6 +53,14 @@
               (do
                 ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
                 (swap! current-game-state inc))))))
+
+(defn update-no-draw
+  "update without drawing"
+  []
+  (if @RUNNING
+    (let [current-state-number @current-game-state]
+          (if (not ((:update-handler (nth STATES current-state-number))))
+              (swap! current-game-state inc)))))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"

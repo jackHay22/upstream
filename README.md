@@ -41,6 +41,7 @@ docker run --rm \
 - Note: there is currently a problem running app in container.  I am currently trying to use an X11 server for graphics.
 
 ## TODO:
+- [ ] Prevent image loads in tilemap for ```-server``` mode.
 - [ ] Fix problems with gsmanager state changes from key presses
 - [ ] Fix conflict between load state and menu state using static screen
 - [x] Async resource loads through calls to state/init
