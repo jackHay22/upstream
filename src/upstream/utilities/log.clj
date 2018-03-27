@@ -6,7 +6,8 @@
 (defn write-log
   "write log message to std out"
   [msg & args]
-  (println "Upstream =>" msg (reduce str args)))
+  (if @config/HEADLESS-SERVER?
+    (println "Upstream =>" msg (reduce str args))))
 
 (defn write-log-sumologic
   "send a log to sumologic endpt"
@@ -18,7 +19,8 @@
 (defn write-log-all
   "write log to stdout and sumologic"
   [msg & args]
-  (let [log-message (str msg (reduce str args))]
-    (do
-      (println "Upstream =>" log-message)
-      (write-log-sumologic (clojure.string/trim log-message)))))
+  (if @config/HEADLESS-SERVER?
+    (let [log-message (str msg (reduce str args))]
+      (do
+        (println "Upstream =>" log-message)
+        (write-log-sumologic (clojure.string/trim log-message))))))

@@ -66,20 +66,20 @@
                     (:map-path tilemap-set)
                     (:loaded-map-fields tilemap-set))]
   ;return transformed resource
-  {:loaded-images (if (not config/HEADLESS-SERVER?)
+  {:loaded-images (if (not @config/HEADLESS-SERVER?)
                         (mapcat (fn [block]
                                 (let [block-loader (images/sub-image-loader (:img block))]
-                                      (split-master block-loader
-                                        (:tile-width block) (:tile-height block))))
-                            (:tiles-data tilemap-set)))
-   :tile-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
+                                      (map #(images/scale-loaded-image-by-factor % @config/COMPUTED-SCALE)
+                                            (split-master block-loader
+                                              (:tile-width block) (:tile-height block)))))
+                                (:tiles-data tilemap-set)))
+   :increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
    :position-x 0
    :position-y 0
    :start-display-x 0
    :start-display-y 0
    :tiles-down (count map-load)
    :tiles-across (count (first map-load))
-   ;TODO: broken
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
    ;TODO: improve
    :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set)) 4)))
@@ -99,24 +99,22 @@
               ;:display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ new-tile-width 4)))
   [gr tilemap overlap-handler-set] ;handler is only necessary for l1, l2, etc... not l0
   ;overlap handler: {:y :fn}
-  (let [images (:loaded-images tilemap)
-        map-contents (:map tilemap)
-        tile-width (:tile-width tilemap)
+  (let [increment-width (:increment-width tilemap)
         start-draw-x (:start-display-x tilemap)
         start-draw-y (:start-display-y tilemap)
         offset-fn (fn [x y] ;handle alternating offset
-                      (+ (* x tile-width)
+                      (+ (* x increment-width)
                          (if (even? y)
-                             (/ tile-width 2) 0)))
+                             (/ increment-width 2) 0)))
         ;TODO: incorporate handler, movement based on player loc
         ]
         (doseq [x (range start-draw-x (+ start-draw-x (:display-across tilemap)))
                 y (range start-draw-y (+ start-draw-y (:display-down tilemap)))]
 
-          (let [map-entry (nth (nth map-contents y) x)
-                r-loc (int (+ (* y (/ tile-width 4)) (:position-y tilemap)))
+          (let [map-entry (nth (nth (:map tilemap) y) x)
+                r-loc (int (+ (* y (/ increment-width 4)) (:position-y tilemap)))
                 c-loc (int (+ (offset-fn x y) (:position-x tilemap)))]
             (if (:draw? map-entry)
               (images/draw-image
-                (nth images (:image map-entry))
+                (nth (:loaded-images tilemap) (:image map-entry))
                 gr c-loc r-loc))))))

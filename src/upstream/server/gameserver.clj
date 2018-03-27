@@ -42,6 +42,7 @@
                   new-port 4001 ;allocate available port
                   processed (pr-str new-port)
                   writer (io/writer server)]
+                  (logger/write-log-all "user=" user-code)
                   ;start data connection and return new port to user
                   (persistent-connection new-port user-auth)
                   (.write writer processed)

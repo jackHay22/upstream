@@ -7,6 +7,6 @@ ADD target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
-EXPOSE 5555
+EXPOSE 4000
 
 CMD /run.sh

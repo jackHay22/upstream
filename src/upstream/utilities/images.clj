@@ -26,6 +26,15 @@
       new-w (* new-w (/ (.getHeight img) (.getWidth img)))
       Image/SCALE_DEFAULT)))
 
+(defn scale-loaded-image-by-factor
+  "take image, rescale by new x"
+  [img scale]
+  (sawicon/icon
+    (.getScaledInstance img
+      (* scale (.getWidth img))
+      (* scale (.getHeight img))
+      Image/SCALE_DEFAULT)))
+
 (defn load-image
     "load an image from resources"
     [loc]

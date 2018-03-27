@@ -32,6 +32,9 @@ docker run upstream_server:latest
 ### Windows build
 - _Not tested_
 
+## Server Operation
+- Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
+
 ## TODO:
 - [ ] AWS lambda function for automated ecr cleanup
 - [ ] Prevent image loads in tilemap for ```-server``` mode.

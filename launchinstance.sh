@@ -8,7 +8,7 @@ WRENCH='\xF0\x9F\x94\xA7'
 AWS_ACCOUNT='190175714341'
 
 if [ "$#" -ne 1 ]; then
-    printf "${WRENCH}  ${RED}Error:${NC} not enough arguments provided. Usage: ${YELLOW}./launchinstance [-dev | -production] <task definition>${NC}. \n"
+    printf "${WRENCH}  ${RED}Error:${NC} not enough arguments provided. Usage: ${YELLOW}./launchinstance [ -dev | -production ] <task definition>${NC}. \n"
     exit 1
 fi
 if [ "$1" == "-dev" ]; then

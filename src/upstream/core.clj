@@ -26,5 +26,5 @@
         (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))
         (reset! config/COMPUTED-SCALE (/ (/ (.width screenSize) config/TILES-ACROSS)
                                      config/ORIGINAL-TILE-WIDTH))
-        (gsm/init-gsm 0)
+        (gsm/init-gsm 2)
         (engine/start-window config/WINDOW-TITLE)))))
