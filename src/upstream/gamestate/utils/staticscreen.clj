@@ -32,9 +32,8 @@
               (draw-screen-alpha layer gr)
               (do
                 ;TODO: why are non fading layers not drawing?
-                (println "Drawing nonalpha: " layer)
                 (utils/draw-image (:image layer) gr 0 0) layer))
-          layer))]
+                layer))]
 
   (if (list? presets)
       (doall (map #(process-fn % gr) presets))

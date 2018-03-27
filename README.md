@@ -36,18 +36,11 @@ docker run upstream_server:latest
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 
 ## TODO:
+- [ ] Non-fading static screen images not rendering
 - [ ] Fix tilemap not drawing superblocks as they scroll away (render optimization)
-- [ ] Fix conflict between load state and menu state using static screen
 - [ ] General tilemap refactor (clean up hardcoded stuff)
-- [x] Rewrite fixbounds
-- [x] Better reactive scaling
-- [x] Prevent image loads in tilemap for ```-server``` mode.
-- [x] Fix problems with gsmanager state changes from key presses
-- [x] Async resource loads through calls to state/init
-- [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
-- [x] Link tile layer movement
-- [x] Better resource loading at boot (optimize game loads)
 - [ ] AWS lambda function for automated ecr cleanup
+- [ ] Clear unused resources as system overhead optimization (i.e. paralax)
 - [ ] Fix menu options
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)
@@ -58,5 +51,16 @@ docker run upstream_server:latest
 - [ ] Water (boats)
 - [ ] Enemy AI (big time)
 - [ ] More art
+
+### Completed
+- [x] Fix conflict between load state and menu state using static screen
+- [x] Rewrite fixbounds
+- [x] Better reactive scaling
+- [x] Prevent image loads in tilemap for ```-server``` mode.
+- [x] Fix problems with gsmanager state changes from key presses
+- [x] Async resource loads through calls to state/init
+- [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
+- [x] Link tile layer movement
+- [x] Better resource loading at boot (optimize game loads)
 
 ## Upstream Copyright © 2018 Jack Hay.

@@ -6,7 +6,6 @@
   (:gen-class))
 
 (def current-game-state (atom 0))
-(def RUNNING (atom false))
 
 (def STATES
   (list
@@ -40,27 +39,23 @@
     (reset! current-game-state starting-state)
     (logger/write-log "Starting gamestate manager in state: " @current-game-state)
     ((:init-fn (nth STATES @current-game-state)))
-    (reset! RUNNING true)
-    ;TODO: this is causing a load state problem: both load state and menu state share static screen
     (start-subsequent-loads (rest STATES))))
 
 (defn update-and-draw
   "Update and Draw the current game state"
   [gr]
-  (if @RUNNING
     (let [current-state-number @current-game-state]
           (if ((:update-handler (nth STATES current-state-number)))
               ((:draw-handler (nth STATES current-state-number)) gr)
               (do
                 ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
-                (swap! current-game-state inc))))))
+                (swap! current-game-state inc)))))
 
 (defn update-no-draw
   "update without drawing"
   []
-  (if @RUNNING
       (if (not ((:update-handler (nth STATES @current-game-state))))
-          (swap! current-game-state inc))))
+          (swap! current-game-state inc)))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"
