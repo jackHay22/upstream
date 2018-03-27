@@ -2,60 +2,40 @@
   (:require [upstream.utilities.images :as utils])
   (:gen-class))
 
-(def img-list (atom '()))
-(def img-alpha (atom 1))
-(def alpha-inc (atom 0))
-(def fade? (atom false))
-
-(defn register-screen-image
-  "register image: takes map with image and :fade? param"
-  [new]
-    (swap! img-list conj (assoc new :draw? true)))
-
-(defn start-screen-fade
-  "start to fade screen"
-  [] (reset! fade? true))
-
-(defn fade-started? [] @fade?)
-
-(defn clear-registered
-  "clear registered screen images"
-  []
-  (do
-    (reset! img-list '())
-    (reset! fade? false)
-    (reset! img-alpha 1)))
-
-(defn register-fade-increment
-  "update screen"
-  [inc]
-  (do
-    (reset! alpha-inc inc)
-    (if (> inc 0)
-      (reset! img-alpha 1)
-      (reset! img-alpha 0))))
-
 (defn draw-screen-alpha
   "draw screen with alpha"
   [layer gr]
-    (let [update-a (- @img-alpha @alpha-inc)]
-      (if (and (>= update-a 0) (<= update-a 1))
+    (let [a-val (:alpha layer)]
+      (if (and (>= a-val 0) (<= a-val 1))
         (do
-          (reset! img-alpha update-a)
-          (utils/draw-image-alpha (:image layer) gr 0 0 update-a)
-          layer)
+          (utils/draw-image-alpha (:image layer) gr 0 0 a-val)
+          (assoc layer :alpha (- a-val (:fade-increment layer))))
         (assoc layer :draw? false))))
 
-(defn draw-screen
-  "draw image"
-  [gr]
-  (let [layer-list @img-list]
-    (if (not (empty? layer-list))
-      (reset! img-list (doall
-        (map (fn [layer]
-          (if (:draw? layer)
-            (if (and @fade? (:fade? layer))
+(defn update-alpha-layers
+  "update alpha changes"
+  [layers]
+  (let [set-fade #(if (:fade? %)
+                          (let [layer-alpha (:alpha %)]
+                                (assoc % :alpha
+                                  (- layer-alpha (:fade-increment %)))) %)]
+    (if (list? layers)
+      (doall (map set-fade layers))
+      (set-fade layers))))
+
+(defn draw-static-screen-from-preset
+  "take loaded preset(s), draw"
+  [presets gr]
+  (let [process-fn (fn [layer gr]
+        (if (:draw? layer)
+          (if (:fade? layer)
               (draw-screen-alpha layer gr)
               (do
+                ;TODO: why are non fading layers not drawing?
+                (println "Drawing nonalpha: " layer)
                 (utils/draw-image (:image layer) gr 0 0) layer))
-            layer)) layer-list))))))
+          layer))]
+
+  (if (list? presets)
+      (doall (map #(process-fn % gr) presets))
+      (do (process-fn presets gr)))))

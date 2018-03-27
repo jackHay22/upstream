@@ -37,18 +37,18 @@ docker run upstream_server:latest
 
 ## TODO:
 - [ ] Fix tilemap not drawing superblocks as they scroll away (render optimization)
+- [ ] Fix conflict between load state and menu state using static screen
+- [ ] General tilemap refactor (clean up hardcoded stuff)
 - [x] Rewrite fixbounds
-- [ ] AWS lambda function for automated ecr cleanup
+- [x] Better reactive scaling
 - [x] Prevent image loads in tilemap for ```-server``` mode.
 - [x] Fix problems with gsmanager state changes from key presses
-- [ ] Fix conflict between load state and menu state using static screen
 - [x] Async resource loads through calls to state/init
 - [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
 - [x] Link tile layer movement
-- [ ] General tilemap refactor (clean up hardcoded stuff)
 - [x] Better resource loading at boot (optimize game loads)
+- [ ] AWS lambda function for automated ecr cleanup
 - [ ] Fix menu options
-- [x] Better reactive scaling
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)
 - [ ] Music from nick

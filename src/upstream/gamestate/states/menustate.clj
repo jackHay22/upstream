@@ -16,6 +16,8 @@
   []
   (util/load-image-scale-by-width "menus/menu_overlay.png" @config/WINDOW-WIDTH))
 
+(def static-screen-element (atom '()))
+
 (def start? (atom false))
 (def about? (atom false))
 (def online? (atom false))
@@ -56,10 +58,17 @@
   (if (not @config/HEADLESS-SERVER?)
     (do
       ;(screen/clear-registered) ;TODO: fix bug
-      (screen/register-screen-image {:image (load-title-image) :fade? false})
-      (screen/register-screen-image {:image (load-overlay) :fade? true})
-      (screen/register-fade-increment (/ 1.0 (/ config/LOAD-SCREEN-TTL config/LOAD-SCREEN-FADE-DIVISION)))
-      (screen/start-screen-fade) ;TODO: timing
+      (reset! static-screen-element (list
+                                      {:image (load-overlay)
+                                       :fade? true
+                                       :draw? true
+                                       :alpha 1
+                                       :fade-increment (/ 1.0
+                                                          (/ config/LOAD-SCREEN-TTL
+                                                             config/LOAD-SCREEN-FADE-DIVISION))}
+                                      {:image (load-title-image)
+                                       :fade? false
+                                       :draw? true}))
       (menu/register-menu-options (load-menu-selectable-fields))
       (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))))
 
@@ -67,15 +76,17 @@
   "update"
   []
   (do
+    (reset! static-screen-element (screen/update-alpha-layers @static-screen-element))
     (paralax/update-layers)
     true))
 
 (defn draw-menu
   "update and draw handler for menu state"
   [gr]
-  (paralax/render-layers gr)
-  (screen/draw-screen gr)
-  (menu/draw-menu-options gr))
+  (do
+    (paralax/render-layers gr)
+    (screen/draw-static-screen-from-preset @static-screen-element gr)
+    (menu/draw-menu-options gr)))
 
 (defn keypressed-menu
   "key press handler for menu"
