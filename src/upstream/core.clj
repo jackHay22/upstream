@@ -26,4 +26,5 @@
         (reset! config/COMPUTED-SCALE (/ (/ (.width screenSize) config/TILES-ACROSS)
                                      config/ORIGINAL-TILE-WIDTH))
         (gsm/init-gsm 0)
-        (engine/start-window config/WINDOW-TITLE)))))
+        (engine/start-window config/WINDOW-TITLE)
+        (gsm/start-subsequent-loads)))))

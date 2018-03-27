@@ -29,33 +29,32 @@
 
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
-  [states]
-    (.start (Thread. #(doseq [s states] ((:init-fn s))))))
+  []
+  (.start (Thread. #(doseq [s (rest STATES)] ((:init-fn s))))))
 
 (defn init-gsm
   "perform resource loads"
   [starting-state]
   (do
     (reset! current-game-state starting-state)
-    (logger/write-log "Starting gamestate manager in state: " @current-game-state)
-    ((:init-fn (nth STATES @current-game-state)))
-    (start-subsequent-loads (rest STATES))))
+    (logger/write-log "Starting gamestate manager in state: " starting-state)
+    ((:init-fn (nth STATES starting-state)))))
 
 (defn update-and-draw
   "Update and Draw the current game state"
   [gr]
-    (let [current-state-number @current-game-state]
-          (if ((:update-handler (nth STATES current-state-number)))
-              ((:draw-handler (nth STATES current-state-number)) gr)
-              (do
-                ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
-                (swap! current-game-state inc)))))
+  (let [current-state-number @current-game-state]
+       (if ((:update-handler (nth STATES current-state-number)))
+           ((:draw-handler (nth STATES current-state-number)) gr)
+           (do
+              ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
+              (swap! current-game-state inc)))))
 
 (defn update-no-draw
   "update without drawing"
   []
-      (if (not ((:update-handler (nth STATES @current-game-state))))
-          (swap! current-game-state inc)))
+  (if (not ((:update-handler (nth STATES @current-game-state))))
+      (swap! current-game-state inc)))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"

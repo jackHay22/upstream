@@ -36,6 +36,7 @@ docker run upstream_server:latest
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 
 ## TODO:
+- [ ] Fix bad load performance
 - [ ] Non-fading static screen images not rendering
 - [ ] Fix tilemap not drawing superblocks as they scroll away (render optimization)
 - [ ] General tilemap refactor (clean up hardcoded stuff)

@@ -33,7 +33,6 @@
     (swap! ttl dec)
     (> @ttl 0)))
 
-
 (defn keypressed-load
   "key press handler for load"
   [key])
