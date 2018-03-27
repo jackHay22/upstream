@@ -42,7 +42,7 @@
                   new-port 4001 ;allocate available port
                   processed (pr-str new-port)
                   writer (io/writer server)]
-                  (logger/write-log-all "user=" user-code)
+                  (logger/write-log (str "user=" user-code))
                   ;start data connection and return new port to user
                   (persistent-connection new-port user-auth)
                   (.write writer processed)
@@ -51,6 +51,6 @@
 (defn start-welcome-server
     "start and accept a connection to a tcp socket server for establishing data conn"
     [port] (let [socket (ServerSocket. port)]
-        (logger/write-log-all "Starting server on port: " port)
+        (logger/write-log "Starting server on port: " port)
         ;use socket to create async persistent server
         (do (persistent-server-establish socket) socket)))

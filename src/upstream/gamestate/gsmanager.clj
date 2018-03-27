@@ -38,7 +38,7 @@
   [starting-state]
   (do
     (reset! current-game-state starting-state)
-    (logger/write-log-all "Starting gamestate manager in state: " @current-game-state)
+    (logger/write-log "Starting gamestate manager in state: " @current-game-state)
     ((:init-fn (nth STATES @current-game-state)))
     (reset! RUNNING true)
     ;TODO: this is causing a load state problem: both load state and menu state share static screen

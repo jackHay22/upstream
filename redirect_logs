@@ -1,0 +1,13 @@
+#!/bin/sh
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+WRENCH='\xF0\x9F\x94\xA7'
+
+printf "${WRENCH}  Redirecting logs to ${YELLOW}Sumologic${NC}. \n"
+
+while read LINE
+do
+  curl -G "https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV1ywtw9nbutDXHZf7JNTPJMObzysu-aRrxEb3ZuTSUEWy9xNItGDY9ipwuTCAzhVOGtQ1waXM1bUxdI0BKqctHc6-bgEimvvsC7PwldBYXs1w==" \
+  --data-urlencode "log=${LINE}" > /dev/null 2>&1
+done

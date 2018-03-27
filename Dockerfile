@@ -7,6 +7,10 @@ ADD target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
+ADD redirect_logs /redirect_logs
+RUN chmod a+x /redirect_logs
+RUN apk update && apk add curl
+
 EXPOSE 4000
 
 CMD /run.sh

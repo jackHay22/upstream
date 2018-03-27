@@ -27,7 +27,6 @@
 
 (def SERVER-LISTEN-PORT 4000)
 (def SERVER-DATA-PORTS '(4001 4002 4003 4004))
-(def SUMOLOGIC-ENDPOINT "https://endpoint2.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV1ywtw9nbutDXHZf7JNTPJMObzysu-aRrxEb3ZuTSUEWy9xNItGDY9ipwuTCAzhVOGtQ1waXM1bUxdI0BKqctHc6-bgEimvvsC7PwldBYXs1w==")
 
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))

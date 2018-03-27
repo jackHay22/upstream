@@ -46,7 +46,7 @@
           tilemap-negative-offset-y (fix-offset-at-edges initial-window-offset-y
                                       (+ (- window-height
                                             (* increment-height (:tiles-down tilemap)))
-                                         increment-height)
+                                         increment-height) ;TODO: change to account for layer offset
                                       (- 0 increment-height))]
           (merge tilemap
             {
