@@ -15,6 +15,8 @@
 (def TILES-ACROSS 10) ;base layer (and map unit for all layers)
 (def SPACING-STANDARD 64)
 (def SPACING-MINIMAL 4)
+(def RENDER-STANDARD 0)
+(def RENDER-OVERSIZED 1)
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))
@@ -36,6 +38,7 @@
     (list
       {:map-path "maps/basic_template.txt"
        :spacing-paradigm SPACING-STANDARD
+       :render-optimization RENDER-STANDARD
        :tiles-data (list
                       {:img "tiles/test_sheet.png"
                        :tile-width ORIGINAL-TILE-WIDTH
@@ -43,6 +46,7 @@
        :loaded-map-fields (list :image :sound)}
       {:map-path "maps/super_block_demo.txt"
        :spacing-paradigm SPACING-STANDARD
+       :render-optimization RENDER-OVERSIZED
        :tiles-data (list
                        {:img "tiles/test_superblock.png"
                         :tile-width 292
@@ -50,4 +54,5 @@
                        {:img "tiles/list_load_test.png"
                         :tile-width 64
                         :tile-height 32})
-       :loaded-map-fields (list :image :height :blocked?)}))
+       :loaded-map-fields (list :image :height :blocked?)}
+       ))

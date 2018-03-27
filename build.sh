@@ -52,7 +52,7 @@ elif [ "$1" == "-saveartifact" ]; then
   aws s3 cp \
   target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
   s3://upstream-build-archive/upstream-archive-build.jar
-elif [ "$1" == "-linuxserver" ]; then
+elif [ "$1" == "-linux" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   docker build --tag upstream_server . || exit 1
   printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"

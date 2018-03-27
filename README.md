@@ -14,7 +14,7 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 
 ### Linux server build
 - Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
-- Run ``` ./build.sh -linuxserver ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
+- Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
   - This will build and push a new image to AWS ECR
 - Optional: start a vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
 - Or just run the following:
@@ -36,17 +36,18 @@ docker run upstream_server:latest
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 
 ## TODO:
+- [ ] Fix tilemap not drawing superblocks as they scroll away (render optimization)
+- [x] Rewrite fixbounds
 - [ ] AWS lambda function for automated ecr cleanup
-- [ ] Prevent image loads in tilemap for ```-server``` mode.
-- [ ] Fix problems with gsmanager state changes from key presses
+- [x] Prevent image loads in tilemap for ```-server``` mode.
+- [x] Fix problems with gsmanager state changes from key presses
 - [ ] Fix conflict between load state and menu state using static screen
 - [x] Async resource loads through calls to state/init
 - [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
-- [ ] Rework tiles/set-position
 - [x] Link tile layer movement
 - [ ] General tilemap refactor (clean up hardcoded stuff)
-- [ ] Better resource loading at boot (optimize game loads)
-- [ ] Fix resolution of menu options
+- [x] Better resource loading at boot (optimize game loads)
+- [ ] Fix menu options
 - [x] Better reactive scaling
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)

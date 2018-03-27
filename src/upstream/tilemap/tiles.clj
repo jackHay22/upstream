@@ -24,29 +24,37 @@
   [loaded-map x y])
 
 (defn set-position
-    "set tile-map position: based off player loc"
-    [x y tile-map]
-    ;TODO: rework
-    (let [relative-x (- (/ @config/WINDOW-WIDTH 2) x)
-          relative-y (- (/ @config/WINDOW-HEIGHT 2) y)
-          scale @config/COMPUTED-SCALE
-          fix-bounds (fn [dim min]
-                         (cond (> dim 0)   0
-                               (< dim min) min
-                               :else       dim))
-          tile-width (:tile-width tile-map)
-          bounds-x (fix-bounds relative-x
-                      (- (/ @config/WINDOW-WIDTH scale)
-                         (* (:tiles-down tile-map) tile-width)))
-          bounds-y (fix-bounds relative-y
-                    (- (/ @config/WINDOW-HEIGHT scale)
-                       (* (:tiles-across tile-map) (/ tile-width 2))))]
-          ;TODO: figure out this mess
-    (merge tile-map
-      {:position-x bounds-x
-       :position-y bounds-y
-       :start-display-x (int (/ (- bounds-x) tile-width))
-       :start-display-y (int (/ (- bounds-y) (/ tile-width 2)))})))
+    "set tile-map position: based off player's location in map"
+    [px py tilemap]
+    (let [increment-width (:increment-width tilemap)
+          increment-height (/ increment-width 2)
+          window-width @config/WINDOW-WIDTH
+          window-height @config/WINDOW-HEIGHT
+          fix-offset-at-edges (fn [computed-negative-offset max-negative-offset buffer]
+                                (cond
+                                    (> computed-negative-offset buffer) buffer
+                                    (> max-negative-offset
+                                       computed-negative-offset) max-negative-offset
+                                    :else computed-negative-offset))
+          initial-window-offset-x (- (/ window-width 2) px)
+          initial-window-offset-y (- (/ window-height 2) py (:increment-width tilemap))
+          tilemap-negative-offset-x (fix-offset-at-edges initial-window-offset-x
+                                      (+ (- window-width
+                                            (* increment-width (:tiles-across tilemap)))
+                                         increment-width)
+                                      (- 0 increment-width))
+          tilemap-negative-offset-y (fix-offset-at-edges initial-window-offset-y
+                                      (+ (- window-height
+                                            (* increment-height (:tiles-down tilemap)))
+                                         increment-height)
+                                      (- 0 increment-height))]
+          (merge tilemap
+            {
+              :map-offset-x tilemap-negative-offset-x
+              :map-offset-y tilemap-negative-offset-y
+              :start-display-x (- (int (/ (- tilemap-negative-offset-x) increment-width)) 1)
+              :start-display-y (- (int (/ (- tilemap-negative-offset-y) increment-height)) 1)})))
+
 
 (defn split-master
   "split master image into list of images (1 dimensional)"
@@ -74,10 +82,12 @@
                                               (:tile-width block) (:tile-height block)))))
                                 (:tiles-data tilemap-set)))
    :increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
-   :position-x 0
-   :position-y 0
+   :map-offset-x 0
+   :map-offset-y 0
    :start-display-x 0
    :start-display-y 0
+   :draw-peripheral-superblocks? (if (= (:render-optimization tilemap-set) config/RENDER-OVERSIZED) true false)
+                                      ;TODO: figure out width and height of largest(reduce )
    :tiles-down (count map-load)
    :tiles-across (count (first map-load))
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
@@ -90,6 +100,17 @@
   [gr handler-set y1 y2]
   (if (and (> (:y handler-set) y1) (< (:y handler-set) y2))
     ((:handler gr))))
+
+(defn get-tile
+  [px py tilemap]
+
+  )
+
+(defn component-visible?
+  "take tiled component and check if visible on map"
+  [x y w h]
+
+  )
 
 (defn render-map
   "render a tilemap/set in loaded form (as tilemap is rendered, system
@@ -112,8 +133,8 @@
                 y (range start-draw-y (+ start-draw-y (:display-down tilemap)))]
 
           (let [map-entry (nth (nth (:map tilemap) y) x)
-                r-loc (int (+ (* y (/ increment-width 4)) (:position-y tilemap)))
-                c-loc (int (+ (offset-fn x y) (:position-x tilemap)))]
+                r-loc (int (+ (* y (/ increment-width 4)) (:map-offset-y tilemap)))
+                c-loc (int (+ (offset-fn x y) (:map-offset-x tilemap)))]
             (if (:draw? map-entry)
               (images/draw-image
                 (nth (:loaded-images tilemap) (:image map-entry))

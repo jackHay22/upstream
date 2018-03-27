@@ -1,12 +1,13 @@
 (ns upstream.gamestate.states.levelone
   (:require [upstream.config :as config]
+            [seesaw.graphics :as sawgr] ;TODO: remove
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
 (def game-state (atom config/STARTING-GAME-STATE))
 (def tile-map-layers (atom 0))
-(def this-x (atom 50))
-(def this-y (atom 50))
+(def this-x (atom 400))
+(def this-y (atom 250))
 
 (defn init-level-one
   "load resources"
@@ -29,16 +30,25 @@
     (reset! this-x (+ current-x 1))
 
     (reset! tile-map-layers
-      (doall (map #(tiles/set-position @this-x @this-y %)
+      (doall (map #(tiles/set-position
+                    @this-x
+                    @this-y %)
        @tile-map-layers)))
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
-  (doall (map #(tiles/render-map gr % 0) @tile-map-layers))
-
-  )
+  (let [tilemaps @tile-map-layers]
+  (doall (map #(tiles/render-map gr % 0) tilemaps))
+  ;testing
+    (sawgr/draw gr (sawgr/rect
+      ;position to draw player
+      (+ @this-x (:map-offset-x (first tilemaps)))
+      (+ @this-y (:map-offset-y (first tilemaps)))
+      30 30)
+      (sawgr/style :background :yellow))
+  ))
 
 (defn keypressed-level-one
   "key press handler for level one"
