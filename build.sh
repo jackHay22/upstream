@@ -45,7 +45,7 @@ if [ $# -eq 0 ]; then
       -name "Upstream" \
       -title "Upstream" \
       -Bruntime=${JAVA_RUNTIME} \
-      -Bicon=resources/app/Upstream.icns && \
+      -Bicon=resources/app/upstream_v2.icns && \
   printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
 elif [ "$1" == "-saveartifact" ]; then
   printf "${WRENCH}  Uploading ${RED}Upstream${NC} jar build to AWS s3 as: ${YELLOW}s3://upstream-build-archive/upstream-archive-build.jar${NC} using s3 versioning scheme. \n"

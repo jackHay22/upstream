@@ -4,32 +4,23 @@
 
 <h1>Upstream Server</h1>
 
-<p>Container Running on Docker</p>
-JS function testing, Time: <br/> <p id="time"></p>
+<p>Users in current instance:</p>
+<canvas id="grapher" width="900" height="500"
+style="border:1px solid #c3c3c3;">
+</canvas>
+
 <script>
-function checkTime(i) {
-  if (i < 10) {
-    i = "0" + i;
-  }
-  return i;
-}
-
-function startTime() {
-  var today = new Date();
-  var h = today.getHours();
-  var m = today.getMinutes();
-  var s = today.getSeconds();
-  // add a zero in front of numbers<10
-  m = checkTime(m);
-  s = checkTime(s);
-  document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
-  t = setTimeout(function() {
-    startTime()
-  }, 500);
-}
-startTime();
-
+var canvas = document.getElementById("grapher");
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#FF0000";
+ctx.moveTo(0,500);
+ctx.lineTo(10,450);
+ctx.stroke();
+ctx.moveTo(10,450);
+ctx.lineTo(15,475);
+ctx.stroke();
 </script>
+
 
 </body>
 </html>
