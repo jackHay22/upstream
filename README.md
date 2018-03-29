@@ -21,7 +21,7 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ```
 eval $(aws ecr get-login --region us-east-2 --no-include-email)
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
-docker run upstream_server:latest
+docker run -p 4000:4000 upstream_server:latest
 ```
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
 
@@ -36,7 +36,8 @@ docker run upstream_server:latest
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 
 ## TODO:
-- [ ] Fix bad load performance
+- [ ] Start-delay not updating correctly
+- [ ] Fix bad load performance (may be an underlying clojure speed problem)
 - [ ] Non-fading static screen images not rendering
 - [ ] Fix tilemap not drawing superblocks as they scroll away (render optimization)
 - [ ] General tilemap refactor (clean up hardcoded stuff)
@@ -52,6 +53,7 @@ docker run upstream_server:latest
 - [ ] Water (boats)
 - [ ] Enemy AI (big time)
 - [ ] More art
+- [ ] Use terraform for automated ecs deployments
 
 ### Completed
 - [x] Fix conflict between load state and menu state using static screen

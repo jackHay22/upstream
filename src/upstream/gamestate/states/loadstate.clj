@@ -15,7 +15,8 @@
     (reset! static-screen
       {:image (util/load-image-scale-by-width
                   "menus/temp_splash3.png" @config/WINDOW-WIDTH)
-      :fade? true
+      :fade? false
+      :start-delay (/ config/LOAD-SCREEN-TTL 2)
       :draw? true
       :alpha 1
       :fade-increment (/ 1.0 (/ @ttl config/LOAD-SCREEN-FADE-DIVISION))}))))

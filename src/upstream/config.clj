@@ -42,7 +42,7 @@
                       {:img "tiles/test_sheet.png"
                        :tile-width ORIGINAL-TILE-WIDTH
                        :tile-height ORIGINAL-TILE-HEIGHT})
-       :loaded-map-fields (list :image :sound)}
+       :loaded-map-fields (list :image-index :sound)}
       {:map-path "maps/super_block_demo.txt"
        :spacing-paradigm SPACING-STANDARD
        :render-optimization RENDER-OVERSIZED
@@ -53,5 +53,4 @@
                        {:img "tiles/list_load_test.png"
                         :tile-width 64
                         :tile-height 32})
-       :loaded-map-fields (list :image :height :blocked?)}
-       ))
+       :loaded-map-fields (list :image-index :height :blocked?)}))

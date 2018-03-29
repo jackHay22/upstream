@@ -27,7 +27,7 @@ else
   else
     printf "${WRENCH}  Warning: ${YELLOW}brew${NC} not installed, trying to download now... \n"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    printf "${WRENCH}  Using brew to install ${YELLOW}lein${NC}... \n"
+    printf "${WRENCH}  ${YELLOW}Brew${NC}: installing ${RED}lein${NC}... \n"
     brew install leiningen || exit 1 #note: this is not the preferred way to install lein
     printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
     lein_build
@@ -51,8 +51,9 @@ elif [ "$1" == "-saveartifact" ]; then
   printf "${WRENCH}  Uploading ${RED}Upstream${NC} jar build to AWS s3 as: ${YELLOW}s3://upstream-build-archive/upstream-archive-build.jar${NC} using s3 versioning scheme. \n"
   aws s3 cp \
   target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
-  s3://upstream-build-archive/upstream-archive-build.jar
-elif [ "$1" == "-linux" ]; then
+  s3://upstream-build-archive/upstream-archive-build.jar || exit 1
+  printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
+elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   docker build --tag upstream_server . || exit 1
   printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
@@ -61,7 +62,7 @@ elif [ "$1" == "-linux" ]; then
   eval $(aws ecr get-login --region us-east-2 --no-include-email)
   printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECR_RESOURCE_URI${NC}... \n"
   docker push ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest || exit 1
-  printf "${WRENCH}  ECR: ${RED}upstream_server:latest${NC} pushed. \n"
+  printf "${WRENCH}  ${YELLOW}ECR${NC}: ${RED}upstream_server:latest${NC} pushed. \n"
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
   exit 1

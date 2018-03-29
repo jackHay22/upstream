@@ -57,14 +57,16 @@
 
 
 (defn split-master
-  "split master image into list of images (1 dimensional)"
+  "split master image into list of image maps: {:image :width :height} (1 dimensional)"
   [block-loader tile-width tile-height]
   (let [x-coords (range 0 (:resource-width block-loader) tile-width)
         y-coords (range 0 (:resource-height block-loader) tile-height)]
   (flatten
       (map (fn [r]
            (map (fn [c]
-              ((:load-fn block-loader) c r tile-width tile-height)) x-coords)) y-coords))))
+              {:image ((:load-fn block-loader) c r tile-width tile-height)
+               :width tile-width
+               :height tile-height}) x-coords)) y-coords))))
 
 (defn init-tile-map
   "take tilemap resource and master tilemap document"
@@ -123,6 +125,7 @@
   (let [increment-width (:increment-width tilemap)
         start-draw-x (:start-display-x tilemap)
         start-draw-y (:start-display-y tilemap)
+        check-drawable-blocks? (:draw-peripheral-superblocks? tilemap)
         offset-fn (fn [x y] ;handle alternating offset
                       (+ (* x increment-width)
                          (if (even? y)
@@ -135,7 +138,9 @@
           (let [map-entry (nth (nth (:map tilemap) y) x)
                 r-loc (int (+ (* y (/ increment-width 4)) (:map-offset-y tilemap)))
                 c-loc (int (+ (offset-fn x y) (:map-offset-x tilemap)))]
-            (if (:draw? map-entry)
-              (images/draw-image
-                (nth (:loaded-images tilemap) (:image map-entry))
-                gr c-loc r-loc))))))
+            (do
+              (if (:draw? map-entry)
+                (images/draw-image
+                  (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
+                gr c-loc r-loc)
+              (if check-drawable-blocks?))))))
