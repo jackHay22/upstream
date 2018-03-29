@@ -6,6 +6,7 @@ import os
 
 PORT = int(sys.argv[1])
 HOST_NAME = 'localhost'
+INDEX = open(os.path.join(__location__, 'interface.html'))
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -16,11 +17,11 @@ class InterfaceHandler(BaseHTTPServer.BaseHTTPRequestHandler):
          s.end_headers()
     def do_GET(s):
          """Respond to a GET with interface file"""
-         index = open(os.path.join(__location__, 'interface.html'))
          s.send_response(200)
          s.send_header("Content-type", "text/html")
          s.end_headers()
-         for line in index:
+         INDEX.seek(0)
+         for line in INDEX:
              s.wfile.write(line)
 
 server_class = BaseHTTPServer.HTTPServer
