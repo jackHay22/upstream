@@ -15,6 +15,20 @@ lein_build () {
   lein uberjar || exit 1
 }
 
+start_docker() {
+  printf "${WRENCH}  ${YELLOW}Warning${NC}: trying to start docker daemon... \n"
+  open -a Docker || exit
+  i=0
+  while ! docker system info &>/dev/null; do
+    (( i++ == 0 )) && printf "${WRENCH}  Waiting for ${YELLOW}Docker${NC} daemon" %s || printf "."
+    sleep 1
+  done
+  (( i )) && printf '\n'
+  printf "${WRENCH}  ${YELLOW}Docker${NC}: started daemon successfully. \n"
+  printf "${WRENCH}  ${YELLOW}Docker${NC}: retrying build... \n"
+  docker build --tag upstream_server .
+}
+
 #check lein installation
 if command -v lein >/dev/null 2>&1; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} jar binary... ${YELLOW}${1}${NC} \n"
@@ -55,7 +69,8 @@ elif [ "$1" == "-saveartifact" ]; then
   printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
-  docker build --tag upstream_server . || exit 1
+  printf "${WRENCH}  ${YELLOW}Docker${NC} building ${RED}upstream_server${NC}... \n"
+  docker build --tag upstream_server . || start_docker
   printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
   docker tag upstream_server:latest ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest
   printf "${WRENCH}  Trying ECR login for ${YELLOW}--region us-east-2${NC}. \n"

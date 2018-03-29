@@ -20,6 +20,6 @@ RUN apk add curl
 RUN apk add python
 
 EXPOSE 4444
-EXPOSE 4041
+EXPOSE 4000
 
 CMD /run.sh
