@@ -10,11 +10,16 @@ RUN chmod a+x /run.sh
 ADD docker/start_web_interface /start_web_interface
 RUN chmod a+x /start_web_interface
 
+ADD docker/index.html index.html
+
 ADD docker/redirect_logs /redirect_logs
 RUN chmod a+x /redirect_logs
-RUN apk update && apk add curl && apk add python
 
-EXPOSE 4000
-EXPOSE 4001
+RUN apk update
+RUN apk add curl
+RUN apk add python
+
+EXPOSE 4444
+EXPOSE 4041
 
 CMD /run.sh

@@ -21,9 +21,11 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ```
 eval $(aws ecr get-login --region us-east-2 --no-include-email)
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
-docker run -p 4000:4000 upstream_server:latest
+docker run -p 4000:4000 -p 4444:4444 upstream_server:latest
 ```
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
+- To kill all running containers: ```docker kill $(docker ps -q)```.
+- Web interface: ```localhost:4444```.
 
 ### Store build artifact
 - Run ``` ./build -saveartifact ``` (requires ``` aws ``` cli and bucket permissions for ``` s3://upstream-build-archive ```) to upload standalone jar to a versioned s3 bucket.
