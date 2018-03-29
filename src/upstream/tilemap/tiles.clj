@@ -143,4 +143,5 @@
                 (images/draw-image
                   (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
                 gr c-loc r-loc)
+                ;TODO
               (if check-drawable-blocks?))))))

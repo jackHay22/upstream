@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First Heading</h1>
+
+<p>My first paragraph.</p>
+Time: <br/> <p id="time"></p>
+<script>
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  // add a zero in front of numbers<10
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('time').innerHTML = h + ":" + m + ":" + s;
+  t = setTimeout(function() {
+    startTime()
+  }, 500);
+}
+startTime();
+
+</script>
+
+</body>
+</html>
