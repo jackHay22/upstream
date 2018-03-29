@@ -4,25 +4,25 @@ import SocketServer
 import sys
 import os
 
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 PORT = int(sys.argv[1])
 HOST_NAME = 'localhost'
 INDEX = open(os.path.join(__location__, 'interface.html'))
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 class InterfaceHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
-         s.send_response(200)
-         s.send_header("Content-type", "text/html")
-         s.end_headers()
+        s.send_response(200)
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
     def do_GET(s):
-         """Respond to a GET with interface file"""
-         s.send_response(200)
-         s.send_header("Content-type", "text/html")
-         s.end_headers()
-         INDEX.seek(0)
-         for line in INDEX:
-             s.wfile.write(line)
+        """Respond to a GET with interface file"""
+        s.send_response(200)
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
+        INDEX.seek(0)
+        for line in INDEX:
+            s.wfile.write(line)
 
 server_class = BaseHTTPServer.HTTPServer
 httpd = server_class((HOST_NAME, PORT), InterfaceHandler)

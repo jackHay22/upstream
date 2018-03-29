@@ -1,26 +1,21 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<h1>Upstream Server</h1>
-
-<p>Users in current instance:</p>
-<canvas id="grapher" width="900" height="500"
-style="border:1px solid #c3c3c3;">
-</canvas>
-
-<script>
-var canvas = document.getElementById("grapher");
-var ctx = canvas.getContext("2d");
-ctx.fillStyle = "#FF0000";
-ctx.moveTo(0,500);
-ctx.lineTo(10,450);
-ctx.stroke();
-ctx.moveTo(10,450);
-ctx.lineTo(15,475);
-ctx.stroke();
-</script>
-
-
-</body>
+  <body>
+    <h1>Upstream Server</h1>
+    <p>Users in current instance:</p>
+    <canvas id="grapher" width="900" height="500"
+      style="border:1px solid #c3c3c3;">
+    </canvas>
+    <script>
+        var canvas = document.getElementById("grapher");
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#FF0000";
+        ctx.moveTo(0,500);
+        ctx.lineTo(10,450);
+        ctx.stroke();
+        ctx.moveTo(10,450);
+        ctx.lineTo(15,475);
+        ctx.stroke();
+    </script>
+  </body>
 </html>
