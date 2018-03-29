@@ -7,7 +7,6 @@ ADD target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
 ADD docker/run.sh /run.sh
 RUN chmod a+x /run.sh
 
-RUN mkdir interface
 ADD docker/start_web_interface /start_web_interface
 RUN chmod a+x /start_web_interface
 
