@@ -74,6 +74,9 @@
                       (:map-path tilemap-set)
                       (:loaded-map-fields tilemap-set))
         increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
+        draw-peripheral-superblocks? (if (and
+                                          (not @config/HEADLESS-SERVER?)
+                                          (= (:render-optimization tilemap-set) config/RENDER-OVERSIZED)) true false)
         factor-reduce (fn [type]
                           (fn [largest next]
                               (if (> (type next) largest) (type next) largest)))
@@ -95,11 +98,13 @@
    :map-offset-y 0
    :start-display-x 0
    :start-display-y 0
-   :draw-peripheral-superblocks? (if (= (:render-optimization tilemap-set) config/RENDER-OVERSIZED) true false)
-   :largest-superblock-width (int (/ (reduce  (factor-reduce :width)
-                                              (:width (first loaded-images)) loaded-images) increment-width))
-   :largest-superblock-height (int (/ (reduce (factor-reduce :height)
-                                              (:height (first loaded-images)) loaded-images) (/ increment-width 2)))
+   :draw-peripheral-superblocks? draw-peripheral-superblocks?
+   :largest-superblock-width (if draw-peripheral-superblocks?
+                                 (int (/ (reduce (factor-reduce :width)
+                                         (:width (first loaded-images)) loaded-images) increment-width)) 0)
+   :largest-superblock-height (if draw-peripheral-superblocks?
+                                  (int (/ (reduce (factor-reduce :height)
+                                          (:height (first loaded-images)) loaded-images) (/ increment-width 2))) 0)
    :tiles-down (count loaded-map)
    :tiles-across (count (first loaded-map))
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type

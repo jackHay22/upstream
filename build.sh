@@ -17,7 +17,7 @@ lein_build () {
 
 start_docker() {
   printf "${WRENCH}  ${YELLOW}Warning${NC}: trying to start docker daemon... \n"
-  open -a Docker || exit
+  open -a Docker || exit 1
   i=0
   while ! docker system info &>/dev/null; do
     (( i++ == 0 )) && printf "${WRENCH}  Waiting for ${YELLOW}Docker${NC} daemon" %s || printf "."
@@ -69,17 +69,30 @@ elif [ "$1" == "-saveartifact" ]; then
   printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
-  printf "${WRENCH}  ${YELLOW}Docker${NC} building ${RED}upstream_server${NC}... \n"
+  printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker
-  printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
-  docker tag upstream_server:latest ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest
-  printf "${WRENCH}  Trying ECR login for ${YELLOW}--region us-east-2${NC}. \n"
-  eval $(aws ecr get-login --region us-east-2 --no-include-email)
-  printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECR_RESOURCE_URI${NC}... \n"
-  docker push ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest || exit 1
-  printf "${WRENCH}  ${YELLOW}ECR${NC}: ${RED}upstream_server:latest${NC} pushed. \n"
-  printf "${WRENCH}  ${YELLOW}ECR${NC}: Images in upstream_server repository: \n"
-  aws ecr describe-images --repository-name upstream_server --region us-east-2
+  if [ "$#" -eq 2 ]; then
+    if [ "$2" == "-run" ]; then
+      printf "${WRENCH}  ${YELLOW}Docker${NC}: running ${RED}upstream_server${NC} locally... \n"
+      docker run \
+              -p 4000:4000 \
+              -p 4444:4444 \
+              --env-file ./docker/run.list \
+              upstream_server:latest
+    elif [ "$2" == "-push" ]; then
+      printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
+      docker tag upstream_server:latest ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest
+      printf "${WRENCH}  Trying ECR login for ${YELLOW}--region us-east-2${NC}. \n"
+      eval $(aws ecr get-login --region us-east-2 --no-include-email)
+      printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECR_RESOURCE_URI${NC}... \n"
+      docker push ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest || exit 1
+      printf "${WRENCH}  ${YELLOW}ECR${NC}: ${RED}upstream_server:latest${NC} pushed. \n"
+      printf "${WRENCH}  ${YELLOW}ECR${NC}: Images in upstream_server repository: \n"
+      aws ecr describe-images --repository-name upstream_server --region us-east-2
+    else
+      printf "${WRENCH}  Error: ${YELLOW}"$2"${NC} not a valid server build mode. \n"
+    fi
+  fi
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
   exit 1

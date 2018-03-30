@@ -15,18 +15,23 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ### Linux server build
 - Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
 - Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
-  - macOS: the build script is able to start the docker daemon on its own
-  - This will build and push a new docker image to AWS ECR
-- Optional: start a vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
-- Or just run the following:
+  - (macOS: the build script is able to start the docker daemon on its own)
+- Additional build options:
+  - ```-push``` This will build and push a new docker image to AWS ECR
+  - ```-run``` This will run the docker image locally without pushing it to ECR
+- Running the docker container manually:
 ```
 eval $(aws ecr get-login --region us-east-2 --no-include-email)
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
-docker run -p 4000:4000 -p 4444:4444 upstream_server:latest
+docker run \
+        -p 4000:4000 \
+        -p 4444:4444 \
+        --env-file ./docker/run.list \
+        upstream_server:latest
 ```
+- To kill all running containers: ```docker kill $(docker ps -q)``` (free up ports).
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
-- To kill all running containers: ```docker kill $(docker ps -q)```.
-- Web interface: ```localhost:4444```.
+- Vagrant vm: ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
 
 ### Store build artifact
 - Run ``` ./build -saveartifact ``` (requires ``` aws ``` cli and bucket permissions for ``` s3://upstream-build-archive ```) to upload standalone jar to a versioned s3 bucket.
@@ -35,8 +40,9 @@ docker run -p 4000:4000 -p 4444:4444 upstream_server:latest
 ### Windows build
 - _Not tested_
 
-## Server Operation
+## Server Operation (via docker)
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
+- Upstream containers also provide a web interface with various metrics ```localhost:4444``` (or whatever port is configured in ```docker/run.list```)
 
 ## TODO:
 - [ ] Fix entity draw handler

@@ -2,6 +2,8 @@ FROM java:8-jre-alpine
 
 MAINTAINER Jack Hay "https://github.com/jackHay22"
 
+ENV WEB_INTERFACE=4444
+
 ADD target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
 
 ADD docker/run.sh /run.sh
@@ -22,4 +24,4 @@ RUN apk add python
 EXPOSE 4444
 EXPOSE 4000
 
-CMD /run.sh
+CMD /run.sh $WEB_INTERFACE
