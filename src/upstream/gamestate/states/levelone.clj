@@ -39,8 +39,10 @@
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
-  (let [tilemaps @tile-map-layers]
-  (doall (map #(tiles/render-map gr % 0) tilemaps))
+  (let [temp-handler-set (list {:y 5 :fn #(println "handler 1")} {:y 10 :fn #(println "handler 2")})
+        tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers)
+        ]
+  (doall (map #(tiles/render-map gr %) tilemaps))
   ;testing
     (sawgr/draw gr (sawgr/rect
       ;position to draw player

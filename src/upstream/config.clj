@@ -46,6 +46,7 @@
       {:map-path "maps/super_block_demo.txt"
        :spacing-paradigm SPACING-STANDARD
        :render-optimization RENDER-OVERSIZED
+       :entity-handler? true
        :tiles-data (list
                        {:img "tiles/test_superblock.png"
                         :tile-width 292

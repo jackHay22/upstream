@@ -26,7 +26,9 @@
 - Here is an example tilemap resource load:
 ```clojure
 {:map-path "maps/basic_template.txt"
- :spacing-paradigm SPACING-STANDARD
+ :spacing-paradigm SPACING-STANDARD                 ;use base tile dimension of 64 (applicable for most layers)
+ :render-optimization RENDER-OVERSIZED              ;render superblocks that are partially visible (applicable for layers with superblocks)
+ :entity-handler? true                              ;optional: used by tilemap to layer in entities
  :tiles-data (list
                 {:img "tiles/test_sheet.png"
                  :tile-width ORIGINAL-TILE-WIDTH
@@ -34,5 +36,5 @@
                 {:img "tiles/list_load_test.png"
                  :tile-width 64
                  :tile-height 32})
- :loaded-map-fields (list :image :sound)}
+ :loaded-map-fields (list :image :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```

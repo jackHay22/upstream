@@ -39,10 +39,10 @@ docker run -p 4000:4000 -p 4444:4444 upstream_server:latest
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 
 ## TODO:
+- [ ] Fix entity draw handler
 - [ ] Start-delay not updating correctly
 - [ ] Fix bad load performance (may be an underlying clojure speed problem)
 - [ ] Non-fading static screen images not rendering
-- [ ] Fix tilemap not drawing superblocks as they scroll away (render optimization)
 - [ ] General tilemap refactor (clean up hardcoded stuff)
 - [ ] AWS lambda function for automated ecr cleanup
 - [ ] Clear unused resources as system overhead optimization (i.e. paralax)
@@ -59,6 +59,7 @@ docker run -p 4000:4000 -p 4444:4444 upstream_server:latest
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Fix tilemap not drawing superblocks as they scroll away (render optimization)
 - [x] Fix conflict between load state and menu state using static screen
 - [x] Rewrite fixbounds
 - [x] Better reactive scaling

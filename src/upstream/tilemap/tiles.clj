@@ -49,12 +49,10 @@
                                          increment-height) ;TODO: change to account for layer offset
                                       (- 0 increment-height))]
           (merge tilemap
-            {
-              :map-offset-x tilemap-negative-offset-x
-              :map-offset-y tilemap-negative-offset-y
-              :start-display-x (- (int (/ (- tilemap-negative-offset-x) increment-width)) 1)
-              :start-display-y (- (int (/ (- tilemap-negative-offset-y) increment-height)) 1)})))
-
+            {:map-offset-x tilemap-negative-offset-x
+             :map-offset-y tilemap-negative-offset-y
+             :start-display-x (- (int (/ (- tilemap-negative-offset-x) increment-width)) 1)
+             :start-display-y (- (int (/ (- tilemap-negative-offset-y) increment-height)) 1)})))
 
 (defn split-master
   "split master image into list of image maps: {:image :width :height} (1 dimensional)"
@@ -72,9 +70,10 @@
   "take tilemap resource and master tilemap document"
   [tilemap-set]
     ;TODO: correct loading with mapcat
-  (let [map-load (parse-map-file
-                    (:map-path tilemap-set)
-                    (:loaded-map-fields tilemap-set))
+  (let [loaded-map (parse-map-file
+                      (:map-path tilemap-set)
+                      (:loaded-map-fields tilemap-set))
+        increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
         factor-reduce (fn [type]
                           (fn [largest next]
                               (if (> (type next) largest) (type next) largest)))
@@ -82,43 +81,41 @@
                               (mapcat (fn [block]
                                       (let [block-loader (images/sub-image-loader (:img block))]
                                             ;transform resource block attribute by scaling image
-                                            (map #(assoc % :image (images/scale-loaded-image-by-factor (:image %) @config/COMPUTED-SCALE))
+                                            (map #(merge %
+                                                          {:image (images/scale-loaded-image-by-factor (:image %) @config/COMPUTED-SCALE)
+                                                           :width (* @config/COMPUTED-SCALE (:width %))
+                                                           :height (* @config/COMPUTED-SCALE (:height %))})
                                                   (split-master block-loader
                                                     (:tile-width block) (:tile-height block)))))
                                       (:tiles-data tilemap-set)))]
   ;return transformed resource
   {:loaded-images loaded-images
-   :increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
+   :increment-width increment-width
    :map-offset-x 0
    :map-offset-y 0
    :start-display-x 0
    :start-display-y 0
    :draw-peripheral-superblocks? (if (= (:render-optimization tilemap-set) config/RENDER-OVERSIZED) true false)
-   :largest-superblock-width (reduce  (factor-reduce :width)
-                                      (:width (first loaded-images)) loaded-images)
-   :largest-superblock-height (reduce (factor-reduce :height)
-                                      (:height (first loaded-images)) loaded-images)
-   :tiles-down (count map-load)
-   :tiles-across (count (first map-load))
+   :largest-superblock-width (int (/ (reduce  (factor-reduce :width)
+                                              (:width (first loaded-images)) loaded-images) increment-width))
+   :largest-superblock-height (int (/ (reduce (factor-reduce :height)
+                                              (:height (first loaded-images)) loaded-images) (/ increment-width 2)))
+   :tiles-down (count loaded-map)
+   :tiles-across (count (first loaded-map))
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
    ;TODO: improve
    :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set)) 4)))
-   :map map-load}))
+   :map loaded-map}))
 
-(defn check-handler
-  "check fo handler criteria, draw if applicable"
-  [gr handler-set y1 y2]
-  (if (and (> (:y handler-set) y1) (< (:y handler-set) y2))
-    ((:handler gr))))
+(defn entity-handler
+  "execute handlers at correct y value"
+  [handlers]
+  (fn [y]
+    ;TODO: not working
+    (doall (map #(if (= y (:y %)) ((:fn %))) handlers))))
 
 (defn get-tile
   [px py tilemap]
-
-  )
-
-(defn component-visible?
-  "take tiled component and check if visible on map"
-  [x y w h]
 
   )
 
@@ -126,11 +123,9 @@
   "render a tilemap/set in loaded form (as tilemap is rendered, system
     will render game entities by providing an x value to any subscribing
     systems)"
-    ;TODO:           :display-across (+ window-tiles-across 2)
-              ;:display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ new-tile-width 4)))
-  [gr tilemap overlap-handler-set] ;handler is only necessary for l1, l2, etc... not l0
-  ;overlap handler: {:y :fn}
+  [gr tilemap]
   (let [increment-width (:increment-width tilemap)
+        handle-at-y (entity-handler (:entity-handlers tilemap))
         start-draw-x (:start-display-x tilemap)
         start-draw-y (:start-display-y tilemap)
         check-drawable-blocks? (:draw-peripheral-superblocks? tilemap)
@@ -147,23 +142,24 @@
                        (range
                           (- start-draw-y (:largest-superblock-height tilemap))
                           (+ start-draw-y (:display-down tilemap) (:largest-superblock-height tilemap)))
-                       (range start-draw-y (+ start-draw-y (:display-down tilemap))))
-        ;TODO: incorporate handler, movement based on player loc
-        ]
-        (doseq [x range-across
-                y range-down]
+                       (range start-draw-y (+ start-draw-y (:display-down tilemap))))]
 
-          (if (and
-                (and (>= x 0) (> (:tiles-across tilemap) x))
-                (and (>= y 0) (> (:tiles-across tilemap) y)))
+        (doall (map (fn [y]
+            (do (handle-at-y y)
+            (doall (map (fn [x]
+                (if (and
+                        (and (>= x 0) (> (:tiles-across tilemap) x))
+                        (and (>= y 0) (> (:tiles-down tilemap) y)))
 
-                (let [map-entry (nth (nth (:map tilemap) y) x)
-                      r-loc (int (+ (* y (/ increment-width 4)) (:map-offset-y tilemap)))
-                      c-loc (int (+ (offset-fn x y) (:map-offset-x tilemap)))]
-                    (do
-                      (if (:draw? map-entry)
-                          ;(if check-drawable-blocks?
-                              ;() ;TODO: future optimization by way of only drawing objects that actually appear
-                              (images/draw-image
-                                (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
-                                gr c-loc r-loc))))))))
+                        (let [map-entry (nth (nth (:map tilemap) y) x)
+                              r-loc (int (+ (* y (/ increment-width 4)) (:map-offset-y tilemap)))
+                              c-loc (int (+ (offset-fn x y) (:map-offset-x tilemap)))]
+                            (do
+                              (if (:draw? map-entry)
+                                  ;(if check-drawable-blocks?
+                                      ;() ;TODO: future optimization by way of only drawing objects that actually appear
+                                      (images/draw-image
+                                        (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
+                                        gr c-loc r-loc))))))
+                range-across))))
+                range-down))))
