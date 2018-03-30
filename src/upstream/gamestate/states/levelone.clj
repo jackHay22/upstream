@@ -1,6 +1,8 @@
 (ns upstream.gamestate.states.levelone
   (:require [upstream.config :as config]
             [upstream.utilities.images :as images]
+            [upstream.entities.entitymanager :as entity-manager]
+            [upstream.entities.entitypreset :as entity-preset]
             [seesaw.graphics :as sawgr] ;TODO: remove
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))

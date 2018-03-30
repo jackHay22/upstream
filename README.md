@@ -48,10 +48,11 @@ docker run \
 
 ## TODO:
 - [ ] Fix entity draw handler
-- [ ] Non-fading static screen images not rendering
-- [ ] Start-delay not updating correctly (related to staic screen)
-- [ ] General tilemap refactor (clean up hardcoded stuff)
 - [ ] Draw superblocks based on their relative height (so they match with their relative location)
+- [ ] Non-fading static screen images not rendering
+- [ ] Entity manager code
+- [ ] Cleanup for tilemap system, goal: make it sustainable. (General tilemap refactor (clean up hardcoded stuff))
+- [ ] Start-delay not updating correctly (related to static screen)
 - [ ] Fix web interface server
 - [ ] AWS lambda function for automated ecr cleanup
 - [ ] Clear unused resources as system overhead optimization (i.e. paralax)? (Allow garbage collection)
