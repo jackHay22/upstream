@@ -78,6 +78,8 @@ elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  Pushing ${RED}upstream_server:latest${NC} to AWS ECR with URI: ${YELLOW}$ECR_RESOURCE_URI${NC}... \n"
   docker push ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest || exit 1
   printf "${WRENCH}  ${YELLOW}ECR${NC}: ${RED}upstream_server:latest${NC} pushed. \n"
+  printf "${WRENCH}  ${YELLOW}ECR${NC}: Images in upstream_server repository: \n"
+  aws ecr describe-images --repository-name upstream_server --region us-east-2
 else
   printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
   exit 1
