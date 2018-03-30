@@ -17,17 +17,18 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 - Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
   - (macOS: the build script is able to start the docker daemon on its own)
 - Additional build options:
-  - ```-push``` This will build and push a new docker image to AWS ECR
-  - ```-run``` This will run the docker image locally without pushing it to ECR
+  - ```-push``` This will tag push the new docker image to AWS ECR. (Run: ```./build -server -push```)
+  - ```-run``` This will run the new docker container locally without pushing it to ECR. (Run: ```./build -server -run```)
+  - Note: ```./build -server``` will just build the new docker image.
 - Running the docker container manually:
-```
-eval $(aws ecr get-login --region us-east-2 --no-include-email)
-docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest
+```bash
+eval $(aws ecr get-login --region us-east-2 --no-include-email) #if image stored in ecr
+docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest #if image stored in ecr
 docker run \
         -p 4000:4000 \
         -p 4444:4444 \
         --env-file ./docker/run.list \
-        upstream_server:latest
+        upstream_server:latest #change if pulled from ecr
 ```
 - To kill all running containers: ```docker kill $(docker ps -q)``` (free up ports).
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
@@ -47,22 +48,25 @@ docker run \
 
 ## TODO:
 - [ ] Fix entity draw handler
-- [ ] Start-delay not updating correctly
-- [ ] Fix bad load performance (may be an underlying clojure speed problem)
 - [ ] Non-fading static screen images not rendering
+- [ ] Start-delay not updating correctly (related to staic screen)
 - [ ] General tilemap refactor (clean up hardcoded stuff)
+- [ ] Draw superblocks based on their relative height (so they match with their relative location)
+- [ ] Fix web interface server
 - [ ] AWS lambda function for automated ecr cleanup
-- [ ] Clear unused resources as system overhead optimization (i.e. paralax)
-- [ ] Fix menu options
+- [ ] Clear unused resources as system overhead optimization (i.e. paralax)? (Allow garbage collection)
+- [ ] Fix menu options resolution and scrolling problem with up arrow
+- [ ] Tilemap intersections
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)
 - [ ] Music from nick
 - [ ] Pause menu
 - [ ] Layer driven tilemap (terrain, obstacles @ height, layers that render behind player and then in front of player)
 - [ ] Dynamic grass, bushes, trees
-- [ ] Water (boats)
+- [ ] Water (boats?)
 - [ ] Enemy AI (big time)
 - [ ] More art
+- [ ] Reduce docker image size
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
