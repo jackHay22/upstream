@@ -74,22 +74,30 @@
     ;TODO: correct loading with mapcat
   (let [map-load (parse-map-file
                     (:map-path tilemap-set)
-                    (:loaded-map-fields tilemap-set))]
+                    (:loaded-map-fields tilemap-set))
+        factor-reduce (fn [type]
+                          (fn [largest next]
+                              (if (> (type next) largest) (type next) largest)))
+        loaded-images (if (not @config/HEADLESS-SERVER?)
+                              (mapcat (fn [block]
+                                      (let [block-loader (images/sub-image-loader (:img block))]
+                                            ;transform resource block attribute by scaling image
+                                            (map #(assoc % :image (images/scale-loaded-image-by-factor (:image %) @config/COMPUTED-SCALE))
+                                                  (split-master block-loader
+                                                    (:tile-width block) (:tile-height block)))))
+                                      (:tiles-data tilemap-set)))]
   ;return transformed resource
-  {:loaded-images (if (not @config/HEADLESS-SERVER?)
-                        (mapcat (fn [block]
-                                (let [block-loader (images/sub-image-loader (:img block))]
-                                      (map #(images/scale-loaded-image-by-factor % @config/COMPUTED-SCALE)
-                                            (split-master block-loader
-                                              (:tile-width block) (:tile-height block)))))
-                                (:tiles-data tilemap-set)))
+  {:loaded-images loaded-images
    :increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
    :map-offset-x 0
    :map-offset-y 0
    :start-display-x 0
    :start-display-y 0
    :draw-peripheral-superblocks? (if (= (:render-optimization tilemap-set) config/RENDER-OVERSIZED) true false)
-                                      ;TODO: figure out width and height of largest(reduce )
+   :largest-superblock-width (reduce  (factor-reduce :width)
+                                      (:width (first loaded-images)) loaded-images)
+   :largest-superblock-height (reduce (factor-reduce :height)
+                                      (:height (first loaded-images)) loaded-images)
    :tiles-down (count map-load)
    :tiles-across (count (first map-load))
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
@@ -130,19 +138,32 @@
                       (+ (* x increment-width)
                          (if (even? y)
                              (/ increment-width 2) 0)))
+        range-across (if check-drawable-blocks?
+                         (range
+                           (- start-draw-x (:largest-superblock-width tilemap))
+                           (+ start-draw-x (:display-across tilemap) (:largest-superblock-width tilemap)))
+                         (range start-draw-x (+ start-draw-x (:display-across tilemap))))
+        range-down (if check-drawable-blocks?
+                       (range
+                          (- start-draw-y (:largest-superblock-height tilemap))
+                          (+ start-draw-y (:display-down tilemap) (:largest-superblock-height tilemap)))
+                       (range start-draw-y (+ start-draw-y (:display-down tilemap))))
         ;TODO: incorporate handler, movement based on player loc
         ]
-        (doseq [x (range start-draw-x (+ start-draw-x (:display-across tilemap)))
-                y (range start-draw-y (+ start-draw-y (:display-down tilemap)))]
+        (doseq [x range-across
+                y range-down]
 
-          (let [map-entry (nth (nth (:map tilemap) y) x)
-                r-loc (int (+ (* y (/ increment-width 4)) (:map-offset-y tilemap)))
-                c-loc (int (+ (offset-fn x y) (:map-offset-x tilemap)))]
-            (do
-              (if (:draw? map-entry)
-                (images/draw-image
-                  (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
-                gr c-loc r-loc)
-                ;TODO
-              ;(if check-drawable-blocks?)
-              ))))))
+          (if (and
+                (and (>= x 0) (> (:tiles-across tilemap) x))
+                (and (>= y 0) (> (:tiles-across tilemap) y)))
+
+                (let [map-entry (nth (nth (:map tilemap) y) x)
+                      r-loc (int (+ (* y (/ increment-width 4)) (:map-offset-y tilemap)))
+                      c-loc (int (+ (offset-fn x y) (:map-offset-x tilemap)))]
+                    (do
+                      (if (:draw? map-entry)
+                          ;(if check-drawable-blocks?
+                              ;() ;TODO: future optimization by way of only drawing objects that actually appear
+                              (images/draw-image
+                                (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
+                                gr c-loc r-loc))))))))

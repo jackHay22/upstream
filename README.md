@@ -15,7 +15,8 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ### Linux server build
 - Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
 - Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
-  - This will build and push a new image to AWS ECR
+  - macOS: the build script is able to start the docker daemon on its own
+  - This will build and push a new docker image to AWS ECR
 - Optional: start a vagrant vm with ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
 - Or just run the following:
 ```
