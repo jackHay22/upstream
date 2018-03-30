@@ -13,7 +13,7 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
 
 ### Linux server build
-- Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
+- (Not necessary) Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
 - Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
   - (macOS: the build script is able to start the docker daemon on its own)
 - Additional build options:
@@ -43,6 +43,7 @@ docker run \
 ## Server Operation (via docker)
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 - Upstream containers also provide a web interface with various metrics ```localhost:4444``` (or whatever port is configured in ```docker/run.list```)
+  - Note: this is still buggy
 
 ## TODO:
 - [ ] Fix entity draw handler

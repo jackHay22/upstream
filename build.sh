@@ -68,7 +68,6 @@ elif [ "$1" == "-saveartifact" ]; then
   s3://upstream-build-archive/upstream-archive-build.jar || exit 1
   printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
 elif [ "$1" == "-server" ]; then
-  printf "${WRENCH}  Building ${RED}Upstream${NC} in ${YELLOW}server mode${NC}... \n"
   printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker
   if [ "$#" -eq 2 ]; then
