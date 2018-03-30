@@ -1,10 +1,12 @@
 (ns upstream.gamestate.states.levelone
   (:require [upstream.config :as config]
+            [upstream.utilities.images :as images]
             [seesaw.graphics :as sawgr] ;TODO: remove
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
 (def game-state (atom config/STARTING-GAME-STATE))
+(def example-player (atom 0))
 (def tile-map-layers (atom 0))
 (def this-x (atom 400))
 (def this-y (atom 250))
@@ -13,6 +15,7 @@
   "load resources"
   []
   ;TODO: configure for server mode
+  (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
     (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS))))
 
@@ -50,6 +53,7 @@
       (+ @this-y (:map-offset-y (first tilemaps)))
       30 30)
       (sawgr/style :background :yellow))
+    (images/draw-image @example-player gr 100 100)
   ))
 
 (defn keypressed-level-one

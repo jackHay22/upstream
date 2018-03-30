@@ -8,7 +8,7 @@ __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 PORT = int(sys.argv[1])
 HOST_NAME = 'localhost'
-INDEX = open(os.path.join(__location__, 'interface.html'))
+INDEX = open(os.path.join(__location__, 'interface.html')) #TODO: docker error here? (does it need to be '/interface.html'?)
 
 class InterfaceHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
