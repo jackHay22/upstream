@@ -73,7 +73,8 @@
   (let [loaded-map (parse-map-file
                       (:map-path tilemap-set)
                       (:loaded-map-fields tilemap-set))
-        increment-width (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set))
+        scale-factor @config/COMPUTED-SCALE
+        increment-width (* scale-factor (:spacing-paradigm tilemap-set))
         draw-peripheral-superblocks? (if (and
                                           (not @config/HEADLESS-SERVER?)
                                           (= (:render-optimization tilemap-set) config/RENDER-OVERSIZED)) true false)
@@ -85,10 +86,11 @@
                                       (let [block-loader (images/sub-image-loader (:img block))]
                                             ;transform resource block attribute by scaling image
                                             (map #(merge %
-                                                          {:image (images/scale-loaded-image-by-factor (:image %) @config/COMPUTED-SCALE)
-                                                           :draw-height-offset (if (:draw-height-offset block) (:draw-height-offset block) 0)
-                                                           :width (* @config/COMPUTED-SCALE (:width %))
-                                                           :height (* @config/COMPUTED-SCALE (:height %))})
+                                                          {:image (images/scale-loaded-image-by-factor (:image %) scale-factor)
+                                                           :draw-height-offset (if (:draw-height-offset block)
+                                                                                   (* scale-factor (:draw-height-offset block)) 0)
+                                                           :width (* scale-factor (:width %))
+                                                           :height (* scale-factor (:height %))})
                                                   (split-master block-loader
                                                     (:tile-width block) (:tile-height block)))))
                                       (:tiles-data tilemap-set)))]
@@ -110,7 +112,7 @@
    :tiles-across (count (first loaded-map))
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
    ;TODO: improve
-   :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ (* @config/COMPUTED-SCALE (:spacing-paradigm tilemap-set)) 4)))
+   :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ (* scale-factor (:spacing-paradigm tilemap-set)) 4)))
    :map loaded-map}))
 
 (defn entity-handler
@@ -168,6 +170,6 @@
                                       (images/draw-image
                                         (:image image-resource)
                                         ;:draw-height-offset: correct for tall resource
-                                        gr c-loc (+ r-loc (:draw-height-offset image-resource)))))))))
+                                        gr c-loc (- r-loc (:draw-height-offset image-resource)))))))))
                 range-across))))
                 range-down))))

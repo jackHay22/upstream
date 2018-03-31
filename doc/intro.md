@@ -35,7 +35,7 @@
                  :tile-width ORIGINAL-TILE-WIDTH
                  :tile-height ORIGINAL-TILE-HEIGHT}
                 {:img "tiles/list_load_test.png"
-                 :draw-height-offset 30             ;if block is taller than standard size, adjusts draw location
+                 :draw-height-offset 30             ;if block is taller than standard size, adjusts draw location (should be the difference between top of image and corner)
                  :tile-width 64
                  :tile-height 32})
  :loaded-map-fields (list :image :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
