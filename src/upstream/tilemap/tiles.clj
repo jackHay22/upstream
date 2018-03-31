@@ -101,6 +101,7 @@
    :map-offset-y 0
    :start-display-x 0
    :start-display-y 0
+   :entity-handler? (:entity-handler? tilemap-set)
    :draw-peripheral-superblocks? draw-peripheral-superblocks?
    :largest-superblock-width (if draw-peripheral-superblocks?
                                  (int (/ (reduce (factor-reduce :width)
@@ -111,7 +112,7 @@
    :tiles-down (count loaded-map)
    :tiles-across (count (first loaded-map))
    :display-across (+ config/TILES-ACROSS 2) ;TODO: different with a different spacing type
-   ;TODO: improve
+   ;TODO: improve (calculate in config startup sequence)
    :display-down (+ 2 (/ @config/WINDOW-HEIGHT (/ (* scale-factor (:spacing-paradigm tilemap-set)) 4)))
    :map loaded-map}))
 
@@ -119,8 +120,9 @@
   "execute handlers at correct y value"
   [handlers]
   (fn [y]
-    ;TODO: not working
-    (doall (map #(if (= y (:y %)) ((:fn %))) handlers))))
+    (if (not (empty? handlers))
+      (doall
+        (map #(if (= y (:y %)) ((:fn %))) handlers)))))
 
 (defn get-tile
   [px py tilemap]
@@ -133,7 +135,7 @@
     systems)"
   [gr tilemap]
   (let [increment-width (:increment-width tilemap)
-        handle-at-y (entity-handler (:entity-handlers tilemap))
+        handle-at-y (entity-handler (if (:entity-handler? tilemap) (:entity-handlers tilemap) '()))
         start-draw-x (:start-display-x tilemap)
         start-draw-y (:start-display-y tilemap)
         check-drawable-blocks? (:draw-peripheral-superblocks? tilemap)
@@ -153,7 +155,8 @@
                        (range start-draw-y (+ start-draw-y (:display-down tilemap))))]
 
         (doall (map (fn [y]
-            (do (handle-at-y y)
+            (do
+            (handle-at-y y)
             (doall (map (fn [x]
                 (if (and
                         (and (>= x 0) (> (:tiles-across tilemap) x))

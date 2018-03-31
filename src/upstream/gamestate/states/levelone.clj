@@ -46,7 +46,7 @@
   "update and draw handler for level one"
   [gr]
   (let [temp-handler-set (list {:y 5 :fn #(println "handler 1")} {:y 10 :fn #(println "handler 2")})
-        tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers)
+        tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
         ]
   (doall (map #(tiles/render-map gr %) tilemaps))
     (images/draw-image @example-player gr

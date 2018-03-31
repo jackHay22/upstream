@@ -7,6 +7,7 @@
   {:images {
           :display "entities/logger_1.png"
           :at-rest {
+            :current-frame-index 0
             :north '()
             :north-east '()
             :east '()
@@ -17,6 +18,7 @@
             :north-west '()
           }
          :walking {
+           :current-frame-index 0
            :north '()
            :north-east '()
            :east '()
@@ -27,6 +29,7 @@
            :north-west '()
          }
          :running {
+           :current-frame-index 0
            :north '()
            :north-east '()
            :east '()
@@ -37,6 +40,7 @@
            :north-west '()
          }
          :punching {
+           :current-frame-index 0
            :north '()
            :north-east '()
            :east '()

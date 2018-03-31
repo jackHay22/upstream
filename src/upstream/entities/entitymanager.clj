@@ -18,8 +18,22 @@
 
 (defn update-entity
   "update given entity"
-  [])
+  [entity]
+  (let [facing (:facing entity)
+        action (:current-action entity)
+        px (:position-x entity)
+        py (:position-y entity)]
+
+    )
+  )
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
-  [gr e])
+  [gr e]
+  (let [action-set ((:current-action e) (:images e))
+        current-image (nth ((:facing e) action-set)
+                           (:current-frame-index action-set))]
+    (images/draw-image
+      current-image gr
+      (:position-x e)
+      (- (:position-y e) (:draw-height-offset e)))))

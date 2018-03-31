@@ -47,29 +47,31 @@ docker run \
   - Note: this is broken
 
 ## TODO:
-- [ ] Fix entity draw handler
 - [ ] Non-fading static screen images not rendering
 - [ ] Entity manager code
+- [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Cleanup for tilemap system, goal: make it sustainable. (General tilemap refactor (clean up hardcoded stuff))
-- [ ] Start-delay not updating correctly (related to static screen)
-- [ ] Fix web interface server
-- [ ] AWS lambda function for automated ecr cleanup
-- [ ] Clear unused resources as system overhead optimization (i.e. paralax)? (Allow garbage collection)
-- [ ] Fix menu options resolution and scrolling problem with up arrow
+- [ ] Height attribute for l1 layer blocks (and draw player at updated height)
 - [ ] Tilemap intersections
+- [ ] Start-delay not updating correctly (related to static screen)
+- [ ] Fix menu options resolution and scrolling problem with up arrow
+- [ ] Rotoscoping for walk cycle
 - [ ] Art, art, art
 - [ ] Multicast server config (and setting up game to respond to server driven state updates)
 - [ ] Music from nick
 - [ ] Pause menu
-- [ ] Layer driven tilemap (terrain, obstacles @ height, layers that render behind player and then in front of player)
-- [ ] Dynamic grass, bushes, trees
+- [ ] Dynamic grass, bushes, trees @ l2
 - [ ] Water (boats?)
 - [ ] Enemy AI (big time)
 - [ ] More art
+- [ ] Clear unused resources as system overhead optimization (i.e. paralax)? (Allow garbage collection)
+- [ ] Fix web interface server
 - [ ] Reduce docker image size
+- [ ] AWS lambda function for automated ecr cleanup
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Fix entity draw handler
 - [x] Draw superblocks based on their relative height (so they match with their relative location)
 - [x] Fix tilemap not drawing superblocks as they scroll away (render optimization)
 - [x] Fix conflict between load state and menu state using static screen
