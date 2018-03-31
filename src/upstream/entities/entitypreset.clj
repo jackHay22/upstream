@@ -1,9 +1,11 @@
 (ns upstream.entities.entitypreset
   (:gen-class))
 
-(def player-preset
+(def player-preset-1
   ;Sample Individual Entity State:
+  ;each state has a list of cycling animation frames for each of the 8 directions
   {:images {
+          :display "entities/logger_1.png"
           :at-rest {
             :north '()
             :north-east '()
@@ -45,8 +47,10 @@
            :north-west '()
          }
         }
-    :decisions "" ;Maybe not for standard player
+    :decisions false
     :position-x 0
     :position-y 0
+    :facing :north
+    :current-action :at-rest
     }
 )

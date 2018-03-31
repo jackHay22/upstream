@@ -3,9 +3,13 @@
     [upstream.config :as config]
     [upstream.utilities.images :as images])
   (:gen-class))
-  
+
+(defn image-load-transform
+  "take a single image map and map load all directions"
+  [action-map])
+
 (defn load-entities
-  "perform resource loads on list of entities"
+  "perform resource loads on list of entities, create draw-handler for each"
   [])
 
 (defn create-draw-handlers

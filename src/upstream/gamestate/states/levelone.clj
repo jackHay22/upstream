@@ -3,7 +3,6 @@
             [upstream.utilities.images :as images]
             [upstream.entities.entitymanager :as entity-manager]
             [upstream.entities.entitypreset :as entity-preset]
-            [seesaw.graphics :as sawgr] ;TODO: remove
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
@@ -12,11 +11,13 @@
 (def tile-map-layers (atom 0))
 (def this-x (atom 400))
 (def this-y (atom 250))
+(def entity-state (atom '()))
 
 (defn init-level-one
   "load resources"
   []
   ;TODO: configure for server mode
+  (reset! entity-state (list entity-preset/player-preset-1))
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
     (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS))))
@@ -48,14 +49,9 @@
         tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers)
         ]
   (doall (map #(tiles/render-map gr %) tilemaps))
-  ;testing
-    (sawgr/draw gr (sawgr/rect
-      ;position to draw player
+    (images/draw-image @example-player gr
       (+ @this-x (:map-offset-x (first tilemaps)))
-      (+ @this-y (:map-offset-y (first tilemaps)))
-      30 30)
-      (sawgr/style :background :yellow))
-    (images/draw-image @example-player gr 100 100)
+      (+ @this-y (:map-offset-y (first tilemaps))))
   ))
 
 (defn keypressed-level-one
