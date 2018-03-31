@@ -82,4 +82,40 @@ docker run \
 - [x] Link tile layer movement
 - [x] Better resource loading at boot (optimize game loads)
 
+## Planned Iteration Schedule
+- [ ] _0.2.0_ Minimum playable environment (Mid April 2018)
+  - Acceptance Standards:
+    - [ ] Working tilemap system for 2 layers, collision system
+    - [ ] Player idle and movement animations
+    - [ ] Initial pass at game art
+    - [ ] Viable art development pipeline
+- [ ] _0.3.0_ Minimum playable game (Mid July 2018)
+  - Acceptance Standards:
+    - [ ] Full map design and initial art pass on entire map
+    - [ ] Running and fighting player animations
+    - [ ] First pass on hostile enemy system
+    - [ ] Polished art in key locations
+    - [ ] Dynamic undergrowth system @ layer 3
+- [ ] _0.4.0_ Testing release (End of Summer 2018)
+  - Acceptance Standards:
+    - [ ] Distribute game to initial group for local gameplay testing
+    - [ ] Working website with download functionality (testing for macOS gatekeeper)
+- [ ] _0.5.0_ Minimum viable server environment (End of Summer 2018)
+  - Acceptance Standards:
+    - [ ] Deployment to raspberry pi cluster through docker
+    - [ ] Monitoring orchestration
+    - [ ] Redis background server
+    - [ ] Multicast server
+    - [ ] Basic user authentication mechanism
+- [ ] _0.6.0_ Production server environment (Mid Fall 2018)
+  - Acceptance Standards:
+    - [ ] Terraform deployment automation (or cloudformation)
+    - [ ] Full AWS server environment
+- [ ] _1.0.0_ Full Release (End 2018)
+  - Acceptance Standards:
+    - [ ] It's what it sounds like
+    - [ ] Full release available on website
+    - [ ] BTS videos?
+- [ ] _*.0.0_ LTS (Through Summer 2019)
+
 ## Upstream Copyright © 2018 Jack Hay.

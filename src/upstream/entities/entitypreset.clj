@@ -47,9 +47,11 @@
            :north-west '()
          }
         }
+    :logical-entity-id 0
     :decisions false
     :position-x 0
     :position-y 0
+    :draw-height-offset 20
     :facing :north
     :current-action :at-rest
     }
