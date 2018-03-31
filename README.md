@@ -44,11 +44,10 @@ docker run \
 ## Server Operation (via docker)
 - Upstream (in server mode) will send logs to a Sumologic endpoint (in config.clj).
 - Upstream containers also provide a web interface with various metrics ```localhost:4444``` (or whatever port is configured in ```docker/run.list```)
-  - Note: this is still buggy
+  - Note: this is broken
 
 ## TODO:
 - [ ] Fix entity draw handler
-- [ ] Draw superblocks based on their relative height (so they match with their relative location)
 - [ ] Non-fading static screen images not rendering
 - [ ] Entity manager code
 - [ ] Cleanup for tilemap system, goal: make it sustainable. (General tilemap refactor (clean up hardcoded stuff))
@@ -71,6 +70,7 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Draw superblocks based on their relative height (so they match with their relative location)
 - [x] Fix tilemap not drawing superblocks as they scroll away (render optimization)
 - [x] Fix conflict between load state and menu state using static screen
 - [x] Rewrite fixbounds

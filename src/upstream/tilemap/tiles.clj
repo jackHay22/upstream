@@ -86,6 +86,7 @@
                                             ;transform resource block attribute by scaling image
                                             (map #(merge %
                                                           {:image (images/scale-loaded-image-by-factor (:image %) @config/COMPUTED-SCALE)
+                                                           :draw-height-offset (if (:draw-height-offset block) (:draw-height-offset block) 0)
                                                            :width (* @config/COMPUTED-SCALE (:width %))
                                                            :height (* @config/COMPUTED-SCALE (:height %))})
                                                   (split-master block-loader
@@ -163,8 +164,10 @@
                               (if (:draw? map-entry)
                                   ;(if check-drawable-blocks?
                                       ;() ;TODO: future optimization by way of only drawing objects that actually appear
+                                      (let [image-resource (nth (:loaded-images tilemap) (:image-index map-entry))]
                                       (images/draw-image
-                                        (:image (nth (:loaded-images tilemap) (:image-index map-entry)))
-                                        gr c-loc r-loc))))))
+                                        (:image image-resource)
+                                        ;:draw-height-offset: correct for tall resource
+                                        gr c-loc (+ r-loc (:draw-height-offset image-resource)))))))))
                 range-across))))
                 range-down))))

@@ -49,6 +49,7 @@
        :entity-handler? true
        :tiles-data (list
                        {:img "tiles/test_superblock.png"
+                        :draw-height-offset 100
                         :tile-width 292
                         :tile-height 270}
                        {:img "tiles/list_load_test.png"

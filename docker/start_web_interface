@@ -4,11 +4,13 @@ import SocketServer
 import sys
 import os
 
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+script_dir = os.path.dirname(__file__)
+resource_name = 'interface.html'
+resource_path = os.path.join(script_dir, resource_name)
 PORT = int(sys.argv[1])
 HOST_NAME = 'localhost'
-INDEX = open(os.path.join(__location__, 'interface.html')) #TODO: docker error here? (does it need to be '/interface.html'?)
+INDEX = open(resource_path)
+print("Web interface: starting on {}:{} serving: {}.".format(HOST_NAME,PORT,resource_path))
 
 class InterfaceHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
@@ -30,4 +32,5 @@ try:
     httpd.serve_forever()
 except KeyboardInterrupt:
     pass
+print("Server closing.")
 httpd.server_close()
