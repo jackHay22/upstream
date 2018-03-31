@@ -33,7 +33,7 @@
   ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state
         current-x @this-x]
-    (reset! this-x (+ current-x 1))
+    ;(reset! this-x (+ current-x 1))
 
     (reset! tile-map-layers
       (doall (map #(tiles/set-position
@@ -57,7 +57,12 @@
 (defn keypressed-level-one
   "key press handler for level one"
   [key]
-
+  (cond
+    (= key :r)
+    ;allow tilemap reload (dev mode)
+        (init-level-one)
+    )
+  false
   )
 ;
 (defn keyreleased-level-one

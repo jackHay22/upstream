@@ -11,7 +11,8 @@
                    java.awt.event.KeyEvent/VK_RIGHT :right
                    java.awt.event.KeyEvent/VK_SPACE :space
                    java.awt.event.KeyEvent/VK_ENTER :enter
-                   java.awt.event.KeyEvent/VK_P :p})
+                   java.awt.event.KeyEvent/VK_P :p
+                   java.awt.event.KeyEvent/VK_R :r})
 
 (defn start-window
   "initialize the game window"
