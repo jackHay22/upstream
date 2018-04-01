@@ -17,16 +17,16 @@
         directions entity-preset/entity-preset-1-directions
         load-image #(images/load-image-scale-by-factor % @config/COMPUTED-SCALE)]
     (map (fn [entity]
-         (update-in entity [:images]
-            (fn [state-map]
-                (reduce (fn [all-states current-state]
-                        (update-in all-states [current-state]
+          (update-in entity [:images]
+              (fn [state-map]
+                  (reduce (fn [all-states current-state]
+                            (update-in all-states [current-state]
                                    (fn [directions-map]
-                                   (reduce (fn [all-directions current-direction]
-                                              (update-in all-directions [current-direction]
-                                                #(doall (if (not (empty? %))
-                                                            (map load-image %)))))
-                                            directions-map directions))))
+                                      (reduce (fn [all-directions current-direction]
+                                                  (update-in all-directions [current-direction]
+                                                        #(doall (if (not (empty? %))
+                                                                    (map load-image %)))))
+                                              directions-map directions))))
                         state-map states-to-load))))
           entity-list)))
 

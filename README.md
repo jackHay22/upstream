@@ -47,12 +47,12 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Refactor tilemap loader to match entity-loader (potentially change format definition)
 - [ ] Non-fading static screen images not rendering
 - [ ] Entity manager code
 - [ ] Entity decision formatting
 - [ ] Keyboard input control
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
-- [ ] Cleanup for tilemap system, goal: make it sustainable. (General tilemap refactor (clean up hardcoded stuff))
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
 - [ ] Tilemap intersections
 - [ ] Start-delay not updating correctly (related to static screen)

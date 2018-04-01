@@ -20,11 +20,15 @@
       (engine/start-headless))
     (do
       (System/setProperty "sun.java2d.opengl" "true")
-      (let [screenSize (.getScreenSize (Toolkit/getDefaultToolkit))]
+      (let [screenSize (.getScreenSize (Toolkit/getDefaultToolkit))
+            scale (/ (/ (.width screenSize) @config/TILES-ACROSS)
+                                         config/ORIGINAL-TILE-WIDTH)]
         (reset! config/WINDOW-WIDTH (.width screenSize))
         (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))
-        (reset! config/COMPUTED-SCALE (/ (/ (.width screenSize) config/TILES-ACROSS)
-                                     config/ORIGINAL-TILE-WIDTH))
+        (reset! config/COMPUTED-SCALE scale)
+        (reset! config/TILES-DOWN (int (+
+                                        (/ (.height screenSize) (/ (* scale config/ORIGINAL-TILE-HEIGHT) 2))
+                                         2)))
         (gsm/init-gsm 0)
         (engine/start-window config/WINDOW-TITLE)
         (gsm/start-subsequent-loads)))))

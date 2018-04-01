@@ -1,5 +1,6 @@
 (ns upstream.config
-  (:require [upstream.entities.entitypreset :as entity-preset])
+  (:require [upstream.entities.entitypreset :as entity-preset]
+            [upstream.tilemap.tilepreset :as tile-preset])
   (:gen-class))
 
 (import '(java.awt Color Font))
@@ -13,14 +14,11 @@
 (def SERVER-VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
 
-(def TILES-ACROSS 10) ;base layer (and map unit for all layers)
-(def SPACING-STANDARD 64)
-(def SPACING-MINIMAL 4)
-(def RENDER-STANDARD 0)
-(def RENDER-OVERSIZED 1)
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))
+(def TILES-ACROSS (atom 10))
+(def TILES-DOWN (atom 10))
 
 (def STARTING-GAME-STATE {:test 0})
 (def LOAD-SCREEN-TTL 100)
@@ -36,30 +34,9 @@
 (def PLAYER_START-Y 100)
 
 (def LEVEL-ONE-TILEMAPS
-    ;if images are loaded using list functionality, factor in indices of previous
-    ;images in list for current
-    (list
-      {:map-path "maps/basic_template.txt"
-       :spacing-paradigm SPACING-STANDARD
-       :render-optimization RENDER-STANDARD
-       :tiles-data (list
-                      {:img "tiles/test_sheet.png"
-                       :tile-width ORIGINAL-TILE-WIDTH
-                       :tile-height ORIGINAL-TILE-HEIGHT})
-       :loaded-map-fields (list :image-index :sound)}
-      {:map-path "maps/super_block_demo.txt"
-       :spacing-paradigm SPACING-STANDARD
-       :render-optimization RENDER-OVERSIZED
-       :entity-handler? true
-       :tiles-data (list
-                       {:img "tiles/test_superblock.png"
-                        :draw-height-offset 200
-                        :tile-width 292
-                        :tile-height 270}
-                       {:img "tiles/list_load_test.png"
-                        :tile-width 64
-                        :tile-height 32})
-       :loaded-map-fields (list :image-index :height :blocked?)}))
+  (list
+    tile-preset/level-one-layer-0-preset
+    tile-preset/level-one-layer-1-preset))
 
 (def LEVEL-ONE-ENTITIES
   (list
