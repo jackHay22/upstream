@@ -14,10 +14,10 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 
 ### Linux server build
 - (Not necessary) Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
-- Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```, ``` aws ``` cli tool (with ECR auth)).
+- Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```).
   - (macOS: the build script is able to start the docker daemon on its own)
 - Additional build options:
-  - ```-push``` This will tag push the new docker image to AWS ECR. (Run: ```./build -server -push```)
+  - ```-push``` This will tag push the new docker image to AWS ECR. (Run: ```./build -server -push```) (Requires: ``` aws ``` cli tool (with ECR auth))
   - ```-run``` This will run the new docker container locally without pushing it to ECR. (Run: ```./build -server -run```)
   - Note: ```./build -server``` will just build the new docker image.
 - Running the docker container manually:
@@ -85,7 +85,7 @@ docker run \
 - [x] Better resource loading at boot (optimize game loads)
 
 ## Planned Iteration Schedule
-- [ ] _0.2.0_ Minimum playable environment (Mid April 2018)
+- [ ] _0.2.0_ Minimum playable environment (Late April 2018)
   - Acceptance Standards:
     - [ ] Working tilemap system for 2 layers, collision system
     - [ ] Player idle and movement animations

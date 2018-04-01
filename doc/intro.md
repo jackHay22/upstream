@@ -19,7 +19,6 @@
 ```clojure
 (.start (Thread. #(doseq [s states] ((:init-fn s)))))
 ```
-- This introduces a problem with shared utility namespaces.  Both the load and menu states attempt to register static images and thus garble the load state.
 
 ### Resource Specifications
 - Fullscreen resource resolution (at menu) is 350x200 (all resources are scaled based on java max window calculation)
