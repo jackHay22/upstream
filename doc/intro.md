@@ -25,19 +25,18 @@
 - Pixel resolution elsewhere corresponds to ```config/TILES-ACROSS``` X ```config/ORIGINAL-TILE-width```
 - Here is an example tilemap resource load:
 ```clojure
-{:map-path "maps/basic_template.txt"
- :spacing-paradigm SPACING-STANDARD                 ;use base tile dimension of 64 (applicable for most layers)
- :render-optimization RENDER-OVERSIZED              ;render superblocks that are partially visible (applicable for layers with superblocks)
+{:map "maps/basic_template.txt"
  :entity-handler? true                              ;optional: used by tilemap to layer in entities (only one layer should set this to true)
- :tiles-data (list
-                {:img "tiles/test_sheet.png"
-                 :tile-width ORIGINAL-TILE-WIDTH
-                 :tile-height ORIGINAL-TILE-HEIGHT}
-                {:img "tiles/list_load_test.png"
-                 :draw-height-offset 30             ;if block is taller than standard size, adjusts draw location (should be the difference between top of image and corner)
+ :tiles (list
+                {:path "tiles/test_sheet.png"
+                 :height-offset 0
+                 :tile-width 32
+                 :tile-height 64}
+                {:path "tiles/list_load_test.png"
+                 :height-offset 30             ;if block is taller than standard size, adjusts draw location (should be the difference between top of image and corner)
                  :tile-width 64
                  :tile-height 32})
- :loaded-map-fields (list :image :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
+ :map-attributes (list :image-index :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```
 ## Entities
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.

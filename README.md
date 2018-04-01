@@ -47,7 +47,6 @@ docker run \
   - Note: this is broken
 
 ## TODO:
-- [ ] Refactor tilemap loader to match entity-loader (potentially change format definition)
 - [ ] Non-fading static screen images not rendering
 - [ ] Entity manager code
 - [ ] Entity decision formatting
@@ -74,6 +73,7 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Refactor tilemap loader to match entity-loader (potentially change format definition)
 - [x] Fix entity draw handler
 - [x] Draw superblocks based on their relative height (so they match with their relative location)
 - [x] Fix tilemap not drawing superblocks as they scroll away (render optimization)

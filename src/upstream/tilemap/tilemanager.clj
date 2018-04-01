@@ -116,11 +116,6 @@
       (doall
         (map #(if (= y (:y %)) ((:fn %))) handlers)))))
 
-(defn get-tile
-  [px py tilemap]
-
-  )
-
 (defn render-map
   "render a tilemap/set in loaded form (as tilemap is rendered, system
     will render game entities by providing an x value to any subscribing
