@@ -20,9 +20,8 @@
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
     (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS)))
-  ;(reset! entity-state
-      ;(doall (map #(load fn here) config/LEVEL-ONE-ENTITIES)))
-    )
+  (reset! entity-state
+    (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))
 
 (defn update-via-server
   "receive state from server rather than internal"

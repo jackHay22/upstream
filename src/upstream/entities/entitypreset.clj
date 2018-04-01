@@ -1,6 +1,9 @@
 (ns upstream.entities.entitypreset
   (:gen-class))
 
+(def entity-preset-1-states (list :at-rest :walking :running :punching))
+(def entity-preset-1-directions (list :north :north-east :east :south-east :south :south-west :west :north-west))
+
 (defn player-preset-1
   "take x,y and return preset"
   [starting-x starting-y]
@@ -10,12 +13,12 @@
           :display "entities/logger_1.png"
           :at-rest {
             :current-frame-index 0
-            :north '()
+            :north '("entities/idle_rough_n.png")
             :north-east '()
             :east '()
-            :south-east '()
-            :south '()
-            :south-west '()
+            :south-east '("entities/idle_rough_se.png")
+            :south '("entities/idle_rough_s.png")
+            :south-west '("entities/idle_rough_sw.png")
             :west '()
             :north-west '()
           }

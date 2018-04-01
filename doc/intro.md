@@ -39,3 +39,5 @@
                  :tile-height 32})
  :loaded-map-fields (list :image :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```
+## Entities
+- On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.

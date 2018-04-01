@@ -16,7 +16,7 @@ lein_build () {
 }
 
 start_docker() {
-  printf "${WRENCH}  ${YELLOW}Warning${NC}: trying to start docker daemon... \n"
+  printf "${WRENCH}  ${YELLOW}Warning${NC}: trying to start docker daemon. \n"
   open -a Docker || exit 1
   i=0
   while ! docker system info &>/dev/null; do
@@ -59,7 +59,7 @@ if [ $# -eq 0 ]; then
       -name "Upstream" \
       -title "Upstream" \
       -Bruntime=${JAVA_RUNTIME} \
-      -Bicon=resources/app/upstream_v2.icns && \
+      -Bicon=resources/app/peavey.icns && \
   printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
 elif [ "$1" == "-saveartifact" ]; then
   printf "${WRENCH}  Uploading ${RED}Upstream${NC} jar build to AWS s3 as: ${YELLOW}s3://upstream-build-archive/upstream-archive-build.jar${NC} using s3 versioning scheme. \n"

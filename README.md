@@ -49,6 +49,8 @@ docker run \
 ## TODO:
 - [ ] Non-fading static screen images not rendering
 - [ ] Entity manager code
+- [ ] Entity decision formatting
+- [ ] Keyboard input control
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Cleanup for tilemap system, goal: make it sustainable. (General tilemap refactor (clean up hardcoded stuff))
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
@@ -63,6 +65,7 @@ docker run \
 - [ ] Dynamic grass, bushes, trees @ l2
 - [ ] Water (boats?)
 - [ ] Enemy AI (big time)
+- [ ] Proximity-based sound
 - [ ] More art
 - [ ] Clear unused resources as system overhead optimization (i.e. paralax)? (Allow garbage collection)
 - [ ] Fix web interface server
