@@ -2,25 +2,27 @@
   (:require [upstream.config :as config]
             [upstream.utilities.images :as images]
             [upstream.entities.entitymanager :as entity-manager]
-            [upstream.entities.entitypreset :as entity-preset]
             [upstream.tilemap.tiles :as tiles])
   (:gen-class))
 
 (def game-state (atom config/STARTING-GAME-STATE))
-(def example-player (atom 0))
-(def tile-map-layers (atom 0))
-(def this-x (atom 400))
-(def this-y (atom 250))
+(def example-player (atom 0)) ;remove
+(def tile-map-layers (atom '()))
+(def player-input-map (atom {}))
+(def this-x (atom 400)) ;remove
+(def this-y (atom 250)) ;remove
 (def entity-state (atom '()))
 
 (defn init-level-one
   "load resources"
   []
   ;TODO: configure for server mode
-  (reset! entity-state (list entity-preset/player-preset-1))
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
-    (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS))))
+    (doall (map #(tiles/init-tile-map %) config/LEVEL-ONE-TILEMAPS)))
+  ;(reset! entity-state
+      ;(doall (map #(load fn here) config/LEVEL-ONE-ENTITIES)))
+    )
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -62,11 +64,10 @@
     ;allow tilemap reload (dev mode)
         (init-level-one)
     )
-  false
-  )
-;
+  (reset! player-input-map (entity-manager/entitykeypressed key))
+  false)
+
 (defn keyreleased-level-one
   "key release handler for level one"
   [key]
-
-  )
+  (reset! player-input-map (entity-manager/entitykeyreleased key)))

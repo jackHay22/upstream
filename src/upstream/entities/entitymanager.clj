@@ -17,13 +17,12 @@
   [])
 
 (defn update-entity
-  "update given entity"
-  [entity]
+  "update given entity (either from decisions or player input)"
+  [entity & input]
   (let [facing (:facing entity)
         action (:current-action entity)
         px (:position-x entity)
         py (:position-y entity)]
-
     )
   )
 
@@ -37,3 +36,13 @@
       current-image gr
       (:position-x e)
       (- (:position-y e) (:draw-height-offset e)))))
+
+(defn entitykeypressed
+  "respond to key press"
+  [key]
+  {})
+
+(defn entitykeyreleased
+  "respond to key release"
+  [key]
+  {})

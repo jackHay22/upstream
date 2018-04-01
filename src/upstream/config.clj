@@ -1,4 +1,5 @@
 (ns upstream.config
+  (:require [upstream.entities.entitypreset :as entity-preset])
   (:gen-class))
 
 (import '(java.awt Color Font))
@@ -31,6 +32,9 @@
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
 
+(def PLAYER-START-X 100)
+(def PLAYER_START-Y 100)
+
 (def LEVEL-ONE-TILEMAPS
     ;if images are loaded using list functionality, factor in indices of previous
     ;images in list for current
@@ -56,3 +60,8 @@
                         :tile-width 64
                         :tile-height 32})
        :loaded-map-fields (list :image-index :height :blocked?)}))
+
+(def LEVEL-ONE-ENTITIES
+  (list
+    (entity-preset/player-preset-1 PLAYER-START-X PLAYER_START-Y)
+    ))

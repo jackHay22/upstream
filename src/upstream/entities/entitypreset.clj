@@ -1,7 +1,9 @@
 (ns upstream.entities.entitypreset
   (:gen-class))
 
-(def player-preset-1
+(defn player-preset-1
+  "take x,y and return preset"
+  [starting-x starting-y]
   ;Sample Individual Entity State:
   ;each state has a list of cycling animation frames for each of the 8 directions
   {:images {
@@ -53,8 +55,8 @@
         }
     :logical-entity-id 0
     :decisions false
-    :position-x 0
-    :position-y 0
+    :position-x starting-x
+    :position-y starting-y
     :draw-height-offset 20
     :facing :north
     :current-action :at-rest
