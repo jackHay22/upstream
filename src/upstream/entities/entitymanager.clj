@@ -9,9 +9,7 @@
   "perform resource loads on list of entities, TODO: create draw-handler for each"
   [entity-list]
   ;TODO: load decisions if added, create draw handler
-  (let [states-to-load entity-preset/entity-preset-1-states
-        directions entity-preset/entity-preset-1-directions
-        load-image #(images/load-image-scale-by-factor % @config/COMPUTED-SCALE)]
+  (let [load-image #(images/load-image-scale-by-factor % @config/COMPUTED-SCALE)]
     (map (fn [entity]
           (update-in entity [:images]
               (fn [state-map]
@@ -22,8 +20,8 @@
                                                   (update-in all-directions [current-direction]
                                                         #(doall (if (not (empty? %))
                                                                     (map load-image %)))))
-                                              directions-map directions))))
-                        state-map states-to-load))))
+                                              directions-map (:all-directions entity)))))
+                        state-map (:all-states entity)))))
           entity-list)))
 
 

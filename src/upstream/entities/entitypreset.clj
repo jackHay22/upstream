@@ -1,9 +1,6 @@
 (ns upstream.entities.entitypreset
   (:gen-class))
 
-(def entity-preset-1-states (list :at-rest :walking :running :punching))
-(def entity-preset-1-directions (list :north :north-east :east :south-east :south :south-west :west :north-west))
-
 (defn player-preset-1
   "take x,y and return preset"
   [starting-x starting-y]
@@ -56,6 +53,11 @@
            :north-west '()
          }
         }
+    :all-states (list :at-rest :walking :running :punching)
+    :all-directions (list :north :north-east
+                          :east :south-east
+                          :south :south-west
+                          :west :north-west)
     :logical-entity-id 0
     :decisions false
     :position-x starting-x
