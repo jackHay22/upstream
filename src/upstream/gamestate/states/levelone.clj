@@ -50,10 +50,9 @@
         tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
         ]
   (doall (map #(tile-manager/render-map gr %) tilemaps))
-  ;   (images/draw-image @example-player gr
-  ;     (+ @this-x (:map-offset-x (first tilemaps)))
-  ;     (+ @this-y (:map-offset-y (first tilemaps))))
-  ; )
+    (images/draw-image @example-player gr
+      (+ @this-x (:map-offset-x (first tilemaps)))
+      (+ @this-y (:map-offset-y (first tilemaps))))
   ))
 
 (defn keypressed-level-one
@@ -62,12 +61,11 @@
   (cond
     (= key :r)
     ;allow tilemap reload (dev mode)
-        (init-level-one)
-    )
-  (reset! player-input-map (entity-manager/entitykeypressed key))
+        (init-level-one))
+  (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)
 
 (defn keyreleased-level-one
   "key release handler for level one"
   [key]
-  (reset! player-input-map (entity-manager/entitykeyreleased key)))
+  (reset! player-input-map (entity-manager/entitykeyreleased key @player-input-map)))

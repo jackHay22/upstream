@@ -47,6 +47,7 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Bundle tilemap config and add function for updating
 - [ ] Non-fading static screen images not rendering
 - [ ] Entity manager code
 - [ ] Entity decision formatting

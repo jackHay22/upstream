@@ -14,6 +14,11 @@
 (def SERVER-VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
 
+(def TILE-SETTINGS
+  (atom
+  {
+
+  }))
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))

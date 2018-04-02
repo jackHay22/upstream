@@ -61,7 +61,8 @@
     :position-x starting-x
     :position-y starting-y
     :draw-height-offset 20
-    :facing :north
+    :facing :south-west
     :current-action :at-rest
+    :run-stamina 300
     }
 )
