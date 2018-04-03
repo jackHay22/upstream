@@ -2,7 +2,6 @@
   (:require
     [upstream.config :as config]
     [clojure.java.io :as io]
-    [upstream.tilemap.tilepreset :as tile-preset]
     [upstream.utilities.images :as images])
   (:gen-class))
 

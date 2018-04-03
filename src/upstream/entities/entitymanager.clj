@@ -1,7 +1,6 @@
 (ns upstream.entities.entitymanager
   (:require
     [upstream.config :as config]
-    [upstream.entities.entitypreset :as entity-preset]
     [upstream.utilities.images :as images])
   (:gen-class))
 

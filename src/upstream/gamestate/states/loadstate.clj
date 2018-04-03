@@ -30,6 +30,7 @@
   "update load state"
   []
   (do
+    ;(println @static-screen)
     (reset! static-screen (screen/update-alpha-layers @static-screen))
     (swap! ttl dec)
     (> @ttl 0)))

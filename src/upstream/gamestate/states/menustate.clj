@@ -16,7 +16,8 @@
   []
   (util/load-image-scale-by-width "menus/menu_overlay.png" @config/WINDOW-WIDTH))
 
-(def static-screen-element (atom '()))
+(def load-screen-fade (atom {}))
+(def title-image (atom {}))
 
 (def start? (atom false))
 (def about? (atom false))
@@ -58,17 +59,16 @@
   (if (not @config/HEADLESS-SERVER?)
     (do
       ;(screen/clear-registered) ;TODO: fix bug
-      (reset! static-screen-element (list
-                                      {:image (load-overlay)
-                                       :fade? true
-                                       :draw? true
-                                       :alpha 1
-                                       :fade-increment (/ 1.0
-                                                          (/ config/LOAD-SCREEN-TTL
-                                                             config/LOAD-SCREEN-FADE-DIVISION))}
-                                      {:image (load-title-image)
-                                       :fade? false
-                                       :draw? true}))
+      (reset! load-screen-fade {:image (load-overlay)
+                                :fade? false
+                                :draw? true
+                                :start-delay 0
+                                :alpha 1
+                                :fade-increment (/ 1.0 ;config/LOAD-SCREEN-FADE-DIVISION
+                                                          config/LOAD-SCREEN-TTL)})
+      (reset! title-image {:image (load-title-image)
+                           :fade? false
+                           :draw? true})
       (menu/register-menu-options (load-menu-selectable-fields))
       (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))))
 
@@ -76,7 +76,7 @@
   "update"
   []
   (do
-    (reset! static-screen-element (screen/update-alpha-layers @static-screen-element))
+    (reset! load-screen-fade (screen/update-alpha-layers @load-screen-fade))
     (paralax/update-layers)
     true))
 
@@ -85,7 +85,8 @@
   [gr]
   (do
     (paralax/render-layers gr)
-    (screen/draw-static-screen-from-preset @static-screen-element gr)
+    (screen/draw-static-screen-from-preset @title-image gr)
+    (screen/draw-static-screen-from-preset @load-screen-fade gr)
     (menu/draw-menu-options gr)))
 
 (defn keypressed-menu

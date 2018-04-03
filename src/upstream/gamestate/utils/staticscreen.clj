@@ -17,15 +17,14 @@
   [layers]
   ;TODO: load screen black to start
   (let [set-fade #(if (:fade? %)
-                          (let [layer-alpha (:alpha %)]
-                                (assoc % :alpha
-                                (- layer-alpha (:fade-increment %)))) %)
+                      (assoc % :alpha
+                            (- (:alpha %) (:fade-increment %))) %)
                                 ;TODO: start-delay not updating
         update-start-delay #(if (:start-delay %)
                               (let [current-delay (:start-delay %)]
                                 (if (>= 0 current-delay)
                                   (assoc % :fade? true)
-                                  (assoc % :start-delay (- current-delay 1))) %))
+                                  (assoc % :start-delay (- current-delay 1)))) %)
         make-updates #(set-fade (update-start-delay %))]
     (if (list? layers)
       (doall (map make-updates layers))
@@ -38,11 +37,9 @@
   (let [process-fn (fn [layer gr]
         (if (:draw? layer)
           (if (:fade? layer)
-              (draw-screen-alpha layer gr))
-              (do
-                ;TODO: why are non fading layers not drawing?
-                (utils/draw-image (:image layer) gr 0 0) layer))
-                layer)]
+              (do (draw-screen-alpha layer gr) layer)
+              (do (utils/draw-image (:image layer) gr 0 0) layer))
+                layer))]
 
   (if (list? presets)
       (doall (map #(process-fn % gr) presets))
