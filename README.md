@@ -47,6 +47,7 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Player shadow
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
 - [ ] Entity decision formatting

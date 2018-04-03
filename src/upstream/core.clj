@@ -20,6 +20,7 @@
       (engine/start-headless))
     (do
       (System/setProperty "sun.java2d.opengl" "true")
+      ;TODO: refactor
       (let [screenSize (.getScreenSize (Toolkit/getDefaultToolkit))
             scale (/ (/ (.width screenSize) @config/TILES-ACROSS)
                                          config/ORIGINAL-TILE-WIDTH)]

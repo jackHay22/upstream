@@ -33,5 +33,4 @@
     :facing :south-west
     :current-action :at-rest
     :run-stamina 300
-    }
-)
+    })

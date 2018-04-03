@@ -15,13 +15,11 @@
                 #(loadstate/keypressed-load %)
                 #(loadstate/keyreleased-load %)
                 #(loadstate/init-load))
-
     (GameState. #(menu/draw-menu %)
                 #(menu/update-menu)
                 #(menu/keypressed-menu %)
                 #(menu/keyreleased-menu %)
                 #(menu/init-menu))
-
     (GameState. #(level/draw-level-one %)
                 #(level/update-level-one)
                 #(level/keypressed-level-one %)

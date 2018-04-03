@@ -1,6 +1,6 @@
 (ns upstream.gamestate.states.levelone
   (:require [upstream.config :as config]
-            [upstream.utilities.images :as images]
+            [upstream.utilities.images :as images] ;remove
             [upstream.entities.entitymanager :as entity-manager]
             [upstream.tilemap.tilemanager :as tile-manager])
   (:gen-class))
@@ -16,7 +16,7 @@
 (defn init-level-one
   "load resources"
   []
-  ;TODO: configure for server mode
+  ;TODO: configure for server mode (TODO: check for server here rather than in each manager)
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
     (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS))
