@@ -6,31 +6,32 @@
   (:gen-class))
 
 (def current-game-state (atom 0))
+(defrecord GameState [draw-handler update-handler
+                      key-press-handler key-release-handler init-handler])
 
 (def STATES
-  (list
-    {:draw-handler #(loadstate/draw-load %)
-     :update-handler #(loadstate/update-load)
-     :key-press-handler #(loadstate/keypressed-load %)
-     :key-release-handler #(loadstate/keyreleased-load %)
-     :init-fn #(loadstate/init-load)}
+  [(GameState. #(loadstate/draw-load %)
+                #(loadstate/update-load)
+                #(loadstate/keypressed-load %)
+                #(loadstate/keyreleased-load %)
+                #(loadstate/init-load))
 
-    {:draw-handler #(menu/draw-menu %)
-     :update-handler #(menu/update-menu)
-     :key-press-handler #(menu/keypressed-menu %)
-     :key-release-handler #(menu/keyreleased-menu %)
-     :init-fn #(menu/init-menu)}
+    (GameState. #(menu/draw-menu %)
+                #(menu/update-menu)
+                #(menu/keypressed-menu %)
+                #(menu/keyreleased-menu %)
+                #(menu/init-menu))
 
-    {:draw-handler #(level/draw-level-one %)
-     :update-handler #(level/update-level-one)
-     :key-press-handler #(level/keypressed-level-one %)
-     :key-release-handler #(level/keyreleased-level-one %)
-     :init-fn #(level/init-level-one)}))
+    (GameState. #(level/draw-level-one %)
+                #(level/update-level-one)
+                #(level/keypressed-level-one %)
+                #(level/keyreleased-level-one %)
+                #(level/init-level-one))])
 
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
   []
-  (.start (Thread. #(doseq [s (rest STATES)] ((:init-fn s))))))
+  (.start (Thread. #(doseq [s (rest STATES)] ((:init-handler s))))))
 
 (defn init-gsm
   "perform resource loads"
@@ -38,7 +39,7 @@
   (do
     (reset! current-game-state starting-state)
     (logger/write-log "Starting gamestate manager in state: " starting-state)
-    ((:init-fn (nth STATES starting-state)))))
+    ((:init-handler (nth STATES starting-state)))))
 
 (defn update-and-draw
   "Update and Draw the current game state"

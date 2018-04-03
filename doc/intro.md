@@ -27,15 +27,9 @@
 ```clojure
 {:map "maps/basic_template.txt"
  :entity-handler? true                              ;optional: used by tilemap to layer in entities (only one layer should set this to true)
- :tiles (list
-                {:path "tiles/test_sheet.png"
-                 :height-offset 0
-                 :tile-width 32
-                 :tile-height 64}
-                {:path "tiles/list_load_test.png"
-                 :height-offset 30             ;if block is taller than standard size, adjusts draw location (should be the difference between top of image and corner)
-                 :tile-width 64
-                 :tile-height 32})
+ :tiles (list (TileResource. "tiles/test_superblock.png" 200 292 270)
+              (TileResource. "tiles/list_load_test.png" 0 64 32))
+              ;TileResource record takes path, y-draw offset, tile width, tile height
  :map-attributes (list :image-index :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```
 ## Entities

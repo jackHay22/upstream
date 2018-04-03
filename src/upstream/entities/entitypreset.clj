@@ -1,58 +1,25 @@
 (ns upstream.entities.entitypreset
   (:gen-class))
 
+(defrecord StateImageCollection [current-frame-index
+             north north-east east south-east
+             south south-west west north-west])
+
 (defn player-preset-1
   "take x,y and return preset"
   [starting-x starting-y]
   ;Sample Individual Entity State:
   ;each state has a list of cycling animation frames for each of the 8 directions
   {:images {
-          :display "entities/logger_1.png"
-          :at-rest {
-            :current-frame-index 0
-            :north '("entities/idle_rough_n.png")
-            :north-east '()
-            :east '()
-            :south-east '("entities/idle_rough_se.png")
-            :south '("entities/idle_rough_s.png")
-            :south-west '("entities/idle_rough_sw.png")
-            :west '()
-            :north-west '()
-          }
-         :walking {
-           :current-frame-index 0
-           :north '()
-           :north-east '()
-           :east '()
-           :south-east '()
-           :south '()
-           :south-west '()
-           :west '()
-           :north-west '()
-         }
-         :running {
-           :current-frame-index 0
-           :north '()
-           :north-east '()
-           :east '()
-           :south-east '()
-           :south '()
-           :south-west '()
-           :west '()
-           :north-west '()
-         }
-         :punching {
-           :current-frame-index 0
-           :north '()
-           :north-east '()
-           :east '()
-           :south-east '()
-           :south '()
-           :south-west '()
-           :west '()
-           :north-west '()
-         }
-        }
+         :display "entities/logger_1.png"
+         :at-rest (StateImageCollection. 0 '("entities/idle_rough_n.png") '()
+                                           '() '("entities/idle_rough_se.png")
+                                           '("entities/idle_rough_s.png") '("entities/idle_rough_sw.png")
+                                           '() '())
+         :walking (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :running (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :punching (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+    }
     :all-states (list :at-rest :walking :running :punching)
     :all-directions (list :north :north-east
                           :east :south-east

@@ -74,6 +74,7 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Explore defrecord for interfaces.
 - [x] Non-fading static screen images not rendering
 - [x] Refactor tilemap loader to match entity-loader (potentially change format definition)
 - [x] Fix entity draw handler
