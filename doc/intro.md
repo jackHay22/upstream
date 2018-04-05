@@ -34,3 +34,6 @@
  ```
 ## Entities
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.
+
+## Game Saves
+- When the game is saved it writes a truncated entity state map to the file: ```user.home/.upstream/<config/SAVE-FILE>```. Ex: ```/Users/jackhay/.upstream/game_saves.txt```.  If the game is loaded from a file, this truncated map will automatically be merged with the corresponding config entity preset and loaded by the entity manager.
