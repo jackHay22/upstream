@@ -14,6 +14,8 @@
 (def SERVER-VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
 
+(def SAVE-PATH "saves/game_saves.txt")
+
 (def TILE-SETTINGS
   (atom
   {

@@ -13,6 +13,8 @@
                    java.awt.event.KeyEvent/VK_ENTER :enter
                    java.awt.event.KeyEvent/VK_SHIFT :shift
                    java.awt.event.KeyEvent/VK_P :p
+                   java.awt.event.KeyEvent/VK_S :s
+                   java.awt.event.KeyEvent/VK_L :l
                    java.awt.event.KeyEvent/VK_R :r})
 
 (defn start-window

@@ -2,6 +2,7 @@
   (:require [upstream.config :as config]
             [upstream.utilities.images :as images] ;remove
             [upstream.entities.entitymanager :as entity-manager]
+            [upstream.utilities.save :as save]
             [upstream.tilemap.tilemanager :as tile-manager])
   (:gen-class))
 
@@ -49,7 +50,7 @@
   (let [temp-handler-set (list {:y 5 :fn #(println "handler 1")} {:y 10 :fn #(println "handler 2")})
         tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
         ]
-  (doall (map #(tile-manager/render-map gr %) tilemaps))
+  (doall (map #(tile-manager/render-map gr %) @tile-map-layers)) ;tilemaps
     (images/draw-image @example-player gr
       (+ @this-x (:map-offset-x (first tilemaps)))
       (+ @this-y (:map-offset-y (first tilemaps))))
@@ -59,9 +60,9 @@
   "key press handler for level one"
   [key]
   (cond
-    (= key :r)
-    ;allow tilemap reload (dev mode)
-        (init-level-one))
+    (= key :r) (init-level-one) ;(remove in prod)
+    (= key :l) (reset! entity-state (save/load-from-save config/LEVEL-ONE-ENTITIES))
+    (= key :s) (save/save-state @entity-state))
   (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)
 

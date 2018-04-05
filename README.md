@@ -47,16 +47,16 @@ docker run \
   - Note: this is broken
 
 ## TODO:
-- [ ] Player shadow
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
 - [ ] Entity decision formatting
 - [ ] Keyboard input control
+- [ ] Fix broken load-from-save
+- [ ] Load safeguards (infrastructure around save functionality)
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
 - [ ] Tilemap intersections
 - [ ] Refactor temporary fixes to menu and load screens, improve code and reduce atomics
-- [ ] Start-delay not updating correctly (related to static screen)
 - [ ] Fix menu options resolution and scrolling problem with up arrow
 - [ ] Rotoscoping for walk cycle
 - [ ] Art, art, art
@@ -75,6 +75,8 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Player shadow
+- [x] Start-delay not updating correctly (related to static screen)
 - [x] Explore defrecord for interfaces.
 - [x] Non-fading static screen images not rendering
 - [x] Refactor tilemap loader to match entity-loader (potentially change format definition)
