@@ -36,4 +36,15 @@
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.
 
 ## Game Saves
-- When the game is saved it writes a truncated entity state map to the file: ```user.home/.upstream/<config/SAVE-FILE>```. Ex: ```/Users/jackhay/.upstream/game_saves.txt```.  If the game is loaded from a file, this truncated map will automatically be merged with the corresponding config entity preset and loaded by the entity manager.
+- When the game is saved it writes a truncated entity state map to the file: ```user.home/.upstream/<config/SAVE-FILE>```. Ex: ```/Users/jackhay/.upstream/game_saves.txt```.  If the game is loaded from a file, this truncated map will automatically be merged with the corresponding config entity preset. The included resources should then be loaded in the current gamestate by the entity manager.
+- By default, level one loads into a saved state and creates a new save file if none exists.  If the save is empty, it will use the configuration preset.
+- Here is the code for loading from save with config/LEVEL-ONE-ENTITIES as default.  This also starts the autosaver with a reference to the entity state.
+```clojure
+(reset! entity-state (entity-manager/load-entities
+                          (save/load-from-save config/LEVEL-ONE-ENTITIES)))
+(save/start-autosaver entity-state)
+```
+- The current save file can be overwritten with the following call (save file is replaced with standard preset):
+```clojure
+(save/overwrite-save! config/LEVEL-ONE-ENTITIES)
+```

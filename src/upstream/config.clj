@@ -15,6 +15,7 @@
 (def WINDOW-TITLE "Upstream")
 
 (def SAVE-FILE "game_saves.txt")
+(def AUTO-SAVE-SLEEP 30000) ;Autosave every 30 seconds
 
 (def TILE-SETTINGS
   (atom

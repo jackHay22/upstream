@@ -21,9 +21,9 @@
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
     (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS))
-
-  ;automatically loads config settings if no save file exists, otherwise merges updates.
-  (reset! entity-state (save/load-from-save config/LEVEL-ONE-ENTITIES)))
+  (reset! entity-state (entity-manager/load-entities
+                            (save/load-from-save config/LEVEL-ONE-ENTITIES)))
+  (save/start-autosaver entity-state))
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -36,8 +36,6 @@
   ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state
         current-x @this-x]
-    ;(reset! this-x (+ current-x 1))
-
      (reset! tile-map-layers
        (doall (map #(tile-manager/set-position
                      @this-x

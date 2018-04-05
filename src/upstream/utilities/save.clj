@@ -1,6 +1,5 @@
 (ns upstream.utilities.save
   (:require [upstream.config :as config]
-            [upstream.entities.entitymanager :as entity-manager]
             [clojure.java.io :as io])
   (:gen-class))
 
@@ -38,4 +37,18 @@
   (with-open [save-reader (clojure.java.io/reader (get-user-save-location config/SAVE-FILE))]
     (let [raw-save-state (clojure.string/join "\n" (line-seq save-reader))
           to-load (if (empty? raw-save-state) (repeat nil) (read-string raw-save-state))]
-          (entity-manager/load-entities (map merge to-merge to-load)))))
+           (map merge to-merge to-load))))
+
+(defn start-autosaver
+  "start autosaver"
+  [state-reference]
+  (.start (Thread.
+      (loop []
+          (save-state @state-reference)
+          (Thread/sleep config/AUTO-SAVE-SLEEP)
+      (recur)))))
+
+(defn overwrite-save!
+  "overwrite game save with config/LEVEL-ONE-ENTITIES --
+   restarting game and or fixing corruption"
+  [to-reset] (save-state to-reset))

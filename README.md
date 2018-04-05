@@ -51,8 +51,8 @@ docker run \
 - [ ] Entity manager code
 - [ ] Entity decision formatting
 - [ ] Keyboard input control
-- [ ] Fix broken load-from-save
 - [ ] Load safeguards (infrastructure around save functionality)
+- [ ] Detect save corruption
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
 - [ ] Tilemap intersections
@@ -75,6 +75,7 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Fix broken load-from-save
 - [x] Player shadow
 - [x] Start-delay not updating correctly (related to static screen)
 - [x] Explore defrecord for interfaces.
