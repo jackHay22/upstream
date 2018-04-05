@@ -43,7 +43,7 @@
                         (read-string raw-save-state)
                       (catch Exception e
                         (do
-                          (log/write-log "Error loading saved game state, reverting to preset")
+                          (log/write-log "Error loading saved game state, reverting to preset: \n\n" (pr-str to-merge))
                           (repeat nil)))))]
            (map merge to-merge to-load))))
 

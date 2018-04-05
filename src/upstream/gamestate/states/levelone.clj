@@ -20,7 +20,7 @@
   ;TODO: configure for server mode (TODO: check for server here rather than in each manager)
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
-    (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS))
+          (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS))
   (reset! entity-state (entity-manager/load-entities
                             (save/load-from-save config/LEVEL-ONE-ENTITIES)))
   (save/start-autosaver entity-state))

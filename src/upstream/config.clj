@@ -15,13 +15,14 @@
 (def WINDOW-TITLE "Upstream")
 
 (def SAVE-FILE "game_saves.txt")
-(def AUTO-SAVE-SLEEP 30000) ;Autosave every 30 seconds
+(def AUTO-SAVE-SLEEP 10000) ;Autosave every 10 seconds
 
 (def TILE-SETTINGS
   (atom
   {
 
   }))
+  
 (def ORIGINAL-TILE-WIDTH 64)
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))
