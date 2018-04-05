@@ -21,8 +21,9 @@
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
     (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS))
-  (reset! entity-state
-    (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))
+
+  ;automatically loads config settings if no save file exists, otherwise merges updates.
+  (reset! entity-state (save/load-from-save config/LEVEL-ONE-ENTITIES)))
 
 (defn update-via-server
   "receive state from server rather than internal"
@@ -61,7 +62,6 @@
   [key]
   (cond
     (= key :r) (init-level-one) ;(remove in prod)
-    (= key :l) (reset! entity-state (save/load-from-save config/LEVEL-ONE-ENTITIES))
     (= key :s) (save/save-state @entity-state))
   (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)
