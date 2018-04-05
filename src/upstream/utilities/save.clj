@@ -1,6 +1,7 @@
 (ns upstream.utilities.save
   (:require [upstream.config :as config]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [upstream.utilities.log :as log])
   (:gen-class))
 
 (import java.io.File)
@@ -36,7 +37,14 @@
   [to-merge]
   (with-open [save-reader (clojure.java.io/reader (get-user-save-location config/SAVE-FILE))]
     (let [raw-save-state (clojure.string/join "\n" (line-seq save-reader))
-          to-load (if (empty? raw-save-state) (repeat nil) (read-string raw-save-state))]
+          to-load (if (empty? raw-save-state)
+                      (repeat nil)
+                      (try
+                        (read-string raw-save-state)
+                      (catch Exception e
+                        (do
+                          (log/write-log "Error loading saved game state, reverting to preset")
+                          (repeat nil)))))]
            (map merge to-merge to-load))))
 
 (defn start-autosaver
