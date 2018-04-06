@@ -2,32 +2,14 @@
   (:require
     [upstream.config :as config]
     [clojure.java.io :as io]
-    [upstream.utilities.images :as images])
+    [upstream.utilities.images :as images]
+    [upstream.tilemap.chunkutility :as chunkutility])
   (:gen-class))
-
-(defn parse-map-file
-  "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
-  or '(:image :sound :height :blocked?))
-  returns: map of fields and :draw.  result is wrapped with :map, :tiles-across, :tiles-down"
-  [path fields]
-  (with-open [reader (clojure.java.io/reader (io/resource path))]
-  (let [loaded-map
-        (map (fn [line]
-          (map (fn [sub-line]
-                  (let [location-set
-                          (zipmap fields (map #(Integer. %)
-                            (clojure.string/split sub-line #",")))]
-                  (assoc location-set :draw? (not (= -1 ((first fields) location-set))))))
-        (clojure.string/split line #" ")))
-      (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))]
-      {:map loaded-map
-       :tiles-across (count (first loaded-map))
-       :tiles-down (count loaded-map)})))
 
 (defn set-position
     "set tile-map position: based off player's location in map"
     [px py tilemap]
-    (let [increment-width (* 64 @config/COMPUTED-SCALE) ;TODO: fix
+    (let [increment-width (* config/ORIGINAL-TILE-WIDTH @config/COMPUTED-SCALE) ;TODO: fix
           increment-height (/ increment-width 2)
           window-width @config/WINDOW-WIDTH
           window-height @config/WINDOW-HEIGHT
@@ -78,11 +60,14 @@
 
 (defn load-tile-maps
   "take list of tilemap layers, load all and return as list"
-  [map-layers]
+  [map-layers x-loc-suggestion y-loc-suggestion]
   (map
     (fn [layer]
       (update-in
-        (update-in layer [:map] #(parse-map-file % (:map-attributes layer)))
+        (update-in layer [:map] #(chunkutility/prepare-map-chunks % (:map-attributes layer) (:label layer)
+                                    (:chunk-dimension layer)  x-loc-suggestion y-loc-suggestion))
+                                      ;returns {:map :label :central-chunk} (x,y)
+                                      ;(label for accessing chunk-store), map is current generated view
         [:tiles]
         (fn [tile-list]
             (if (not @config/HEADLESS-SERVER?)

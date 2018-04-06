@@ -48,3 +48,7 @@
 ```clojure
 (save/overwrite-save! config/LEVEL-ONE-ENTITIES)
 ```
+
+## Debug Options
+- Write a message to std out: ```(log/write-log msg arg1 ... argn)```
+- Save a stack trace or debug message to a file in .upstream directory: ```(log/save-critical-log filename message)```

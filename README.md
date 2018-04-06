@@ -47,15 +47,18 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Move to chunk model for tilemap
+- [ ] Implement either smaller files or seek() in bigger files
+- [ ] Asynchronous chunk loading at runtime (future and eventual retrieval)
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
 - [ ] Entity decision formatting
 - [ ] Keyboard input control
-- [ ] Load safeguards (infrastructure around save functionality)
-- [ ] Detect save corruption
+- [ ] Prevent image/file loads if headless server (this is important in several areas)
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
 - [ ] Tilemap intersections
+- [ ] Pause menu in level1
 - [ ] Refactor temporary fixes to menu and load screens, improve code and reduce atomics
 - [ ] Fix menu options resolution and scrolling problem with up arrow
 - [ ] Rotoscoping for walk cycle
@@ -75,6 +78,8 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Detect save corruption
+- [x] Load safeguards (infrastructure around save functionality)
 - [x] Fix broken load-from-save
 - [x] Player shadow
 - [x] Start-delay not updating correctly (related to static screen)

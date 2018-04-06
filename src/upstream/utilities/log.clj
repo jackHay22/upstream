@@ -3,6 +3,8 @@
             [upstream.config :as config])
   (:gen-class))
 
+(import java.io.File)
+
 (defn write-log
   "write log message to std out"
   [msg & args]
