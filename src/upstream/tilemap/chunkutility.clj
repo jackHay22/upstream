@@ -56,26 +56,29 @@
         chunk-array (map #(take 3 (drop (min (- (second center-indices) 1) 0) %))
                           (take 3 (drop (min (- (first center-indices) 1) 0)
                             load-from-store)))]
+        (do (println "Debug: running chunk load cycle...")
         (list
+          ;TODO: verify that this works
           (reduce into []
             (map (fn [chunk-row]
-              (map #(reduce into [] %) (apply map vector (map #(:map %) chunk-row)))) chunk-array))
-          (second (second chunk-array)))))
+              (map #(reduce into [] %)
+                    (apply map vector (map #(:map %) chunk-row))))
+                  chunk-array))
+          (second (second chunk-array))))))
 
 (defn update-chunk-view
   "take player location, update loaded chunks
    --only swap chunks if player moves out of middle chunk
    --adds 9 chunks to map"
   [current-map px py]
+  ;TODO: verify tiles are correctly indexed
   (let [tile-x (/ px config/ORIGINAL-TILE-WIDTH)
         tile-y (/ py (/ config/ORIGINAL-TILE-WIDTH 2))]
-  (cond ;on start
-        (empty? (:map current-map)) ()
-        ;current view sufficient
-        (coords-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
-                       (tile-to-chunk tile-x tile-y (:chunk-dim current-map))) current-map
-        ;need to reload map with new chunk set
-        :else (let [new-map (build-map-from-center
+  (if (and (not (empty? (:map current-map)))
+           (coords-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
+                          (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
+      ;else: perform reload cycle
+      (let [new-map (build-map-from-center
                                 (:label current-map)
                                 (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))]
               (assoc current-map :map (first new-map)
@@ -85,9 +88,8 @@
   "returns chunk of master given offset an dim"
   [master-array chunk-dim]
   (fn [offset-x offset-y]
-    (map
-      #(Chunk. (take chunk-dim (drop offset-x master-array)) offset-x offset-y)
-       (take chunk-dim (drop offset-y master-array)))))
+    (map #(Chunk. (take chunk-dim (drop offset-x master-array)) offset-x offset-y)
+          (take chunk-dim (drop offset-y master-array)))))
 
 (defn prepare-map-chunks
   "take 2D array of map chunk files to be loaded dynamically to prevent system overhead
@@ -105,8 +107,9 @@
         (do
           ;save to chunk store with given label
           (swap! chunk-store assoc label all-chunks)
+          ;perform initial chunk load cycle
           (update-chunk-view {:map '()
-                              :label [label]
+                              :label label
                               :chunk-dim chunk-dim
                               :central-chunk nil}
                              start-x start-y))))

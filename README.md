@@ -47,9 +47,11 @@ docker run \
   - Note: this is broken
 
 ## TODO:
-- [ ] Move to chunk model for tilemap
-- [ ] Implement either smaller files or seek() in bigger files
-- [ ] Asynchronous chunk loading at runtime (future and eventual retrieval)
+- [ ] Verify chunk-window loader
+- [ ] Update set map position and render functions to accommodate new model
+- [ ] Draw based on center chunk offset
+- [ ] Testing of chunk load cycle performance
+- [ ] Edge testing
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
 - [ ] Entity decision formatting
