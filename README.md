@@ -47,6 +47,7 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Add utility function that determines the tile a player is on given px py, can be used in several places
 - [ ] Verify chunk-window loader
 - [ ] Update set map position to accommodate new model
 - [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn

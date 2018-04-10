@@ -19,10 +19,9 @@
   []
   ;TODO: configure for server mode (TODO: check for server here rather than in each manager)
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
-  (reset! tile-map-layers
-          (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS 100 100)) ;TODO: change starting location
-  ; (if @config/HEADLESS-SERVER?
-  ;           config/LEVEL-ONE-ENTITIES
+  ;(reset! tile-map-layers
+  ;        (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS 100 100)) ;TODO: change starting location
+
   (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
   (save/start-autosaver entity-state))
@@ -39,23 +38,26 @@
   (let [state @game-state
         current-x (+  @this-x 1)]
      (reset! this-x current-x)
-     (reset! tile-map-layers
-       (doall (map #(tile-manager/set-position
-                     @this-x
-                     @this-y %)
-        @tile-map-layers)))
+     ; (reset! tile-map-layers
+     ;   (doall (map #(tile-manager/set-position
+     ;                 @this-x
+     ;                 @this-y %)
+     ;    @tile-map-layers)))
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
-  (let [temp-handler-set (list {:y 5 :prevent-block? true :fn #(println "handler 1")} {:y 10 :fn #(println "handler 2")})
-        tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
-        ]
+  (let [temp-handler-set (list {:x 0 :y 5 :prevent-block? true :fn #(println "handler 1")} {:x 0 :y 10 :fn #(println "handler 2")})
+          ;handlers have grid coords
+          
+        ;tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
+]
+
         ;(println tilemaps)
         ;(println "\n")
         ;(System/exit 1)
-  (doall (map #(tile-manager/render-map gr %) tilemaps)) ;tilemaps
+  ;(doall (map #(tile-manager/render-map gr %) tilemaps)) ;tilemaps
     ; (images/draw-image @example-player gr
     ;   (+ @this-x (:map-offset-x (first tilemaps)))
     ;   (+ @this-y (:map-offset-y (first tilemaps))))

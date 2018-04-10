@@ -3,6 +3,7 @@
     [upstream.config :as config]
     [clojure.java.io :as io]
     [upstream.utilities.images :as images]
+    [upstream.utilities.spacial :as spacialutility]
     [upstream.tilemap.chunkutility :as chunkutility])
   (:gen-class))
 
@@ -143,3 +144,31 @@
                                         gr c-loc (- r-loc (:height-offset image-resource)))))))))
                 range-across))))
                 range-down))))
+
+(defn render-map-v2
+  "take graphics object and current tilemap layer to render"
+  [gr tilemap]
+  (let [handle-at-y (entity-handler (if (:entity-handler? tilemap) (:entity-handlers tilemap) '()))
+        tilemap-resource (:map tilemap)
+        current-chunked-map (:current-map tilemap-resource)
+        grid-dim (:grid-dimension tilemap)
+        draw-offset-x 0 ;TODO
+        draw-offset-y 0]
+        ;TODO: figure out max viable offset and add guard
+
+            ;TODO: (handle-at-y y)
+        (doall
+          (reduce (fn [y-offset row]
+            (doall
+              (reduce (fn [x-offset tile]
+                  (do
+                    (if (:draw? tile)
+                        (let [image-resource (nth (:images (:tiles tilemap)) (:image-index map-entry))
+                              iso-coords (spacialutility/cartesian-to-isometric-transform
+                                                (list x-offset (- y-offset (:height-offset image-resource))))]
+                              ;TODO: draw at 50% alpha if obscuring a player
+                            (images/draw-image
+                              (:image image-resource) gr (first iso-coords) (second iso-coords))))
+                    (+ x-offset grid-dim))) draw-offset-x row)
+            (+ y-offset grid-dim)))
+          draw-offset-y current-chunked-map))))

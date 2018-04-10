@@ -1,7 +1,8 @@
 (ns upstream.tilemap.chunkutility
   (:require
     [upstream.config :as config]
-    [clojure.java.io :as io])
+    [clojure.java.io :as io]
+    [upstream.utilities.spacial :as spacial-utility])
   (:gen-class))
 
 (def chunk-store (atom {}))
@@ -73,7 +74,10 @@
   [current-map px py]
   ;TODO: verify tiles are correctly indexed
   (let [tile-x (/ px config/ORIGINAL-TILE-WIDTH)
-        tile-y (/ py (/ config/ORIGINAL-TILE-WIDTH 2))]
+        tile-y (/ py (/ config/ORIGINAL-TILE-WIDTH 2))
+        entity-tile-location (spacial-utility/get-entity-tile px py) ;TODO
+
+        ]
         (try (do (println "index of central: " (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map)))
             (println "tile @ indexed chunk: " (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) (catch Exception e (str "not fully loaded....")))
   (if (and (not (empty? (:current-map current-map)))
