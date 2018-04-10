@@ -44,8 +44,10 @@
 
 (def LEVEL-ONE-TILEMAPS
   (list
-    tile-preset/level-one-layer-0-preset
-    tile-preset/level-one-layer-1-preset))
+    ;tile-preset/level-one-layer-0-preset
+    ;tile-preset/level-one-layer-1-preset
+    tile-preset/level-one-layer-0-preset-chunked
+    ))
 
 (def LEVEL-ONE-ENTITIES
   (list

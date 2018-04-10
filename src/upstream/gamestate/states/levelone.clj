@@ -49,13 +49,16 @@
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
-  (let [temp-handler-set (list {:y 5 :fn #(println "handler 1")} {:y 10 :fn #(println "handler 2")})
+  (let [temp-handler-set (list {:y 5 :prevent-block? true :fn #(println "handler 1")} {:y 10 :fn #(println "handler 2")})
         tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
         ]
-  (doall (map #(tile-manager/render-map gr %) @tile-map-layers)) ;tilemaps
-    (images/draw-image @example-player gr
-      (+ @this-x (:map-offset-x (first tilemaps)))
-      (+ @this-y (:map-offset-y (first tilemaps))))
+        ;(println tilemaps)
+        ;(println "\n")
+        ;(System/exit 1)
+  (doall (map #(tile-manager/render-map gr %) tilemaps)) ;tilemaps
+    ; (images/draw-image @example-player gr
+    ;   (+ @this-x (:map-offset-x (first tilemaps)))
+    ;   (+ @this-y (:map-offset-y (first tilemaps))))
   ))
 
 (defn keypressed-level-one

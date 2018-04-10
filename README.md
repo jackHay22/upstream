@@ -9,12 +9,12 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ## App build info
 
 ### OSX build
-- To build upstream.app: ``` ./build.sh ``` (requires ``` lein ```, ``` javapackager ```)
+- To build upstream.app: ```./build.sh``` (requires ```lein```, ```javapackager```)
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
 
 ### Linux server build
-- (Not necessary) Remove ``` -Xdock:name=Upstream ``` from ``` :jvm-opts ``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
-- Run ``` ./build.sh -server ``` (requires ``` lein ```, ``` docker ```).
+- (Not necessary) Remove ```-Xdock:name=Upstream``` from ```:jvm-opts``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
+- Run ``` ./build.sh -server ``` (requires ```lein```, ```docker```).
   - (macOS: the build script is able to start the docker daemon on its own)
 - Additional build options:
   - ```-push``` This will tag push the new docker image to AWS ECR. (Run: ```./build -server -push```) (Requires: ``` aws ``` cli tool (with ECR auth))
@@ -32,10 +32,10 @@ docker run \
 ```
 - To kill all running containers: ```docker kill $(docker ps -q)``` (free up ports).
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
-- Vagrant vm: ``` vagrant up ``` and then run ``` vagrant provision ``` to prep vm and pull ECR image. (login stage currently broken)
+- Vagrant vm: ```vagrant up``` and then run ```vagrant provision``` to prep vm and pull ECR image. (login stage currently broken)
 
 ### Store build artifact
-- Run ``` ./build -saveartifact ``` (requires ``` aws ``` cli and bucket permissions for ``` s3://upstream-build-archive ```) to upload standalone jar to a versioned s3 bucket.
+- Run ```./build -saveartifact``` (requires ```aws``` cli and bucket permissions for ```s3://upstream-build-archive```) to upload standalone jar to a versioned s3 bucket.
 - Note: will not build native app
 
 ### Windows build
@@ -48,7 +48,8 @@ docker run \
 
 ## TODO:
 - [ ] Verify chunk-window loader
-- [ ] Update set map position and render functions to accommodate new model
+- [ ] Update set map position to accommodate new model
+- [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn
 - [ ] Draw based on center chunk offset
 - [ ] Testing of chunk load cycle performance
 - [ ] Edge testing
@@ -119,22 +120,28 @@ docker run \
   - Acceptance Standards:
     - [ ] Distribute game to initial group for local gameplay testing
     - [ ] Working website with download functionality (testing for macOS gatekeeper)
-- [ ] _0.5.0_ Minimum viable server environment (End of Summer 2018)
+- [ ] _0.5.0_ Testing release 2 (Early Fall 2018)
+  - Acceptance Standards:
+    - [ ] Resolve inevitable bugs
+    - [ ] Iterate on feedback
+    - [ ] Re-release with changes made
+- [ ] _0.6.0_ Minimum viable server environment (End of Summer 2018)
   - Acceptance Standards:
     - [ ] Deployment to raspberry pi cluster through docker
     - [ ] Monitoring orchestration
     - [ ] Redis background server
     - [ ] Multicast server
     - [ ] Basic user authentication mechanism
-- [ ] _0.6.0_ Production server environment (Mid Fall 2018)
+- [ ] _0.7.0_ Production server environment (Mid Fall 2018)
   - Acceptance Standards:
     - [ ] Terraform deployment automation (or cloudformation)
     - [ ] Full AWS server environment
 - [ ] _1.0.0_ Full Release (End 2018)
   - Acceptance Standards:
     - [ ] It's what it sounds like
+    - [ ] Website
     - [ ] Full release available on website
     - [ ] BTS videos?
 - [ ] _*.0.0_ LTS (Through Summer 2019)
 
-## Upstream Copyright © 2018 Jack Hay.
+### Upstream Copyright © 2018 Jack Hay.

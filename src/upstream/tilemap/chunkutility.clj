@@ -1,10 +1,11 @@
 (ns upstream.tilemap.chunkutility
   (:require
-    [upstream.config :as config])
+    [upstream.config :as config]
+    [clojure.java.io :as io])
   (:gen-class))
 
 (def chunk-store (atom {}))
-(defrecord (Chunk [map offset-x offset-y]))
+(defrecord Chunk [map offset-x offset-y])
 
 (defn parse-map-file
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
@@ -37,7 +38,7 @@
   (list (/ (:offset-x chunk) dim)
         (/ (:offset-y chunk) dim)))
 
-(defn coords-equal?
+(defn indices-equal?
   "compare to x,y list pairs"
   [p1 p2]
   (and (= (first p1) (first p2))
@@ -52,11 +53,10 @@
   "take indices of center chunk, build 3 chunk x 3 chunk map
    --return tuple of simplified map and central chunk resource"
   [label center-indices]
-  (let [load-from-store (label @chunk-store)
-        chunk-array (map #(take 3 (drop (min (- (second center-indices) 1) 0) %))
-                          (take 3 (drop (min (- (first center-indices) 1) 0)
-                            load-from-store)))]
-        (do (println "Debug: running chunk load cycle...")
+  (let [chunk-array (map #(take 3 (drop (max (- (second center-indices) 1) 0) %))
+                          (take 3 (drop (max (- (first center-indices) 1) 0)
+                            (label @chunk-store))))] ;pull master array from memory
+        (do (println "Debug: running chunk-load-cycle")
         (list
           ;TODO: verify that this works
           (reduce into []
@@ -74,22 +74,24 @@
   ;TODO: verify tiles are correctly indexed
   (let [tile-x (/ px config/ORIGINAL-TILE-WIDTH)
         tile-y (/ py (/ config/ORIGINAL-TILE-WIDTH 2))]
-  (if (and (not (empty? (:map current-map)))
-           (coords-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
-                          (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
+        (try (do (println "index of central: " (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map)))
+            (println "tile @ indexed chunk: " (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) (catch Exception e (str "not fully loaded....")))
+  (if (and (not (empty? (:current-map current-map)))
+           (indices-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
+                           (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
       ;else: perform reload cycle
       (let [new-map (build-map-from-center
                                 (:label current-map)
                                 (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))]
-              (assoc current-map :map (first new-map)
+              (assoc current-map :current-map (first new-map)
                                  :central-chunk (second new-map))))))
 
 (defn get-chunk-from-offset
-  "returns chunk of master given offset an dim"
+  "returns chunk of master given offset and dim"
   [master-array chunk-dim]
   (fn [offset-x offset-y]
-    (map #(Chunk. (take chunk-dim (drop offset-x master-array)) offset-x offset-y)
-          (take chunk-dim (drop offset-y master-array)))))
+    (Chunk. (map #(take chunk-dim (drop offset-x %))
+                (take chunk-dim (drop offset-y master-array))) offset-x offset-y)))
 
 (defn prepare-map-chunks
   "take 2D array of map chunk files to be loaded dynamically to prevent system overhead
@@ -98,18 +100,19 @@
   (let [master-resource (parse-map-file path fields)
         tiles-across (:tiles-across master-resource)
         tiles-down (:tiles-down master-resource)
-        chunk-loader (get-chunk-from-offset master chunk-dim)
-        all-chunks (map
-                    (fn [x] (map
-                      (fn [y] (chunk-loader x y))
+        chunk-loader (get-chunk-from-offset (:map master-resource) chunk-dim)
+        all-chunks (map (fn [x] (map
+                          (fn [y] (chunk-loader x y))
                       (range 0 tiles-down (/ tiles-down chunk-dim))))
                       (range 0 tiles-across (/ tiles-across chunk-dim)))]
         (do
           ;save to chunk store with given label
           (swap! chunk-store assoc label all-chunks)
           ;perform initial chunk load cycle
-          (update-chunk-view {:map '()
+          (update-chunk-view {:current-map '()
                               :label label
                               :chunk-dim chunk-dim
+                              :tiles-down tiles-down
+                              :tiles-across tiles-across
                               :central-chunk nil}
                              start-x start-y))))

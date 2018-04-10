@@ -32,6 +32,24 @@
               ;TileResource record takes path, y-draw offset, tile width, tile height
  :map-attributes (list :image-index :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```
+### Loaded Resource Format:
+```clojure
+{:map {:current-map '(({:draw? & :fields} ...) ...)
+       :label
+       :tiles-down
+       :tiles-across
+       :chunk-dim
+       :central-chunk}
+ :tiles {:images '({:image :height-offset :width :height} ...)
+         :widest
+         :tallest}
+ :start-display-x
+ :start-display-y
+ :entity-handlers
+ :entity-handler?
+ :map-offset-x
+ :map-offset-y}
+```
 ## Entities
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.
 
