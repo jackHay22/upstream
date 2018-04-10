@@ -47,6 +47,11 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Correct draw image location based on image corner offset
+- [ ] Draw images with correct offsets given computed scale
+- [ ] Based on entity handler, draw with opacity if blocking player
+- [ ] Use set-map location for negative chunk offset
+- [ ] Try making chunks smaller
 - [ ] Add utility function that determines the tile a player is on given px py, can be used in several places
 - [ ] Verify chunk-window loader
 - [ ] Update set map position to accommodate new model

@@ -155,20 +155,25 @@
         draw-offset-x 0 ;TODO
         draw-offset-y 0]
         ;TODO: figure out max viable offset and add guard
-
             ;TODO: (handle-at-y y)
-        (doall
           (reduce (fn [y-offset row]
-            (doall
               (reduce (fn [x-offset tile]
                   (do
                     (if (:draw? tile)
-                        (let [image-resource (nth (:images (:tiles tilemap)) (:image-index map-entry))
+                        (let [image-resource (nth (:images (:tiles tilemap)) (:image-index tile))
                               iso-coords (spacialutility/cartesian-to-isometric-transform
-                                                (list x-offset (- y-offset (:height-offset image-resource))))]
+                                                (list x-offset (- y-offset (:height-offset image-resource))))
+                              iso-x (first iso-coords)
+                              iso-y (second iso-coords)]
                               ;TODO: draw at 50% alpha if obscuring a player
+                              ;TODO: grid dim might need to be greater
+                              ;TODO: change draw location based on square image offset
+                            (if (and (> iso-x (- 0 grid-dim))
+                                     (> iso-y (- 0 grid-dim))
+                                     (< iso-x @config/WINDOW-WIDTH)
+                                     (< iso-y @config/WINDOW-HEIGHT))
                             (images/draw-image
-                              (:image image-resource) gr (first iso-coords) (second iso-coords))))
+                              (:image image-resource) gr iso-x iso-y))))
                     (+ x-offset grid-dim))) draw-offset-x row)
-            (+ y-offset grid-dim)))
-          draw-offset-y current-chunked-map))))
+            (+ y-offset grid-dim))
+          draw-offset-y current-chunked-map)))
