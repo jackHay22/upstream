@@ -39,12 +39,6 @@
   (list (/ (:offset-x chunk) dim)
         (/ (:offset-y chunk) dim)))
 
-(defn indices-equal?
-  "compare to x,y list pairs"
-  [p1 p2]
-  (and (= (first p1) (first p2))
-       (= (second p1) (second p2))))
-
 (defn get-chunk
   "take label, indices return chunk"
   [label indices]
@@ -72,17 +66,12 @@
    --only swap chunks if player moves out of middle chunk
    --adds 9 chunks to map"
   [current-map px py]
-  ;TODO: verify tiles are correctly indexed
-  (let [tile-x (/ px config/ORIGINAL-TILE-WIDTH)
-        tile-y (/ py (/ config/ORIGINAL-TILE-WIDTH 2))
-        entity-tile-location (spacial-utility/get-entity-tile px py) ;TODO
-
-        ]
-        (try (do (println "index of central: " (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map)))
-            (println "tile @ indexed chunk: " (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) (catch Exception e (str "not fully loaded....")))
+  (let [tile-x (/ px 32) ;TODO: update
+        tile-y (/ py 32)]
+        ;TODO: running chunk load cycle constantly
   (if (and (not (empty? (:current-map current-map)))
-           (indices-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
-                           (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
+           (spacial-utility/coords-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
+                                          (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
       ;else: perform reload cycle
       (let [new-map (build-map-from-center
                                 (:label current-map)

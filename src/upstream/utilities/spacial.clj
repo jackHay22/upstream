@@ -2,15 +2,14 @@
   (:require [upstream.config :as config])
   (:gen-class))
 
-(defn get-entity-tile
-  "given an entities x,y, return tile index pair"
-  [px py]
-  (let [tile-width (* @config/COMPUTED-SCALE config/ORIGINAL-TILE-WIDTH)
-        tile-height (* @config/COMPUTED-SCALE config/ORIGINAL-TILE-HEIGHT)
-        ]
-
-
-    ))
+(defn lateral-range
+  "create a lateral range for drawing tiles at depth"
+  [grid-dim]
+  (let [make-range-layer #(map vector
+                  (take (+ % 1) (range)) (take (+ % 1) (range % -1 -1)))]
+  (mapcat (fn [row remove] (take (- grid-dim remove) (drop remove (make-range-layer row))))
+          (range (- (* grid-dim 2) 1))
+          (concat (repeat (- grid-dim 1) 0) (range grid-dim)))))
 
 (defn cartesian-to-isometric-transform
   "take cartesian x,y and map to isometric (x,y)"

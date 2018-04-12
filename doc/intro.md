@@ -43,12 +43,11 @@
  :tiles {:images '({:image :height-offset :width :height} ...)
          :widest
          :tallest}
- :start-display-x
- :start-display-y
+ :draw-offset-x
+ :draw-offset-y
  :entity-handlers
  :entity-handler?
- :map-offset-x
- :map-offset-y}
+ :grid-dimension}
 ```
 ## Entities
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.
