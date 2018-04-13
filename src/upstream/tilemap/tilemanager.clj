@@ -8,45 +8,6 @@
   (:gen-class))
 
 (defn set-position
-    "set tile-map position: based off player's location in map"
-    [px py tilemap]
-    ;TODO: refactor
-    (let [increment-width (:grid-dimension tilemap)
-          window-width @config/WINDOW-WIDTH
-          window-height @config/WINDOW-HEIGHT
-          grid-screen-center (spacialutility/isometric-to-cartesian-transform (list (/ window-width 2) (/ window-height 2)))
-          updated-chunked-map (chunkutility/update-chunk-view (:map tilemap) px py)
-          tiles-across-master (:tiles-across updated-chunked-map)
-          tiles-down-master (:tiles-down updated-chunked-map)
-          chunk-tile-offset-x (- (:offset-x (:central-chunk updated-chunked-map)) (:chunk-dim updated-chunked-map))
-          chunk-tile-offset-y (- (:offset-y (:central-chunk updated-chunked-map)) (:chunk-dim updated-chunked-map))
-          player-position-x-in-chunk (- px (* chunk-tile-offset-x increment-width))
-          player-position-y-in-chunk (- py (* chunk-tile-offset-y increment-width))
-
-          fix-offset-at-edges (fn [computed-negative-offset max-negative-offset buffer]
-                                (cond
-                                    (> computed-negative-offset buffer) buffer
-                                    (> max-negative-offset
-                                       computed-negative-offset) max-negative-offset
-                                    :else computed-negative-offset))
-          tilemap-negative-offset-x (fix-offset-at-edges (- (/ window-width 2) player-position-x-in-chunk)
-                                      (+ (- window-width
-                                            (* increment-width tiles-across-master))
-                                         increment-width)
-                                      (- 0 increment-width))
-          tilemap-negative-offset-y (fix-offset-at-edges (- (/ window-height 2) player-position-y-in-chunk)
-                                      (+ (- window-height
-                                            (* increment-width tiles-down-master))
-                                         increment-width)
-                                      (- 0 increment-width))]
-          (merge tilemap
-            ;TODO: add an offset for player location
-            {:draw-offset-x (- 0 (+ tilemap-negative-offset-x ))
-             :draw-offset-y (- 0 (+ tilemap-negative-offset-y ))
-             :map updated-chunked-map
-             })))
-
-(defn set-position-v2
   "testing set-position fn"
   [px py tilemap]
   (let [updated-chunk-map (chunkutility/update-chunk-view (:map tilemap) px py)
@@ -160,10 +121,10 @@
                           ;TODO: confirm that offset computed after transform is correct (might need to be separated from scale up)
                           iso-x (* (- (first iso-coords) (:origin-offset-x image-resource)) @config/COMPUTED-SCALE)
                           iso-y (* (- (second iso-coords) (:origin-offset-y image-resource)) @config/COMPUTED-SCALE)]
-                            (if (and (> iso-x (* (- 0 width-guard) 2))
-                                     (> iso-y (* (- 0 height-guard) 2))
-                                     (< iso-x (+ @config/WINDOW-WIDTH (* 2 width-guard)))
-                                     (< iso-y (+ @config/WINDOW-HEIGHT (* 2 height-guard))))
+                            (if (and (> iso-x (* (- 0 width-guard) 3))
+                                     (> iso-y (* (- 0 height-guard) 3)) ;TODO: this won't be efficient for super blocks
+                                     (< iso-x (+ @config/WINDOW-WIDTH (* 3 width-guard)))
+                                     (< iso-y (+ @config/WINDOW-HEIGHT (* 3 height-guard))))
                             (if (check-visible image-resource iso-x iso-y)
                                 (images/draw-image-alpha
                                   (:image image-resource) gr iso-x iso-y 0.5)

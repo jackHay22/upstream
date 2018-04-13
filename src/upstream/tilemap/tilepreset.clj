@@ -8,7 +8,7 @@
     ;images in list for current
       {:map "maps/level_1-layer_0.txt"
        :label :l0
-       :chunk-dimension 8
+       :chunk-dimension 16
        :grid-dimension 32
        :tiles (list (TileResource. "tiles/test_sheet.png" 32 16 64 32))
        :map-attributes (list :image-index :sound)})
