@@ -10,8 +10,8 @@
 (def example-player (atom 0)) ;remove
 (def tile-map-layers (atom '()))
 (def player-input-map (atom {}))
-(def this-x (atom 400)) ;remove
-(def this-y (atom 250)) ;remove
+(def this-x (atom 800)) ;remove
+(def this-y (atom 800)) ;remove
 (def entity-state (atom '()))
 
 (defn init-level-one
@@ -20,7 +20,7 @@
   ;TODO: configure for server mode (TODO: check for server here rather than in each manager)
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
   (reset! tile-map-layers
-          (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS 100 100)) ;TODO: change starting location
+          (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS 800 800)) ;TODO: change starting location
 
   (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
@@ -36,10 +36,10 @@
   []
   ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state
-        current-x (+  @this-x 1)]
+        current-x (+ @this-x 0.1)]
      (reset! this-x current-x)
       (reset! tile-map-layers
-        (doall (map #(tile-manager/set-position
+        (doall (map #(tile-manager/set-position-v2
                       @this-x
                       @this-y %)
          @tile-map-layers)))
@@ -50,6 +50,7 @@
   [gr]
   (let [temp-handler-set (list {:x 0 :y 5 :prevent-block? true :fn #(println "handler 1")} {:x 0 :y 10 :fn #(println "handler 2")})
           ;handlers have grid indices (TODO: make this more efficient)
+          ;handlers just take gr and should bundle things needed to render entities
 
         tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
 ]

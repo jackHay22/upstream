@@ -10,9 +10,11 @@
 (defn set-position
     "set tile-map position: based off player's location in map"
     [px py tilemap]
+    ;TODO: refactor
     (let [increment-width (:grid-dimension tilemap)
           window-width @config/WINDOW-WIDTH
           window-height @config/WINDOW-HEIGHT
+          grid-screen-center (spacialutility/isometric-to-cartesian-transform (list (/ window-width 2) (/ window-height 2)))
           updated-chunked-map (chunkutility/update-chunk-view (:map tilemap) px py)
           tiles-across-master (:tiles-across updated-chunked-map)
           tiles-down-master (:tiles-down updated-chunked-map)
@@ -27,7 +29,6 @@
                                     (> max-negative-offset
                                        computed-negative-offset) max-negative-offset
                                     :else computed-negative-offset))
-
           tilemap-negative-offset-x (fix-offset-at-edges (- (/ window-width 2) player-position-x-in-chunk)
                                       (+ (- window-width
                                             (* increment-width tiles-across-master))
@@ -39,10 +40,30 @@
                                          increment-width)
                                       (- 0 increment-width))]
           (merge tilemap
-            {:draw-offset-x (- 0 tilemap-negative-offset-x)
-             :draw-offset-y (- 0 tilemap-negative-offset-y)
+            ;TODO: add an offset for player location
+            {:draw-offset-x (- 0 (+ tilemap-negative-offset-x ))
+             :draw-offset-y (- 0 (+ tilemap-negative-offset-y ))
              :map updated-chunked-map
              })))
+
+(defn set-position-v2
+  "testing set-position fn"
+  [px py tilemap]
+  (let [updated-chunk-map (chunkutility/update-chunk-view (:map tilemap) px py)
+        map-offset-x (- (:offset-x (:central-chunk updated-chunk-map))
+                        (:chunk-dim updated-chunk-map))
+        map-offset-y (- (:offset-y (:central-chunk updated-chunk-map))
+                        (:chunk-dim updated-chunk-map))
+        player-position-x-in-map (- px (* map-offset-x (:grid-dimension tilemap)))
+        player-position-y-in-map (- py (* map-offset-y (:grid-dimension tilemap)))
+        window-width (/ @config/WINDOW-WIDTH @config/COMPUTED-SCALE)
+        window-height (/ @config/WINDOW-HEIGHT @config/COMPUTED-SCALE)
+        grid-screen-center (spacialutility/isometric-to-cartesian-transform (list (/ window-width 2) (/ window-height 2)))]
+
+        (merge tilemap
+            {:draw-offset-x (- (first grid-screen-center) player-position-x-in-map)
+             :draw-offset-y (- (second grid-screen-center) player-position-y-in-map)
+             :map updated-chunk-map})))
 
 (defn split-master-image
   "split master image into list of image maps: {:image :width :height} (1 dimensional)"
@@ -50,8 +71,7 @@
   (let [x-coords (range 0 (:resource-width block-loader) (:width tileset))
         y-coords (range 0 (:resource-height block-loader) (:height tileset))]
   (flatten
-      (map (fn [r]
-           (map (fn [c]
+      (map (fn [r] (map (fn [c]
               (merge tileset
                 {:image ((:load-fn block-loader) c r (:width tileset) (:height tileset))}))
             x-coords)) y-coords))))
@@ -79,12 +99,11 @@
                 (let [all-tiles
                         (mapcat
                             (fn [tileset]
-                                (doall
-                                    (map (fn [loaded-resource]
-                                              (update-in loaded-resource [:image]
-                                                #(images/scale-loaded-image-by-factor % @config/COMPUTED-SCALE)))
+                                (doall (map (fn [loaded-resource]
+                                                (update-in loaded-resource [:image]
+                                                  #(images/scale-loaded-image-by-factor % @config/COMPUTED-SCALE)))
                                             (split-master-image
-                                              (images/sub-image-loader (:path tileset)) tileset))))
+                                                (images/sub-image-loader (:path tileset)) tileset))))
                               tile-list)]
                     {:images all-tiles
                      :widest (reduce-map-by-factor :width all-tiles)
@@ -99,6 +118,7 @@
   (fn [y]
     (if (not (empty? handlers))
       (doall
+        ;TODO: convert to isometric coordinates and draw in relative chunk position
         (map #(if (= y (:y %)) ((:fn %))) handlers)))))
 
 (defn object-blocks-visible?
@@ -109,7 +129,8 @@
         entity-y (:y entity-set)]
   (fn [img-map x y]
     (if (= entity-set false) false
-        (and (> entity-x x)
+        (and (> (:origin-offset-y img-map) entity-y)
+             (> entity-x x)
              (> (+ x (:width img-map)) entity-x)
              (> entity-y y)
              (> (+ y (:height img-map)) entity-y))))))
@@ -130,16 +151,19 @@
                   (let [tile (nth (nth current-chunked-map (second tile-coords)) (first tile-coords))]
                   (if (:draw? tile)
                     (let [image-resource (nth (:images (:tiles tilemap)) (:image-index tile))
-                          iso-coords (spacialutility/cartesian-to-isometric-transform (map #(* % (:grid-dimension tilemap)) tile-coords))
+                          iso-coords (spacialutility/cartesian-to-isometric-transform
+                                      (list
+                                        (+ (* (first tile-coords) (:grid-dimension tilemap)) (:draw-offset-x tilemap))
+                                        (+ (* (second tile-coords) (:grid-dimension tilemap)) (:draw-offset-y tilemap))))
                           width-guard (:widest (:tiles tilemap))
                           height-guard (:tallest (:tiles tilemap))
-                          ;TODO: confirm that offset computed after transform is correct
-                          iso-x (* (- (first iso-coords) (:origin-offset-x image-resource) (:draw-offset-x tilemap)) @config/COMPUTED-SCALE)
-                          iso-y (* (- (second iso-coords) (:origin-offset-y image-resource) (:draw-offset-y tilemap)) @config/COMPUTED-SCALE)]
-                            (if (and (> iso-x (- 0 width-guard))
-                                     (> iso-y (- 0 height-guard))
-                                     (< iso-x (+ @config/WINDOW-WIDTH width-guard))
-                                     (< iso-y (+ @config/WINDOW-HEIGHT height-guard)))
+                          ;TODO: confirm that offset computed after transform is correct (might need to be separated from scale up)
+                          iso-x (* (- (first iso-coords) (:origin-offset-x image-resource)) @config/COMPUTED-SCALE)
+                          iso-y (* (- (second iso-coords) (:origin-offset-y image-resource)) @config/COMPUTED-SCALE)]
+                            (if (and (> iso-x (* (- 0 width-guard) 2))
+                                     (> iso-y (* (- 0 height-guard) 2))
+                                     (< iso-x (+ @config/WINDOW-WIDTH (* 2 width-guard)))
+                                     (< iso-y (+ @config/WINDOW-HEIGHT (* 2 height-guard))))
                             (if (check-visible image-resource iso-x iso-y)
                                 (images/draw-image-alpha
                                   (:image image-resource) gr iso-x iso-y 0.5)

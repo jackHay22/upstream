@@ -7,6 +7,7 @@
 
 (def chunk-store (atom {}))
 (defrecord Chunk [map offset-x offset-y])
+(defn make-empty-chunk [size offset-x offset-y] (Chunk. (repeat size (repeat size {:draw? false})) offset-x offset-y))
 
 (defn parse-map-file
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
@@ -39,19 +40,14 @@
   (list (/ (:offset-x chunk) dim)
         (/ (:offset-y chunk) dim)))
 
-(defn get-chunk
-  "take label, indices return chunk"
-  [label indices]
-  (nth (nth (label @chunk-store) (second indices)) (first indices)))
-
 (defn build-map-from-center
   "take indices of center chunk, build 3 chunk x 3 chunk map
    --return tuple of simplified map and central chunk resource"
   [label center-indices]
-  (let [chunk-array (map #(take 3 (drop (max (- (second center-indices) 1) 0) %))
-                          (take 3 (drop (max (- (first center-indices) 1) 0)
-                            (label @chunk-store))))] ;pull master array from memory
-        (do (println "Debug: running chunk-load-cycle")
+  (let [chunk-array (map #(take 3 (drop (- (first center-indices) 1) %))
+                          (take 3 (drop (- (second center-indices) 1)
+                            (label @chunk-store))))]
+        (do (println "Debug: running chunk-load-cycle...")
         (list
           ;TODO: verify that this works
           (reduce into []
@@ -66,9 +62,9 @@
    --only swap chunks if player moves out of middle chunk
    --adds 9 chunks to map"
   [current-map px py]
-  (let [tile-x (/ px 32) ;TODO: update
-        tile-y (/ py 32)]
-        ;TODO: running chunk load cycle constantly
+  (let [tile-x (int (/ px 32)) ;TODO: update
+        tile-y (int (/ py 32))]
+
   (if (and (not (empty? (:current-map current-map)))
            (spacial-utility/coords-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
                                           (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
@@ -94,10 +90,10 @@
         tiles-across (:tiles-across master-resource)
         tiles-down (:tiles-down master-resource)
         chunk-loader (get-chunk-from-offset (:map master-resource) chunk-dim)
-        all-chunks (map (fn [x] (map
-                          (fn [y] (chunk-loader x y))
-                      (range 0 tiles-down (/ tiles-down chunk-dim))))
-                      (range 0 tiles-across (/ tiles-across chunk-dim)))]
+        all-chunks (map (fn [y] (map
+                          (fn [x] (chunk-loader x y))
+                      (range 0 tiles-across chunk-dim)))
+                      (range 0 tiles-down chunk-dim))]
         (do
           ;save to chunk store with given label
           (swap! chunk-store assoc label all-chunks)

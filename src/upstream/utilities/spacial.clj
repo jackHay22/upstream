@@ -3,7 +3,7 @@
   (:gen-class))
 
 (defn lateral-range
-  "create a lateral range for drawing tiles at depth"
+  "create a lateral range for drawing tiles at depth rather than by row"
   [grid-dim]
   (let [make-range-layer #(map vector
                   (take (+ % 1) (range)) (take (+ % 1) (range % -1 -1)))]
@@ -12,13 +12,13 @@
           (concat (repeat (- grid-dim 1) 0) (range grid-dim)))))
 
 (defn cartesian-to-isometric-transform
-  "take cartesian x,y and map to isometric (x,y)"
+  "take cartesian (x,y) and map to isometric (x,y)"
   [xy]
   (list (- (first xy) (second xy))
         (/ (+ (first xy) (second xy)) 2)))
 
 (defn isometric-to-cartesian-transform
-  "take isometric x,y and map to cartesian (x,y)"
+  "take isometric (x,y) and map to cartesian (x,y)"
   [xy]
   (list (+ (second xy) (/ (first xy) 2))
         (- (second xy) (/ (first xy) 2))))
