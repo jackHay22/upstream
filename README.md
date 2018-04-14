@@ -47,17 +47,11 @@ docker run \
   - Note: this is broken
 
 ## TODO:
-- [ ] Correct draw image location based on image corner offset
-- [ ] Draw images with correct offsets given computed scale
-- [ ] Based on entity handler, draw with opacity if blocking player
-- [ ] Use set-map location for negative chunk offset
-- [ ] Try making chunks smaller
-- [ ] Add utility function that determines the tile a player is on given px py, can be used in several places
-- [ ] Verify chunk-window loader
-- [ ] Update set map position to accommodate new model
+- [ ] refactor core/-main
+- [ ] Fix jittery scrolling (at least fix layer shaking)
+- [ ] Don't always recompute spacial range
+- [ ] Make entity draw handler efficient
 - [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn
-- [ ] Draw based on center chunk offset
-- [ ] Testing of chunk load cycle performance
 - [ ] Edge testing
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
@@ -87,6 +81,16 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Draw based on center chunk offset
+- [x] Testing of chunk load cycle performance
+- [x] Correct draw image location based on image corner offset
+- [x] Draw images with correct offsets given computed scale
+- [x] Based on entity handler, draw with opacity if blocking player
+- [x] Use set-map location for negative chunk offset
+- [x] Try making chunks smaller
+- [x] Add utility function that determines the tile a player is on given px py, can be used in several places
+- [x] Verify chunk-window loader
+- [x] Update set map position to accommodate new model
 - [x] Detect save corruption
 - [x] Load safeguards (infrastructure around save functionality)
 - [x] Fix broken load-from-save

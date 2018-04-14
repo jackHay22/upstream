@@ -8,10 +8,11 @@
 
 (def game-state (atom config/STARTING-GAME-STATE))
 (def example-player (atom 0)) ;remove
-(def tile-map-layers (atom '()))
+(def tile-resource (atom nil))
+(def map-resource (atom nil)) ;TODO: eventually this should be associated with each entity
 (def player-input-map (atom {}))
-(def this-x (atom 800)) ;remove
-(def this-y (atom 800)) ;remove
+(def this-x (atom 200)) ;remove
+(def this-y (atom 200)) ;remove
 (def entity-state (atom '()))
 
 (defn init-level-one
@@ -19,8 +20,9 @@
   []
   ;TODO: configure for server mode (TODO: check for server here rather than in each manager)
   (reset! example-player (images/load-image-scale-by-factor "entities/logger_1.png" @config/COMPUTED-SCALE))
-  (reset! tile-map-layers
-          (tile-manager/load-tile-maps config/LEVEL-ONE-TILEMAPS 800 800)) ;TODO: change starting location
+
+  (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
+  (reset! map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS 200 200))
 
   (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
@@ -36,29 +38,22 @@
   []
   ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state
-        current-x (+ @this-x 0.5)]
+        current-x (+ @this-x 0.1)]
      (reset! this-x current-x)
-      (reset! tile-map-layers
-        (doall (map #(tile-manager/set-position
-                      @this-x
-                      @this-y %)
-         @tile-map-layers)))
+     (reset! map-resource (tile-manager/set-position @this-x @this-y @map-resource))
   true))
 
 (defn draw-level-one
   "update and draw handler for level one"
   [gr]
-  (let [temp-handler-set (list {:x 0 :y 5 :prevent-block? true :fn #(println "handler 1")} {:x 0 :y 10 :fn #(println "handler 2")})
-          ;handlers have grid indices (TODO: make this more efficient)
-          ;handlers just take gr and should bundle things needed to render entities
+  (let [draw-player-at-offset (fn [gr off-x off-y] (images/draw-image @example-player gr (+ @this-x off-x) (+ @this-y off-y)))
+        temp-handler-set (list {:x (int (/ @this-x 32))
+                                :y (int (/ @this-y 32))
+                                :prevent-block? true
+                                :fn (fn [gr o-x o-y] (draw-player-at-offset gr (* (- o-x 10) @config/COMPUTED-SCALE) (* (- o-y 10) @config/COMPUTED-SCALE)))} )
+      ]
 
-        tilemaps (map #(if (:entity-handler? %) (assoc % :entity-handlers temp-handler-set) %) @tile-map-layers) ;get from entity manager layers
-]
-
-  (doall (map #(tile-manager/render-map gr %) tilemaps)) ;tilemaps
-    ; (images/draw-image @example-player gr
-    ;   (+ @this-x (:map-offset-x (first tilemaps)))
-    ;   (+ @this-y (:map-offset-y (first tilemaps))))
+  (tile-manager/render-map gr @map-resource @tile-resource temp-handler-set)
   ))
 
 (defn keypressed-level-one

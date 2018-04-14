@@ -1,7 +1,8 @@
 (ns upstream.entities.entitymanager
   (:require
     [upstream.config :as config]
-    [upstream.utilities.images :as images])
+    [upstream.utilities.images :as images]
+    [upstream.utilities.spacial :as spacialutility])
   (:gen-class))
 
 (defn load-entities
@@ -42,14 +43,29 @@
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
-  [gr e]
+  [gr e x y]
   (let [action-set ((:current-action e) (:images e))
         current-image (nth ((:facing e) action-set)
                            (:current-frame-index action-set))]
     (images/draw-image
       current-image gr
-      (:position-x e)
-      (- (:position-y e) (:draw-height-offset e)))))
+      (- x (* @config/COMPUTED-SCALE (:draw-width-offset e)))
+      ;TODO: figure out correct image offsets given positioning
+      (- y (* @config/COMPUTED-SCALE (:draw-height-offset e))))))
+
+(defn create-draw-handlers
+  "take all entities in list and create a list of draw handlers"
+  [entities]
+  ;TODO: if player, :prevent-block? true
+  ;TODO: update hardcoded grid dim
+  (map #({:x (int (/ (:position-x) 32))
+          :y (int (/ (:position-y) 32))
+          :fn (fn [gr map-offset-x map-offset-y]
+                  (let [iso-coords (spacialutility/cartesian-to-isometric-transform
+                                        (list (+ (:position-x %) map-offset-x)
+                                              (+ (:position-y %) map-offset-y)))]
+                  (draw-entity gr % (first iso-coords) (second iso-coords))))})
+  entities))
 
 (defn entitykeypressed
   "respond to key press"

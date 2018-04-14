@@ -31,8 +31,7 @@
 (defn tile-to-chunk
   "take tile coordinates, return chunk coordinates"
   [tx ty dim]
-  (list
-    (int (/ tx dim)) (int (/ ty dim)))) ;TODO: is int cast correct?
+  (list (int (/ tx dim)) (int (/ ty dim))))
 
 (defn get-chunk-indices
   "get the x,y chunk indices of Chunk"
@@ -44,36 +43,38 @@
   "take indices of center chunk, build 3 chunk x 3 chunk map
    --return tuple of simplified map and central chunk resource"
   [label center-indices]
-  (let [chunk-array (map #(take 3 (drop (- (first center-indices) 1) %))
-                          (take 3 (drop (- (second center-indices) 1)
-                            (label @chunk-store))))]
-        (do (println "Debug: running chunk-load-cycle...")
+  (let [chunk-array (map #(take 3 (drop (first center-indices) %))
+                          ;accounts for empty chunk buffer
+                          (take 3 (drop (second center-indices)
+                            (:map (label @chunk-store)))))]
         (list
-          ;TODO: verify that this works
           (reduce into []
             (map (fn [chunk-row]
               (map #(reduce into [] %)
                     (apply map vector (map #(:map %) chunk-row))))
                   chunk-array))
-          (second (second chunk-array))))))
+          (second (second chunk-array)))))
 
-(defn update-chunk-view
+(defn update-entity-chunk
   "take player location, update loaded chunks
    --only swap chunks if player moves out of middle chunk
    --adds 9 chunks to map"
-  [current-map px py]
+  [entity-map-set px py]
   (let [tile-x (int (/ px 32)) ;TODO: update
-        tile-y (int (/ py 32))]
-
-  (if (and (not (empty? (:current-map current-map)))
-           (spacial-utility/coords-equal? (get-chunk-indices (:central-chunk current-map) (:chunk-dim current-map))
-                                          (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))) current-map
-      ;else: perform reload cycle
-      (let [new-map (build-map-from-center
-                                (:label current-map)
-                                (tile-to-chunk tile-x tile-y (:chunk-dim current-map)))]
-              (assoc current-map :current-map (first new-map)
-                                 :central-chunk (second new-map))))))
+        tile-y (int (/ py 32))
+        chunk-dim (:chunk-dim entity-map-set)]
+  (update-in entity-map-set [:current-maps]
+      #(doall (map
+                (fn [layer]
+                    (if (and (not (empty? (:map layer)))
+                             (spacial-utility/coords-equal?
+                                (get-chunk-indices (:central-chunk layer) chunk-dim)
+                                (tile-to-chunk tile-x tile-y chunk-dim))) layer
+                    ;else: perform reload cycle
+                    (let [new-map (build-map-from-center
+                                      (:label layer)
+                                      (tile-to-chunk tile-x tile-y chunk-dim))]
+                          (merge layer {:map (first new-map) :central-chunk (second new-map)})))) %)))))
 
 (defn get-chunk-from-offset
   "returns chunk of master given offset and dim"
@@ -82,26 +83,40 @@
     (Chunk. (map #(take chunk-dim (drop offset-x %))
                 (take chunk-dim (drop offset-y master-array))) offset-x offset-y)))
 
+(defn map-to-chunks
+  "take map layer, return as :label chunk-store"
+  [layer]
+  (let [load-map-resource (parse-map-file (:map layer) (:map-attributes layer))
+        chunk-loader (get-chunk-from-offset (:map load-map-resource) (:chunk-dim layer))
+        chunk-dim (:chunk-dim layer)
+        tiles-across (:tiles-across load-map-resource)
+        tiles-down (:tiles-down load-map-resource)]
+    (hash-map :map (map (fn [y] (map
+                      (fn [x]
+                        (if (or (< x 0) (< y 0))
+                            (make-empty-chunk chunk-dim x y)
+                            (chunk-loader x y)))
+                  (range (- 0 chunk-dim) tiles-across chunk-dim)))
+                  (range (- 0 chunk-dim) tiles-down chunk-dim))
+              :tiles-across tiles-across
+              :tiles-down tiles-down)))
+
 (defn prepare-map-chunks
   "take 2D array of map chunk files to be loaded dynamically to prevent system overhead
    -- loads based on starting location"
-  [path fields label chunk-dim start-x start-y]
-  (let [master-resource (parse-map-file path fields)
-        tiles-across (:tiles-across master-resource)
-        tiles-down (:tiles-down master-resource)
-        chunk-loader (get-chunk-from-offset (:map master-resource) chunk-dim)
-        all-chunks (map (fn [y] (map
-                          (fn [x] (chunk-loader x y))
-                      (range 0 tiles-across chunk-dim)))
-                      (range 0 tiles-down chunk-dim))]
-        (do
-          ;save to chunk store with given label
-          (swap! chunk-store assoc label all-chunks)
-          ;perform initial chunk load cycle
-          (update-chunk-view {:current-map '()
-                              :label label
-                              :chunk-dim chunk-dim
-                              :tiles-down tiles-down
-                              :tiles-across tiles-across
-                              :central-chunk nil}
-                             start-x start-y))))
+  [layers start-x start-y]
+  (do ;save to chunk store with given label
+      (reset! chunk-store (reduce (fn [resources next-layer]
+                                                  (assoc resources (:label next-layer)
+                                                      (map-to-chunks next-layer))) {} layers))
+      ;perform initial chunk load cycle
+      (update-entity-chunk {:current-maps (map #(hash-map :label (:label %)
+                                                          :map '()
+                                                          :entity-handler? (:entity-handler? %)
+                                                          :prevent-view-block? (:prevent-view-block? %)
+                                                          :central-chunk nil) layers)
+                            :chunk-dim (:chunk-dim (first layers))
+                            :grid-dim (:grid-dim (first layers))
+                            :draw-offset-x 0
+                            :draw-offset-y 0}
+                            start-x start-y)))

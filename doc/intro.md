@@ -32,22 +32,29 @@
               ;TileResource record takes path, y-draw offset, tile width, tile height
  :map-attributes (list :image-index :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```
-### Loaded Resource Format:
+### Loaded Resource Formats:
+- Tile resource (same for all individual entity chunk views)
 ```clojure
-{:map {:current-map '(({:draw? & :fields} ...) ...)
-       :label
-       :tiles-down
-       :tiles-across
-       :chunk-dim
-       :central-chunk}
- :tiles {:images '({:image :height-offset :width :height} ...)
-         :widest
-         :tallest}
+{:l1 {:images '({:image :height-offset :width :height} ...)
+      :widest
+      :tallest}
+ :l2 ...}
+```
+- Map resource (each entity has one)
+```clojure
+{:current-maps '({:label :l1 :map (({:draw? & :fields} ...) ...) :central-chunk Chunk :entity-handler? false :prevent-view-block? false}
+                 {:label :l2 :map (({:draw? & :fields} ...) ...) :central-chunk Chunk :entity-handler? true :prevent-view-block? true})
+ :grid-dim
+ :chunk-dim
  :draw-offset-x
- :draw-offset-y
- :entity-handlers
- :entity-handler?
- :grid-dimension}
+ :draw-offset-y}
+```
+- Chunk store (full map in memory)
+```clojure
+{:l1 {:map ((Chunk.) ...) ;where Chunk record is [map offset-x offset-y]
+      :tiles-across
+      :tiles-down}
+ :l2 {}...}
 ```
 ## Entities
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.
