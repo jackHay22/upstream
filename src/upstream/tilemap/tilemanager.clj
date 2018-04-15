@@ -22,10 +22,9 @@
         window-height (/ @config/WINDOW-HEIGHT @config/COMPUTED-SCALE)
         grid-screen-center (spacialutility/isometric-to-cartesian-transform
                                   (list (/ window-width 2) (/ window-height 2)))]
-
         (merge updated-chunk-map
-            {:draw-offset-x (- (first grid-screen-center) player-position-x-in-map)
-             :draw-offset-y (- (second grid-screen-center) player-position-y-in-map)})))
+            {:draw-offset-x (int (- (first grid-screen-center) player-position-x-in-map))
+             :draw-offset-y (int (- (second grid-screen-center) player-position-y-in-map))})))
 
 (defn split-master-image
   "split master image into list of image maps: {:image :width :height} (1 dimensional)"
@@ -103,12 +102,11 @@
               (let [image-set ((:label current-layer) tile-resource)
                     image-resource (nth (:images image-set) (:image-index tile))
                     iso-coords (spacialutility/cartesian-to-isometric-transform
-                                (list
-                                  (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
-                                  (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
+                                  (list
+                                    (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
+                                    (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
                     width-guard (:widest image-set)
                     height-guard (:tallest image-set)
-                    ;TODO: confirm that offset computed after transform is correct (might need to be separated from scale up)
                     iso-x (* (- (first iso-coords) (:origin-offset-x image-resource)) @config/COMPUTED-SCALE)
                     iso-y (* (- (second iso-coords) (:origin-offset-y image-resource)) @config/COMPUTED-SCALE)]
                       (if (:entity-handler? current-layer)
@@ -130,7 +128,7 @@
   "take graphics object and render all map layers"
   [gr map-resource tile-resource entity-handlers]
   (let [render-map-layer (render-layer gr map-resource tile-resource
-                              (spacialutility/lateral-range (* 3 (:chunk-dim map-resource)))
+                              (spacialutility/lateral-range (* 3 (:chunk-dim map-resource))) ;TODO: doesn't need to be recomputed
                               (object-blocks-visible? (reduce #(if (:prevent-block? %2) (reduced %2) false) false entity-handlers))
                               entity-handlers)]
         (doall (map #(render-map-layer %) (:current-maps map-resource)))))

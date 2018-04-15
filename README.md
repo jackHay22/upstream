@@ -47,8 +47,11 @@ docker run \
   - Note: this is broken
 
 ## TODO:
-- [ ] refactor core/-main
 - [ ] Fix jittery scrolling (at least fix layer shaking)
+- [ ] Each entity has an associated map-resource (the player is the only one used in tilemap render)
+- [ ] Entity manager associates map resource with player
+- [ ] Entity manager builds an entity-handler list
+- [ ] refactor core/-main
 - [ ] Don't always recompute spacial range
 - [ ] Make entity draw handler efficient
 - [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn

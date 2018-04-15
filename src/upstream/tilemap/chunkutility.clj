@@ -60,8 +60,8 @@
    --only swap chunks if player moves out of middle chunk
    --adds 9 chunks to map"
   [entity-map-set px py]
-  (let [tile-x (int (/ px 32)) ;TODO: update
-        tile-y (int (/ py 32))
+  (let [tile-x (int (/ px (:grid-dim entity-map-set)))
+        tile-y (int (/ py (:grid-dim entity-map-set)))
         chunk-dim (:chunk-dim entity-map-set)]
   (update-in entity-map-set [:current-maps]
       #(doall (map
@@ -70,11 +70,11 @@
                              (spacial-utility/coords-equal?
                                 (get-chunk-indices (:central-chunk layer) chunk-dim)
                                 (tile-to-chunk tile-x tile-y chunk-dim))) layer
-                    ;else: perform reload cycle
-                    (let [new-map (build-map-from-center
-                                      (:label layer)
-                                      (tile-to-chunk tile-x tile-y chunk-dim))]
-                          (merge layer {:map (first new-map) :central-chunk (second new-map)})))) %)))))
+                        ;else: perform reload cycle
+                        (let [new-map (build-map-from-center
+                                        (:label layer)
+                                        (tile-to-chunk tile-x tile-y chunk-dim))]
+                              (merge layer {:map (first new-map) :central-chunk (second new-map)})))) %)))))
 
 (defn get-chunk-from-offset
   "returns chunk of master given offset and dim"
@@ -93,7 +93,7 @@
         tiles-down (:tiles-down load-map-resource)]
     (hash-map :map (map (fn [y] (map
                       (fn [x]
-                        (if (or (< x 0) (< y 0))
+                        (if (or (< x 0) (< y 0)) ;TODO: make empty chunks on opposite side
                             (make-empty-chunk chunk-dim x y)
                             (chunk-loader x y)))
                   (range (- 0 chunk-dim) tiles-across chunk-dim)))

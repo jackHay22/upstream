@@ -29,10 +29,10 @@
  :label :l0
  :entity-handler? false
  :prevent-view-block? false
- :chunk-dim
- :grid-dim
- :tiles (list (TileResource. "tiles/test_superblock.png" 200 292 270)
-              (TileResource. "tiles/list_load_test.png" 0 64 32))
+ :chunk-dim 16
+ :grid-dim 32
+ :tiles (list (TileResource. "tiles/test_superblock.png" 170 60 292 270)
+              (TileResource. "tiles/test_sheet.png" 32 0 64 32))
               ;TileResource record takes path, y-draw offset, tile width, tile height
  :map-attributes (list :image-index :sound)} ;attributes corresponding to map values: i.e. map: -1,1 -> {:image -1 :sound 1}
  ```

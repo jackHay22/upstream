@@ -39,7 +39,6 @@
   ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state
         current-x (+ @this-x 0.1)]
-     (reset! this-x current-x)
      (reset! map-resource (tile-manager/set-position @this-x @this-y @map-resource))
   true))
 
@@ -61,6 +60,10 @@
   [key]
   (cond
     (= key :r) (init-level-one) ;(remove in prod)
+    (= key :up) (reset! this-y (- @this-y 1))
+    (= key :down) (reset! this-y (+ @this-y 1))
+    (= key :left) (reset! this-x (- @this-x 1))
+    (= key :right) (reset! this-x (+ @this-x 1))
     (= key :s) (save/save-state @entity-state))
   (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)

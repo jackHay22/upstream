@@ -17,19 +17,13 @@
 (def SAVE-FILE "game_saves.txt")
 (def AUTO-SAVE-SLEEP 10000) ;Autosave every 10 seconds
 
-(def TILE-SETTINGS
-  (atom
-  {
-
-  }))
-
-(def ORIGINAL-TILE-WIDTH 64)
+(def ORIGINAL-TILE-WIDTH 64) ;TODO: remove
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))
 (def TILES-ACROSS (atom 10))
 (def TILES-DOWN (atom 10))
 
-(def STARTING-GAME-STATE {:test 0})
+(def STARTING-GAME-STATE {:test 0}) ;TODO: remove
 (def LOAD-SCREEN-TTL 100)
 (def LOAD-SCREEN-FADE-DIVISION 4)
 
@@ -39,7 +33,7 @@
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
 
-(def PLAYER-START-X 100)
+(def PLAYER-START-X 100) ;TODO: update
 (def PLAYER_START-Y 100)
 
 (def LEVEL-ONE-TILEMAPS

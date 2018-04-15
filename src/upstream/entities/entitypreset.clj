@@ -11,7 +11,7 @@
   ;Sample Individual Entity State:
   ;each state has a list of cycling animation frames for each of the 8 directions
   {:images {
-         :display "entities/logger_1.png"
+         :display "entities/logger_1.png" ;TODO: load as sheets rather than image lists
          :at-rest (StateImageCollection. 0 '("entities/idle_rough_n.png") '()
                                            '() '("entities/idle_rough_se.png")
                                            '("entities/idle_rough_s.png") '("entities/idle_rough_sw.png")

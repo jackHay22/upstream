@@ -12,7 +12,7 @@
        :prevent-view-block? false
        :chunk-dim 16
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/test_sheet.png" 32 16 64 32))
+       :tiles (list (TileResource. "tiles/test_sheet.png" 32 0 64 32))
        :map-attributes (list :image-index :sound)})
 
 (def level-one-layer-1
