@@ -47,7 +47,12 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Experiment with more tiles across at start
 - [ ] Fix jittery scrolling (at least fix layer shaking)
+- [ ] Large superblocks not drawing once far out of screen (maybe needs to be multiplied by scale when finding guards)
+- [ ] Fix opacity issue
+- [ ] Find happy scale medium
+- [ ] Try to make render smoother
 - [ ] Each entity has an associated map-resource (the player is the only one used in tilemap render)
 - [ ] Entity manager associates map resource with player
 - [ ] Entity manager builds an entity-handler list

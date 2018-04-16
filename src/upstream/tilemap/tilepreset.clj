@@ -24,5 +24,5 @@
        :prevent-view-block? true
        :chunk-dim 16
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/test_superblock.png" 170 60 292 270))
+       :tiles (list (TileResource. "tiles/poc_sawmill.png" 170 60 1805 1142))
        :map-attributes (list :image-index :sound)})

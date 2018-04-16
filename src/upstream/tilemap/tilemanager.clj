@@ -107,8 +107,8 @@
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
                     width-guard (:widest image-set)
                     height-guard (:tallest image-set)
-                    iso-x (* (- (first iso-coords) (:origin-offset-x image-resource)) @config/COMPUTED-SCALE)
-                    iso-y (* (- (second iso-coords) (:origin-offset-y image-resource)) @config/COMPUTED-SCALE)]
+                    iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) @config/COMPUTED-SCALE)))
+                    iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) @config/COMPUTED-SCALE)))] ;(int (Math/ceil
                       (if (:entity-handler? current-layer)
                           (entity-handler gr handlers
                                   (first tile-coords) (second tile-coords)
