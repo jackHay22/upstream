@@ -60,6 +60,7 @@ docker run \
 - [ ] Entity manager code
 - [ ] Entity decision formatting
 - [ ] Keyboard input control
+- [ ] Add server support to all updates made
 - [ ] Prevent image/file loads if headless server (this is important in several areas)
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
