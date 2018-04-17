@@ -98,6 +98,12 @@
   :run-stamina 300
 }
 ```
+### Entity Decision-making
+The following specifies the entity decision code implemented in upstream.  Decisions take the form of a <predicate>-<action-category>-<action>:
+```
+:enemy-visible? :attack :shoot-at-closest
+```
+At load, predicate-actions are loaded as symbols and stored in an entities decision-list.  When it is time to make a decision the decision manager will execute the action corresponding to the first true predicate.
 
 ## Game Saves
 - When the game is saved it writes a truncated entity state map to the file: ```user.home/.upstream/<config/SAVE-FILE>```. Ex: ```/Users/jackhay/.upstream/game_saves.txt```.  If the game is loaded from a file, this truncated map will automatically be merged with the corresponding config entity preset. The included resources should then be loaded in the current gamestate by the entity manager.

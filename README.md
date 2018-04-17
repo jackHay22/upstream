@@ -52,19 +52,10 @@ docker run \
 - [ ] Fix jittering problem that originates when origin offsets are non-zero?
 - [ ] Fix bug: superblocks don't get drawn if they are bigger than a chunk (split superblocks up)
 - [ ] Fix bug: using a larger chunk dimension for l1 causes placement of superblocks to jump around
-- [ ] Experiment with more tiles across at start
-- [ ] Fix jittery scrolling (at least fix layer shaking)
-- [ ] Large superblocks not drawing once far out of screen (maybe needs to be multiplied by scale when finding guards)
-- [ ] Fix opacity issue
-- [ ] Fix entity handler bug
-- [ ] Find happy scale medium
+- [ ] Tilemap blocked intersections
 - [ ] Keyboard input control
 - [ ] Try to make render smoother
 - [ ] Initial entity movement
-- [ ] Tilemap intersections
-- [ ] Each entity has an associated map-resource (the player is the only one used in tilemap render)
-- [ ] Entity manager associates map resource with player
-- [ ] Entity manager builds an entity-handler list
 - [ ] refactor core/-main
 - [ ] Don't always recompute spacial range (chunk size is constant)
 - [ ] Make entity draw handler efficient
@@ -97,6 +88,11 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Each entity has an associated map-resource (the player is the only one used in tilemap render)
+- [x] Entity manager associates map resource with player
+- [x] Entity manager builds an entity-handler list
+- [x] Fix jittery scrolling (at least fix layer shaking)
+- [x] Experiment with more tiles across at start
 - [x] Add function to render that checks if an object is visible rather than guessing with "guards"
 - [x] Draw based on center chunk offset
 - [x] Testing of chunk load cycle performance
