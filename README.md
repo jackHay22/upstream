@@ -51,25 +51,27 @@ docker run \
 - [ ] Fix jittery scrolling (at least fix layer shaking)
 - [ ] Large superblocks not drawing once far out of screen (maybe needs to be multiplied by scale when finding guards)
 - [ ] Fix opacity issue
+- [ ] Fix entity handler bug
 - [ ] Find happy scale medium
+- [ ] Keyboard input control
 - [ ] Try to make render smoother
+- [ ] Initial entity movement
+- [ ] Tilemap intersections
 - [ ] Each entity has an associated map-resource (the player is the only one used in tilemap render)
 - [ ] Entity manager associates map resource with player
 - [ ] Entity manager builds an entity-handler list
 - [ ] refactor core/-main
-- [ ] Don't always recompute spacial range
+- [ ] Don't always recompute spacial range (chunk size is constant)
 - [ ] Make entity draw handler efficient
 - [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn
 - [ ] Edge testing
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
 - [ ] Entity decision formatting
-- [ ] Keyboard input control
 - [ ] Add server support to all updates made
 - [ ] Prevent image/file loads if headless server (this is important in several areas)
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
-- [ ] Tilemap intersections
 - [ ] Pause menu in level1
 - [ ] Refactor temporary fixes to menu and load screens, improve code and reduce atomics
 - [ ] Fix menu options resolution and scrolling problem with up arrow

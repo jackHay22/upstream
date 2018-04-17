@@ -100,20 +100,21 @@
             (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))]
             (if (:draw? tile)
               (let [image-set ((:label current-layer) tile-resource)
+                    scale @config/COMPUTED-SCALE
                     image-resource (nth (:images image-set) (:image-index tile))
                     iso-coords (spacialutility/cartesian-to-isometric-transform
                                   (list
                                     (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
-                    width-guard (:widest image-set)
-                    height-guard (:tallest image-set)
-                    iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) @config/COMPUTED-SCALE)))
-                    iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) @config/COMPUTED-SCALE)))] ;(int (Math/ceil
+                    width-guard (* (:widest image-set) scale)
+                    height-guard (* (:tallest image-set) scale)
+                    iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) scale)))
+                    iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) scale)))] ;(int (Math/ceil
                       (if (:entity-handler? current-layer)
                           (entity-handler gr handlers
                                   (first tile-coords) (second tile-coords)
                                   (:draw-offset-x map-resource) (:draw-offset-y map-resource)))
-                      (if (and (> iso-x (* (- 0 width-guard) 3))
+                      (if (and (> iso-x (* (- 0 width-guard) 3)) ;TODO: maybe the 3 only needs to be a 2
                                (> iso-y (* (- 0 height-guard) 3)) ;TODO: this won't be efficient for super blocks
                                (< iso-x (+ @config/WINDOW-WIDTH (* 3 width-guard)))
                                (< iso-y (+ @config/WINDOW-HEIGHT (* 3 height-guard))))

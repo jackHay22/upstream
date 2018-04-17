@@ -14,6 +14,10 @@
 
 ## Technical Documentation
 
+## Resources
+
+![SAWMILL](https://github.com/jackHay22/upstream/blob/master/resources/tiles/poc_sawmill.png)
+
 ### Resource loading
 - At initialization of the gamestate manager, the load state is first started and then subsequent states are loaded in a new thread.
 ```clojure
