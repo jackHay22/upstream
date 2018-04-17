@@ -91,42 +91,6 @@ docker run \
 
 ### Completed
 _See [documentation](doc/intro.md) for completed list_
-- [x] Each entity has an associated map-resource (the player is the only one used in tilemap render)
-- [x] Entity manager associates map resource with player
-- [x] Entity manager builds an entity-handler list
-- [x] Fix jittery scrolling (at least fix layer shaking)
-- [x] Experiment with more tiles across at start
-- [x] Add function to render that checks if an object is visible rather than guessing with "guards"
-- [x] Draw based on center chunk offset
-- [x] Testing of chunk load cycle performance
-- [x] Correct draw image location based on image corner offset
-- [x] Draw images with correct offsets given computed scale
-- [x] Based on entity handler, draw with opacity if blocking player
-- [x] Use set-map location for negative chunk offset
-- [x] Try making chunks smaller
-- [x] Add utility function that determines the tile a player is on given px py, can be used in several places
-- [x] Verify chunk-window loader
-- [x] Update set map position to accommodate new model
-- [x] Detect save corruption
-- [x] Load safeguards (infrastructure around save functionality)
-- [x] Fix broken load-from-save
-- [x] Player shadow
-- [x] Start-delay not updating correctly (related to static screen)
-- [x] Explore defrecord for interfaces.
-- [x] Non-fading static screen images not rendering
-- [x] Refactor tilemap loader to match entity-loader (potentially change format definition)
-- [x] Fix entity draw handler
-- [x] Draw superblocks based on their relative height (so they match with their relative location)
-- [x] Fix tilemap not drawing superblocks as they scroll away (render optimization)
-- [x] Fix conflict between load state and menu state using static screen
-- [x] Rewrite fixbounds
-- [x] Better reactive scaling
-- [x] Prevent image loads in tilemap for ```-server``` mode.
-- [x] Fix problems with gsmanager state changes from key presses
-- [x] Async resource loads through calls to state/init
-- [x] Add option to declare master images as ordered file set rather than single image for layer 2 (not all the same size, not necessarily 2:1)
-- [x] Link tile layer movement
-- [x] Better resource loading at boot (optimize game loads)
 
 ## Planned Iteration Schedule
 - [ ] _0.2.0_ Minimum playable environment (Late April 2018)
