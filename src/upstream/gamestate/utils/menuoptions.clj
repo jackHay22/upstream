@@ -30,7 +30,7 @@
     (if (not (empty? registered))
       (doseq [layer registered]
         ;use: :selected for selected
-        (utils/draw-image (if (:selected? layer) (:selected layer) (:deselected layer)) gr 0 0)))))
+        (utils/draw-image (if (:selected? layer) (:selected layer) (:deselected layer)) gr 0 -20)))))
 
 (defn keypressed-menu-option
   "key press handler for menu"

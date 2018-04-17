@@ -6,6 +6,7 @@
   (:gen-class))
 
 (def chunk-store (atom {}))
+(def chunk-store-loaded? (atom false))
 (defrecord Chunk [map offset-x offset-y])
 (defn make-empty-chunk [size offset-x offset-y] (Chunk. (repeat size (repeat size {:draw? false})) offset-x offset-y))
 
@@ -105,10 +106,13 @@
   "take 2D array of map chunk files to be loaded dynamically to prevent system overhead
    -- loads based on starting location"
   [layers start-x start-y]
-  (do ;save to chunk store with given label
-      (reset! chunk-store (reduce (fn [resources next-layer]
+  (do
+      (if (not @chunk-store-loaded?) ;only needs to be loaded once
+          (do
+            (reset! chunk-store (reduce (fn [resources next-layer]
                                                   (assoc resources (:label next-layer)
                                                       (map-to-chunks next-layer))) {} layers))
+            (reset! chunk-store-loaded? true)))
       ;perform initial chunk load cycle
       (update-entity-chunk {:current-maps (map #(hash-map :label (:label %)
                                                           :map '()

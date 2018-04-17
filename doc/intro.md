@@ -64,8 +64,40 @@
       :tiles-down}
  :l2 {}...}
 ```
+
 ## Entities
 - On calls to update, all entities provide an update map.  This is either created through keyboard input or through "decisions" introduced by the entitydecisionmanager.
+
+### Entity Resource Specification
+```clojure
+{:images {
+       :display "entities/logger_1.png" ;TODO: load as sheets rather than image lists
+       :at-rest (StateImageCollection. 0 '("entities/idle_rough_n.png") '()
+                                         '() '("entities/idle_rough_se.png")
+                                         '("entities/idle_rough_s.png") '("entities/idle_rough_sw.png")
+                                         '() '())
+       :walking (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+       :running (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+       :punching (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+  }
+  :all-states (list :at-rest :walking :running :punching)
+  :all-directions (list :north :north-east
+                        :east :south-east
+                        :south :south-west
+                        :west :north-west)
+  :logical-entity-id 0
+  :decisions false
+  :map-resource nil
+  :render-as-central false
+  :position-x starting-x
+  :position-y starting-y
+  :draw-height-offset 20
+  :draw-width-offset 20
+  :facing :south-west
+  :current-action :at-rest
+  :run-stamina 300
+}
+```
 
 ## Game Saves
 - When the game is saved it writes a truncated entity state map to the file: ```user.home/.upstream/<config/SAVE-FILE>```. Ex: ```/Users/jackhay/.upstream/game_saves.txt```.  If the game is loaded from a file, this truncated map will automatically be merged with the corresponding config entity preset. The included resources should then be loaded in the current gamestate by the entity manager.

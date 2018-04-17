@@ -125,11 +125,10 @@
                                     (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
                     iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) scale)))
-                    iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) scale)))] ;(int (Math/ceil
-                      (if (> 32 (:origin-offset-x image-resource)) (println (:origin-offset-x image-resource)))
+                    iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) scale)))]
                       (if (:entity-handler? current-layer)
                           (entity-handler gr handlers
-                                  (first tile-coords) (second tile-coords) ;TODO: make this map relative with chunk offset
+                                  (first tile-coords) (second tile-coords)
                                   (:draw-offset-x map-resource) (:draw-offset-y map-resource)))
                       (if (image-visible? iso-x iso-y image-resource scale)
                           (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))

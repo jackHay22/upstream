@@ -2,6 +2,7 @@
   (:require
     [upstream.config :as config]
     [upstream.utilities.images :as images]
+    [upstream.tilemap.tilemanager :as tile-manager]
     [upstream.utilities.spacial :as spacialutility])
   (:gen-class))
 
@@ -11,7 +12,9 @@
   ;TODO: load decisions if added, create draw handler
   (let [load-image #(images/load-image-scale-by-factor % @config/COMPUTED-SCALE)]
     (map (fn [entity]
-          (update-in entity [:images]
+          (let [starting-x (:position-x entity)
+                starting-y (:position-y entity)]
+          (assoc (update-in entity [:images]
               (fn [state-map]
                   (reduce (fn [all-states current-state]
                             (update-in all-states [current-state]
@@ -21,20 +24,29 @@
                                                         #(doall (if (not (empty? %))
                                                                     (map load-image %)))))
                                               directions-map (:all-directions entity)))))
-                        state-map (:all-states entity)))))
+                        state-map (:all-states entity))))
+            :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y))))
           entity-list)))
 
-(defn update-entity
+(defn get-central-render-map
+  "take entity list and return the map of the player"
+  [entity-list]
+  (reduce #(if (:render-as-central %2) (reduced (:map-resource %2)) %1) false entity-list))
+
+(defn update-entities
   "update given entity (either from decisions or player input)"
-  [entity update-map]
-  (let [facing (:facing entity)
-        action (:current-action entity)
-        update-facing (:update-facing update-map)
-        update-action (:update-action update-map)
-        px (:position-x entity)
-        py (:position-y entity)]
-    )
-  )
+  [entities update-map]
+  (let [update-facing (:update-facing update-map)
+        update-action (:update-action update-map)]
+    (map (fn [e]
+            (let [facing (:facing e)
+                  action (:current-action e)
+                  map-resource (:map-resource e)
+                  px (:position-x e)
+                  py (:position-y e)]
+            (if (:render-as-central e)
+                (assoc e :map-resource (tile-manager/set-position px py map-resource))))) entities)
+  ))
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
@@ -51,14 +63,19 @@
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
   [entities grid-dim]
-  (map #({:x (int (/ (:position-x) grid-dim))
-          :y (int (/ (:position-y) grid-dim))
-          :fn (fn [gr map-offset-x map-offset-y]
-                  (let [iso-coords (spacialutility/cartesian-to-isometric-transform
+  (map #(hash-map :x (int (/ (:position-x %) grid-dim)) ;TODO: make chunk relative
+                  :y (int (/ (:position-y %) grid-dim))
+                  :fn (fn [gr map-offset-x map-offset-y]
+                          (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                         (list (+ (:position-x %) map-offset-x)
                                               (+ (:position-y %) map-offset-y)))]
-                  (draw-entity gr % (first iso-coords) (second iso-coords))))})
+                  (draw-entity gr % (first iso-coords) (second iso-coords)))))
   entities))
+  ; draw-player-at-offset (fn [gr off-x off-y] (images/draw-image @example-player gr (+ @this-x off-x) (+ @this-y off-y)))
+  ;       temp-handler-set (list {:x (int (/ @this-x 32))
+  ;                               :y (int (/ @this-y 32))
+  ;                               :prevent-block? true
+  ;                               :fn (fn [gr o-x o-y] (draw-player-at-offset gr (* (- o-x 10) @config/COMPUTED-SCALE) (* (- o-y 10) @config/COMPUTED-SCALE)))}
 
 (defn entitykeypressed
   "respond to key press"

@@ -27,11 +27,12 @@
                           :west :north-west)
     :logical-entity-id 0
     :decisions false
+    :map-resource nil
+    :render-as-central false
     :position-x starting-x
     :position-y starting-y
     :draw-height-offset 20
     :draw-width-offset 20
     :facing :south-west
     :current-action :at-rest
-    :run-stamina 300
-    })
+    :run-stamina 300 })
