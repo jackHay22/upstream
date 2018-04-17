@@ -46,7 +46,7 @@
   "key press handler for level one"
   [key]
   (cond
-    (= key :r) (init-level-one) ;(remove in prod)
+    (= key :r) (init-level-one) ;(remove in prod) ;this will cause problems if not removed
     (= key :s) (save/save-state @entity-state))
   (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)

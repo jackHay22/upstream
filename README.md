@@ -47,6 +47,7 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Potential efficiency problem with more entities by looking through list for one to use to render (if central-render is first in list this isn't a big problem)
 - [ ] Make entity handler fn map relative instead of chunk relative
 - [ ] Something wrong with opacity function
 - [ ] Fix jittering problem that originates when origin offsets are non-zero?
@@ -64,6 +65,7 @@ docker run \
 - [ ] Bundle tilemap config and add function for updating
 - [ ] Entity manager code
 - [ ] Entity decision formatting
+- [ ] General system optimizations
 - [ ] Add server support to all updates made
 - [ ] Prevent image/file loads if headless server (this is important in several areas)
 - [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
@@ -88,6 +90,7 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+_See [documentation](doc/intro.md) for completed list_
 - [x] Each entity has an associated map-resource (the player is the only one used in tilemap render)
 - [x] Entity manager associates map resource with player
 - [x] Entity manager builds an entity-handler list
