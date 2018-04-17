@@ -3,6 +3,7 @@
             [upstream.utilities.images :as images] ;remove
             [upstream.entities.entitymanager :as entity-manager]
             [upstream.utilities.save :as save]
+            [upstream.tilemap.chunkutility :as chunk-reload]
             [upstream.tilemap.tilemanager :as tile-manager])
   (:gen-class))
 
@@ -14,10 +15,12 @@
 (defn init-level-one
   "load resources"
   []
+  (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off
   (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
   (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
-  (save/start-autosaver entity-state))
+  ;(save/start-autosaver entity-state) ; production mode
+  )
 
 (defn update-via-server
   "receive state from server rather than internal"
