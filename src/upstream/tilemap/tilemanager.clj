@@ -91,6 +91,24 @@
                      (> entity-y y)
                      (> (+ y (:height img-map)) entity-y))))))
 
+(defn image-visible?
+  "take image resource and determine if it needs to be drawn"
+  [x y image-resource scale]
+  (let [image-height (* (:height image-resource) scale)
+        image-width (* (:width image-resource) scale)
+        center-visible? (fn [x y w h]
+                          (or
+                            (and (< x 0) (> (+ x w) @config/WINDOW-WIDTH))
+                            (and (< y 0) (> (+ y h) @config/WINDOW-HEIGHT))))
+        corner-visible? (fn [x y] (and (> x 0) (> y 0)
+                                       (< x @config/WINDOW-WIDTH)
+                                       (< y @config/WINDOW-HEIGHT)))]
+        (or (center-visible? x y image-width image-height)
+            (corner-visible? x y)
+            (corner-visible? (+ x image-width) y)
+            (corner-visible? x (+ y image-height))
+            (corner-visible? (+ x image-width) (+ y image-height)))))
+
 (defn render-layer
   "take map layer and render"
   [gr map-resource tile-resource lateral-coordinate-set blocks-visible? handlers]
@@ -106,23 +124,19 @@
                                   (list
                                     (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
-                    width-guard (* (:widest image-set) scale)
-                    height-guard (* (:tallest image-set) scale)
                     iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) scale)))
                     iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) scale)))] ;(int (Math/ceil
+                      (if (> 32 (:origin-offset-x image-resource)) (println (:origin-offset-x image-resource)))
                       (if (:entity-handler? current-layer)
                           (entity-handler gr handlers
-                                  (first tile-coords) (second tile-coords)
+                                  (first tile-coords) (second tile-coords) ;TODO: make this map relative with chunk offset
                                   (:draw-offset-x map-resource) (:draw-offset-y map-resource)))
-                      (if (and (> iso-x (* (- 0 width-guard) 3)) ;TODO: maybe the 3 only needs to be a 2
-                               (> iso-y (* (- 0 height-guard) 3)) ;TODO: this won't be efficient for super blocks
-                               (< iso-x (+ @config/WINDOW-WIDTH (* 3 width-guard)))
-                               (< iso-y (+ @config/WINDOW-HEIGHT (* 3 height-guard))))
-                      (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
-                          (images/draw-image-alpha
-                            (:image image-resource) gr iso-x iso-y 0.5)
-                          (images/draw-image
-                            (:image image-resource) gr iso-x iso-y)))))))
+                      (if (image-visible? iso-x iso-y image-resource scale)
+                          (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
+                              (images/draw-image-alpha
+                                (:image image-resource) gr iso-x iso-y 0.5)
+                              (images/draw-image
+                                (:image image-resource) gr iso-x iso-y)))))))
           lateral-coordinate-set))))
 
 (defn render-map

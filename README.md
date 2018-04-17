@@ -47,6 +47,11 @@ docker run \
   - Note: this is broken
 
 ## TODO:
+- [ ] Make entity handler fn map relative instead of chunk relative
+- [ ] Something wrong with opacity function
+- [ ] Fix jittering problem that originates when origin offsets are non-zero?
+- [ ] Fix bug: superblocks don't get drawn if they are bigger than a chunk (split superblocks up)
+- [ ] Fix bug: using a larger chunk dimension for l1 causes placement of superblocks to jump around
 - [ ] Experiment with more tiles across at start
 - [ ] Fix jittery scrolling (at least fix layer shaking)
 - [ ] Large superblocks not drawing once far out of screen (maybe needs to be multiplied by scale when finding guards)
@@ -92,6 +97,7 @@ docker run \
 - [ ] Use terraform for automated ecs deployments
 
 ### Completed
+- [x] Add function to render that checks if an object is visible rather than guessing with "guards"
 - [x] Draw based on center chunk offset
 - [x] Testing of chunk load cycle performance
 - [x] Correct draw image location based on image corner offset

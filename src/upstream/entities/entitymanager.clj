@@ -24,11 +24,6 @@
                         state-map (:all-states entity)))))
           entity-list)))
 
-
-(defn create-draw-handlers
-  "take entity state, build a draw handler for each entity"
-  [])
-
 (defn update-entity
   "update given entity (either from decisions or player input)"
   [entity update-map]
@@ -55,11 +50,9 @@
 
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
-  [entities]
-  ;TODO: if player, :prevent-block? true
-  ;TODO: update hardcoded grid dim
-  (map #({:x (int (/ (:position-x) 32))
-          :y (int (/ (:position-y) 32))
+  [entities grid-dim]
+  (map #({:x (int (/ (:position-x) grid-dim))
+          :y (int (/ (:position-y) grid-dim))
           :fn (fn [gr map-offset-x map-offset-y]
                   (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                         (list (+ (:position-x %) map-offset-x)

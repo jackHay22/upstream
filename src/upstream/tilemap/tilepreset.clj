@@ -24,5 +24,6 @@
        :prevent-view-block? true
        :chunk-dim 16
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/poc_sawmill.png" 170 60 1805 1142))
-       :map-attributes (list :image-index :sound)})
+       :tiles (list (TileResource. "tiles/poc_sawmill.png" 170 60 1797 1122)
+                    (TileResource. "tiles/tree_set.png" 60 300 130 325))
+       :map-attributes (list :image-index :blocked? :height :sound)})

@@ -38,7 +38,7 @@
   []
   ;entities: create overlap handler with subscribers?, send to tilemap at render
   (let [state @game-state
-        current-x (+ @this-x 0.1)]
+        current-x (+ @this-x 0.5)]
      (reset! this-x current-x)
      (reset! map-resource (tile-manager/set-position @this-x @this-y @map-resource))
   true))
