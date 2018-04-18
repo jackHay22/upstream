@@ -9,7 +9,7 @@
 (defn load-entities
   "perform resource loads on list of entities, TODO: create draw-handler for each"
   [entity-list]
-  ;TODO: load decisions if added, create draw handler
+  ;TODO: load decisions if added
   (let [load-image #(images/load-image-scale-by-factor % @config/COMPUTED-SCALE)]
     (map (fn [entity]
           (let [starting-x (:position-x entity)
@@ -45,7 +45,8 @@
                   px (:position-x e)
                   py (:position-y e)]
             (if (:render-as-central e)
-                (assoc e :map-resource (tile-manager/set-position px py map-resource))))) entities)
+                (assoc e :map-resource (tile-manager/set-position px py map-resource))
+                (assoc e :map-resource (tile-manager/update-chunk-view px py map-resource))))) entities)
   ))
 
 (defn draw-entity

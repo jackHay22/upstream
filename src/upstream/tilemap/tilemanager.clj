@@ -26,6 +26,11 @@
             {:draw-offset-x (int (- (first grid-screen-center) player-position-x-in-map))
              :draw-offset-y (int (- (second grid-screen-center) player-position-y-in-map))})))
 
+(defn update-chunk-view
+  "update an entities chunk without computing draw offsets"
+  [px py map-resource]
+  (chunkutility/update-entity-chunk map-resource px py))
+
 (defn split-master-image
   "split master image into list of image maps: {:image :width :height} (1 dimensional)"
   [block-loader tileset]

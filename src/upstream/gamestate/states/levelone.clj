@@ -7,7 +7,6 @@
             [upstream.tilemap.tilemanager :as tile-manager])
   (:gen-class))
 
-(def game-state (atom config/STARTING-GAME-STATE))
 (def tile-resource (atom nil))
 (def player-input-map (atom {}))
 (def entity-state (atom '()))
@@ -15,20 +14,21 @@
 (defn init-level-one
   "load resources"
   []
-  (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off
+  (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
   (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
   (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
-  ;(save/start-autosaver entity-state) ; production mode
+  ;(save/start-autosaver entity-state) ; --> add in prod
   )
 
 (defn update-via-server
   "receive state from server rather than internal"
   [server-state]
-  (reset! game-state server-state))
+  ;parse entity state, error check
+  )
 
 (defn update-level-one
-  "update"
+  "update level1"
   []
   (let [current-entity-state @entity-state]
        (reset! entity-state (entity-manager/update-entities current-entity-state @player-input-map))
@@ -46,7 +46,7 @@
   "key press handler for level one"
   [key]
   (cond
-    (= key :r) (init-level-one) ;(remove in prod) ;this will cause problems if not removed
+    (= key :r) (init-level-one) ;--> remove in prod ;this will cause problems if not removed and hotswapping is enabled
     (= key :s) (save/save-state @entity-state))
   (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)

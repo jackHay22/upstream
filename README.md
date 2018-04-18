@@ -58,6 +58,8 @@ docker run \
 - [ ] Try to make render smoother
 - [ ] Initial entity movement
 - [ ] refactor core/-main
+- [ ] Don't need to sound layers: make layer two a sound layer and update layer 1 accordingly
+- [ ] Fix docker server save file bug (only load or save to file when not server)
 - [ ] Don't always recompute spacial range (chunk size is constant)
 - [ ] Make entity draw handler efficient
 - [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn

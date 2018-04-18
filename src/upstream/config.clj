@@ -23,7 +23,6 @@
 (def TILES-ACROSS (atom 15)) ;TODO: find best scale
 (def TILES-DOWN (atom 10))
 
-(def STARTING-GAME-STATE {:test 0}) ;TODO: remove
 (def LOAD-SCREEN-TTL 100)
 (def LOAD-SCREEN-FADE-DIVISION 4)
 
@@ -42,6 +41,7 @@
     tile-preset/level-one-layer-1))
 
 (def LEVEL-ONE-ENTITIES
+  ;Define render as central at front for efficiency
   (list
     (assoc (entity-preset/player-preset-1 PLAYER-START-X PLAYER_START-Y) :render-as-central true)
     ))
