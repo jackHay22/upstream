@@ -87,6 +87,7 @@
                         :west :north-west)
   :logical-entity-id 0
   :decisions false
+  :performance {}
   :map-resource nil
   :render-as-central false
   :position-x starting-x
@@ -136,6 +137,7 @@ At load, predicate-actions are loaded as symbols and stored in an entities decis
 - Save a stack trace or debug message to a file in .upstream directory: ```(log/save-critical-log filename message)```
 
 ## Completed TODO list
+- [x] Fix docker server save file bug (only load or save to file when not server)
 - [x] Each entity has an associated map-resource (the player is the only one used in tilemap render)
 - [x] Entity manager associates map resource with player
 - [x] Entity manager builds an entity-handler list

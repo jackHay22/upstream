@@ -1,7 +1,7 @@
 (ns upstream.core
   (:require [upstream.engine.gamewindow :as engine]
             [upstream.utilities.log :as logger]
-            [upstream.utilities.gploader :as gpsys]
+            [upstream.utilities.gpsys :as gpsys]
             [upstream.config :as config]
             [upstream.gamestate.gsmanager :as gsm]
             [upstream.server.gameserver :as server])
@@ -16,19 +16,20 @@
     (cond
       (= (first args) "-server")
          (do
-           (logger/write-log "Starting in server mode...")
            (reset! config/HEADLESS-SERVER? true)
+           (logger/write-log "Starting in server mode...")
            (gsm/init-gsm 2) ;skip straight to l1 mode
-           (server/start-welcome-server config/SERVER-LISTEN-PORT)
+           (server/start-server config/SERVER-LISTEN-PORT gsm/authenticate-user "Game Server")
            (engine/start-headless))
       (= (first args) "-gp")
           (do
-            (logger/write-log "Starting UpstreamGP...")
             (reset! config/HEADLESS-SERVER? true)
-            (server/start-gp-server config/SERVER-LISTEN-PORT gpsys/start-gp-simulation))
-        :else (do
-                (reset! config/HEADLESS-SERVER? true)
-                (logger/write-log "Error: bad initialization argument:" (first args))))
+            (logger/write-log "Starting UpstreamGP...")
+            (server/start-server config/SERVER-LISTEN-PORT gpsys/start-gp-simulation "UpstreamGP"))
+      :else
+          (do
+            (reset! config/HEADLESS-SERVER? true)
+            (logger/write-log "ERROR: bad initialization argument:" (first args))))
     (do
       (System/setProperty "sun.java2d.opengl" "true")
       ;TODO: refactor

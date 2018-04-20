@@ -43,16 +43,10 @@
                   (.write writer processed-input)
                   (.flush writer))))) running)
 
-(defn start-welcome-server
+(defn start-server
     "start and accept a connection to a tcp socket server for establishing data conn"
-    [port] (let [socket (ServerSocket. port)]
-        (logger/write-log "Starting server on port:" port)
+    [port handler log-id]
+    (let [socket (ServerSocket. port)]
+        (logger/write-log "Serving" log-id " on port: " port)
         ;use socket to create async persistent server
-        (do (persistent-server socket manager/authenticate-user) socket)))
-
-(defn start-gp-server
-  "Start an instance of upstream as a distributed gp server"
-  [port handler]
-  (let [socket (ServerSocket. port)]
-      (logger/write-log "Starting UpstreamGP server on port:" port)
-      (do (persistent-server socket handler) socket)))
+        (do (persistent-server socket handler) socket)))
