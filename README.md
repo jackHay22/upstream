@@ -46,6 +46,10 @@ docker run \
 - Upstream containers also provide a web interface with various metrics ```localhost:4444``` (or whatever port is configured in ```docker/run.list```)
   - Note: this is broken
 
+## UpstreamGP server Operation
+- Run UpstreamGP with the argument ```-gp```.
+- Follow input formatting convention found in [documentation](doc/intro.md).
+
 ## TODO:
 - [ ] Potential efficiency problem with more entities by looking through list for one to use to render (if central-render is first in list this isn't a big problem)
 - [ ] Make entity handler fn map relative instead of chunk relative

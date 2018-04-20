@@ -14,12 +14,24 @@
 (defn init-level-one
   "load resources"
   []
-  (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
-  (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
-  (reset! entity-state (entity-manager/load-entities
+  ;TODO check if server before load
+  (if (not config/HEADLESS-SERVER?)
+      (do
+        (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
+        (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
+        (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
-  ;(save/start-autosaver entity-state) ; --> add in prod
-  )
+        ;(save/start-autosaver entity-state) ; --> add in prod
+      )
+      (do
+        ;server mode (no image load and no autosave) -- Note: if in GP mode
+        (reset! entity-state (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))))
+
+(defn continuous-state-update
+  "take entity-state and return update
+  state as continuous update for gp"
+  [entities]
+  (entity-manager/update-entities entities {}))
 
 (defn update-via-server
   "receive state from server rather than internal"

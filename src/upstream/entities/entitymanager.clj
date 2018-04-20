@@ -35,7 +35,7 @@
 
 (defn update-entities
   "update given entity (either from decisions or player input)"
-  [entities update-map]
+  [entities update-map] ;NOTE: update-map may be empty
   (let [update-facing (:update-facing update-map)
         update-action (:update-action update-map)]
     (map (fn [e]

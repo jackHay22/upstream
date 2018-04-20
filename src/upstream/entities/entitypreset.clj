@@ -27,6 +27,7 @@
                           :west :north-west)
     :logical-entity-id 0
     :decisions false
+    :performance {}
     :map-resource nil
     :render-as-central false
     :position-x starting-x

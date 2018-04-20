@@ -120,6 +120,17 @@ At load, predicate-actions are loaded as symbols and stored in an entities decis
 (save/overwrite-save! config/LEVEL-ONE-ENTITIES)
 ```
 
+## Genetic Programming Payload spec
+- A clojure map structure is sent from the GP driver to UpstreamGP in the following way
+```clojure
+{:run-ttl 60000 ;frames to run simulation for
+ :entity-state '({...}) ;entity list to be filled out by preset and used in simulation
+ :performance-metrics '(:survival ...) ;list of performance metrics used to create each individual's performance map
+}
+```
+- The GP functionality of Upstream is meant to operate in conjunction with a distributed GP system like [Darwin](https://github.com/darwingp) which was written by [Nate Symer](https://github.com/natesymer) and I in 2017.
+- The Darwin evaluation config should be setup to send individuals to the UpstreamGP server in the evaluation phase and then use the returned performance maps.
+
 ## Debug Options
 - Write a message to std out: ```(log/write-log msg arg1 ... argn)```
 - Save a stack trace or debug message to a file in .upstream directory: ```(log/save-critical-log filename message)```
