@@ -100,10 +100,10 @@ _See [documentation](doc/intro.md) for completed list_
 ## Planned Iteration Schedule
 - [ ] _0.2.0_ Minimum playable environment (Late April 2018)
   - Acceptance Standards:
-    - [ ] Working tilemap system for 2 layers, collision system
+    - [x] Working tilemap system for 2 layers, collision system
     - [ ] Player idle and movement animations
     - [ ] Initial pass at game art
-    - [ ] Viable art development pipeline
+    - [x] Viable art development pipeline
 - [ ] _0.3.0_ Minimum playable game (Mid July 2018)
   - Acceptance Standards:
     - [ ] Full map design and initial art pass on entire map
@@ -111,23 +111,30 @@ _See [documentation](doc/intro.md) for completed list_
     - [ ] First pass on hostile enemy system
     - [ ] Polished art in key locations
     - [ ] Dynamic undergrowth system @ layer 3
-- [ ] _0.4.0_ Testing release (End of Summer 2018)
+- [ ] _0.4.0_ Genetic Programming Release (Early August 2018)
+  - Acceptance Standards:
+    - [ ] Working distributed evaluation system
+    - [ ] Running UpstreamGP image on cluster
+    - [ ] Basic decision instruction generation
+    - [ ] Optimized UpstreamGP individual evaluation
+    - [ ] Testing GP individuals with human-coded individuals
+- [ ] _0.5.0_ Testing release (End of Summer 2018)
   - Acceptance Standards:
     - [ ] Distribute game to initial group for local gameplay testing
     - [ ] Working website with download functionality (testing for macOS gatekeeper)
-- [ ] _0.5.0_ Testing release 2 (Early Fall 2018)
+- [ ] _0.6.0_ Testing release 2 (Early Fall 2018)
   - Acceptance Standards:
     - [ ] Resolve inevitable bugs
     - [ ] Iterate on feedback
     - [ ] Re-release with changes made
-- [ ] _0.6.0_ Minimum viable server environment (End of Summer 2018)
+- [ ] _0.7.0_ Minimum viable server environment (End of Summer 2018)
   - Acceptance Standards:
     - [ ] Deployment to raspberry pi cluster through docker
     - [ ] Monitoring orchestration
     - [ ] Redis background server
     - [ ] Multicast server
     - [ ] Basic user authentication mechanism
-- [ ] _0.7.0_ Production server environment (Mid Fall 2018)
+- [ ] _0.8.0_ Production server environment (Mid Fall 2018)
   - Acceptance Standards:
     - [ ] Terraform deployment automation (or cloudformation)
     - [ ] Full AWS server environment
