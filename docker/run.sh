@@ -11,5 +11,5 @@ WEB_PORT=$2
 #./start_web_interface $WEB_PORT &
 #xterm -title "Upstream Server" &
 
-printf "${WRENCH}  ${YELLOW}Docker${NC}: Starting ${RED}Upstream${NC} as ${YELLOW}server${NC}. \n"
+printf "${WRENCH}  ${YELLOW}Docker${NC}: Starting ${RED}Upstream${NC} in ${YELLOW}$SERVER_MODE${NC} mode. \n"
 exec java -jar /app.jar $SERVER_MODE | ./redirect_logs
