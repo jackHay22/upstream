@@ -15,7 +15,7 @@
   "load resources"
   []
   ;TODO check if server before load
-  (if (not config/HEADLESS-SERVER?)
+  ;(if (not config/HEADLESS-SERVER?)
       (do
         (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
         (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
@@ -23,9 +23,10 @@
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
         ;(save/start-autosaver entity-state) ; --> add in prod
       )
-      (do
-        ;server mode (no image load and no autosave) -- Note: if in GP mode
-        (reset! entity-state (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))))
+      )
+      ; (do
+      ;   ;server mode (no image load and no autosave) -- Note: if in GP mode
+      ;   (reset! entity-state (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))))
 
 (defn continuous-state-update
   "take entity-state and return update
