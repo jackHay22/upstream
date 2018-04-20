@@ -29,7 +29,7 @@
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
   []
-  (.start (Thread. #(doseq [s (rest STATES)] ((:init-handler s))))))
+  (.start (Thread. #(doseq [s (rest STATES)] (doall ((:init-handler s)))))))
 
 (defn init-gsm
   "perform resource loads"
