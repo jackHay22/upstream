@@ -131,16 +131,17 @@
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
                     iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) scale)))
                     iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) scale)))]
-                      (if (:entity-handler? current-layer)
-                          (entity-handler gr handlers
-                                  (first tile-coords) (second tile-coords)
-                                  (:draw-offset-x map-resource) (:draw-offset-y map-resource)))
-                      (if (image-visible? iso-x iso-y image-resource scale)
-                          (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
-                              (images/draw-image-alpha
+                    (if (image-visible? iso-x iso-y image-resource scale)
+                        (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
+                            (images/draw-image-alpha
                                 (:image image-resource) gr iso-x iso-y 0.5)
-                              (images/draw-image
-                                (:image image-resource) gr iso-x iso-y)))))))
+                            (images/draw-image
+                                (:image image-resource) gr iso-x iso-y)))))
+            ;TODO: try to optimize this
+            (if (:entity-handler? current-layer)
+                (entity-handler gr handlers
+                      (first tile-coords) (second tile-coords)
+                      (:draw-offset-x map-resource) (:draw-offset-y map-resource)))))
           lateral-coordinate-set))))
 
 (defn render-map

@@ -64,19 +64,21 @@
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
   [entities grid-dim]
-  (map #(hash-map :x (int (/ (:position-x %) grid-dim)) ;TODO: make chunk relative
-                  :y (int (/ (:position-y %) grid-dim))
-                  :fn (fn [gr map-offset-x map-offset-y]
-                          (let [iso-coords (spacialutility/cartesian-to-isometric-transform
-                                        (list (+ (:position-x %) map-offset-x)
-                                              (+ (:position-y %) map-offset-y)))]
-                  (draw-entity gr % (first iso-coords) (second iso-coords)))))
+  (map #(let [central-chunk (:central-chunk (first (:current-maps (:map-resource %))))
+              chunk-dim (:chunk-dim (:map-resource %))
+              offset-x (* grid-dim (- (:offset-x central-chunk) chunk-dim))
+              offset-y (* grid-dim (- (:offset-y central-chunk) chunk-dim))
+              chunk-relative-x (- (:position-x %) offset-x)
+              chunk-relative-y (- (:position-y %) offset-y)]
+              (hash-map :x (int (/ chunk-relative-x grid-dim))
+                        :y (int (/ chunk-relative-y grid-dim))
+                        ;TODO: add prevent-block? for player
+                        :fn (fn [gr map-offset-x map-offset-y]
+                                (let [iso-coords (spacialutility/cartesian-to-isometric-transform
+                                                      (list (+ chunk-relative-x map-offset-x)
+                                                            (+ chunk-relative-y map-offset-y)))]
+                                    (draw-entity gr % (first iso-coords) (second iso-coords))))))
   entities))
-  ; draw-player-at-offset (fn [gr off-x off-y] (images/draw-image @example-player gr (+ @this-x off-x) (+ @this-y off-y)))
-  ;       temp-handler-set (list {:x (int (/ @this-x 32))
-  ;                               :y (int (/ @this-y 32))
-  ;                               :prevent-block? true
-  ;                               :fn (fn [gr o-x o-y] (draw-player-at-offset gr (* (- o-x 10) @config/COMPUTED-SCALE) (* (- o-y 10) @config/COMPUTED-SCALE)))}
 
 (defn entitykeypressed
   "respond to key press"

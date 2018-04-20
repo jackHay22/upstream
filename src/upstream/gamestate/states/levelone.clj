@@ -24,7 +24,7 @@
         ;(save/start-autosaver entity-state) ; --> add in prod
       )
       )
-      ; (do
+      ; (do ;NOTE: this causes a bug (with headless_server check)
       ;   ;server mode (no image load and no autosave) -- Note: if in GP mode
       ;   (reset! entity-state (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))))
 

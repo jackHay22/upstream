@@ -15,4 +15,4 @@
         with-metrics (map #(assoc % :performance (zipmap performance-metrics (repeat 0))) entity-load)]
         (logger/write-log "Running UpstreamGP simulation with time to live:" run-ttl)
         (map :performance (reduce #(if (> %2 0) (env/continuous-state-update %1) (reduced %1))
-                with-metrics run-ttl))))
+                with-metrics run-ttl)))) ;TODO: run-ttl not a list @REDESIGN
