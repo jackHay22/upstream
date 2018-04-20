@@ -14,16 +14,13 @@
 (defn init-level-one
   "load resources"
   []
-  ;TODO check if server before load
-  ;(if (not config/HEADLESS-SERVER?)
-      (do
-        (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
-        (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
-        (reset! entity-state (entity-manager/load-entities
+  (do
+    (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
+    (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
+    (reset! entity-state (entity-manager/load-entities
                                 (save/load-from-save config/LEVEL-ONE-ENTITIES)))
-        ;(save/start-autosaver entity-state) ; --> add in prod
-      )
-      )
+    ;(save/start-autosaver entity-state) ; --> add in prod
+      ))
       ; (do ;NOTE: this causes a bug (with headless_server check)
       ;   ;server mode (no image load and no autosave) -- Note: if in GP mode
       ;   (reset! entity-state (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))))
@@ -53,7 +50,7 @@
   (let [entity-set @entity-state]
   (tile-manager/render-map
               gr (entity-manager/get-central-render-map entity-set)
-              @tile-resource (entity-manager/create-draw-handlers entity-set 32)))) ;TODO update hardcoded grid size
+              @tile-resource (entity-manager/create-draw-handlers entity-set))))
 
 (defn keypressed-level-one
   "key press handler for level one"

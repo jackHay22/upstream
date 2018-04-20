@@ -32,8 +32,8 @@
     :render-as-central false
     :position-x starting-x
     :position-y starting-y
-    :draw-height-offset 20
-    :draw-width-offset 20
+    :draw-height-offset 110
+    :draw-width-offset 22
     :facing :south-west
     :current-action :at-rest
     :run-stamina 300 })

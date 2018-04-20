@@ -21,7 +21,7 @@
 ### Resource loading
 - At initialization of the gamestate manager, the load state is first started and then subsequent states are loaded in a new thread.
 ```clojure
-(.start (Thread. #(doseq [s states] ((:init-fn s)))))
+  (.start (Thread. #(doseq [s (rest STATES)] (doall ((:init-handler s))))))
 ```
 
 ### Resource Specifications

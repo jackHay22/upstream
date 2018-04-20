@@ -65,7 +65,7 @@ docker run \
 - [ ] Try to make render smoother
 - [ ] Initial entity movement
 - [ ] refactor core/-main
-- [ ] Don't need to sound layers: make layer two a sound layer and update layer 1 accordingly
+- [ ] Don't need two sound layers: make layer two a sound layer and update layer 1 accordingly
 - [ ] Don't always recompute spacial range (chunk size is constant)
 - [ ] Make entity draw handler efficient
 - [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn
@@ -114,17 +114,17 @@ _See [documentation](doc/intro.md) for completed list_
     - [ ] First pass on hostile enemy system
     - [ ] Polished art in key locations
     - [ ] Dynamic undergrowth system @ layer 3
-- [ ] _0.4.0_ Genetic Programming Release (Early August 2018)
+- [ ] _0.4.0_ Testing release (Early August 2018)
+  - Acceptance Standards:
+    - [ ] Distribute game to initial group for local gameplay testing
+    - [ ] Working website with download functionality (testing for macOS gatekeeper)
+- [ ] _0.5.0_ Genetic Programming Release (End of Summer 2018)
   - Acceptance Standards:
     - [ ] Working distributed evaluation system
     - [ ] Running UpstreamGP image on cluster
     - [ ] Basic decision instruction generation
     - [ ] Optimized UpstreamGP individual evaluation
     - [ ] Testing GP individuals with human-coded individuals
-- [ ] _0.5.0_ Testing release (End of Summer 2018)
-  - Acceptance Standards:
-    - [ ] Distribute game to initial group for local gameplay testing
-    - [ ] Working website with download functionality (testing for macOS gatekeeper)
 - [ ] _0.6.0_ Testing release 2 (Early Fall 2018)
   - Acceptance Standards:
     - [ ] Resolve inevitable bugs
@@ -141,6 +141,11 @@ _See [documentation](doc/intro.md) for completed list_
   - Acceptance Standards:
     - [ ] Terraform deployment automation (or cloudformation)
     - [ ] Full AWS server environment
+- [ ] _0.9.0_ Distribution Release (Late Fall 2018)
+  - Acceptance Standards:
+    - [ ] Live website distribution testing
+    - [ ] System architecture testing
+    - [ ] Resource and load optimizations
 - [ ] _1.0.0_ Full Release (End 2018)
   - Acceptance Standards:
     - [ ] It's what it sounds like
@@ -148,5 +153,8 @@ _See [documentation](doc/intro.md) for completed list_
     - [ ] Full release available on website
     - [ ] BTS videos?
 - [ ] _*.0.0_ LTS (Through Summer 2019)
+  - Acceptance Standards:
+    - [ ] Iterate on feedback with well-tested, stable releases
+    - [ ] Release Deployment pipeline
 
 ### Upstream Copyright © 2018 Jack Hay.

@@ -63,13 +63,15 @@
 
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
-  [entities grid-dim]
+  [entities]
   (map #(let [central-chunk (:central-chunk (first (:current-maps (:map-resource %))))
               chunk-dim (:chunk-dim (:map-resource %))
-              offset-x (* grid-dim (- (:offset-x central-chunk) chunk-dim))
-              offset-y (* grid-dim (- (:offset-y central-chunk) chunk-dim))
+              grid-dim (:grid-dim (:map-resource %))
+              offset-x (* grid-dim (max (- (:offset-x central-chunk) chunk-dim) 0))
+              offset-y (* grid-dim (max (- (:offset-y central-chunk) chunk-dim) 0)) ;TODO figure out problem here
               chunk-relative-x (- (:position-x %) offset-x)
               chunk-relative-y (- (:position-y %) offset-y)]
+              ;(println chunk-relative-x "," chunk-relative-y)
               (hash-map :x (int (/ chunk-relative-x grid-dim))
                         :y (int (/ chunk-relative-y grid-dim))
                         ;TODO: add prevent-block? for player

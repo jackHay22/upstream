@@ -18,7 +18,7 @@
          (do
            (reset! config/HEADLESS-SERVER? true)
            (logger/write-log "Starting in server mode...")
-           (gsm/init-gsm 2) ;skip straight to l1 mode
+           (gsm/init-gsm 2)
            (server/start-server config/SERVER-LISTEN-PORT gsm/authenticate-user "Game Server")
            (engine/start-headless))
       (= (first args) "-gp")
@@ -39,7 +39,7 @@
         (reset! config/WINDOW-WIDTH (.width screenSize))
         (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))
         (reset! config/COMPUTED-SCALE scale)
-        (reset! config/TILES-DOWN (int (+
+        (reset! config/TILES-DOWN (int (+ ;TODO: is this used?
                                         (/ (.height screenSize) (/ (* scale config/ORIGINAL-TILE-HEIGHT) 2))
                                          2)))
         (gsm/init-gsm 0)

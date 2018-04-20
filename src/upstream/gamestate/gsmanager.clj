@@ -37,7 +37,7 @@
   (do
     (reset! current-game-state starting-state)
     (logger/write-log "Starting gamestate manager in state:" starting-state)
-    ((:init-handler (nth STATES starting-state)))))
+    (doall ((:init-handler (nth STATES starting-state))))))
 
 (defn update-and-draw
   "Update and Draw the current game state"
