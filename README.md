@@ -52,6 +52,7 @@ docker run \
 - Follow input formatting convention found in [documentation](doc/intro.md).
 
 ## TODO:
+- [ ] Fix object-blocks-visible? fn
 - [ ] Redesign gp evaluation reduce to be list based
 - [ ] Redesign level 1 init file problem for docker image
 - [ ] Potential efficiency problem with more entities by looking through list for one to use to render (if central-render is first in list this isn't a big problem)

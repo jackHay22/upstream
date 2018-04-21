@@ -50,8 +50,8 @@
 ```
 - Map resource (each entity has one)
 ```clojure
-{:current-maps '({:label :l1 :map (({:draw? & :fields} ...) ...) :central-chunk Chunk :entity-handler? false :prevent-view-block? false}
-                 {:label :l2 :map (({:draw? & :fields} ...) ...) :central-chunk Chunk :entity-handler? true :prevent-view-block? true})
+{:current-maps '({:label :l1 :map (({:draw? & :fields} ...) ...) :corner-chunk Chunk :entity-handler? false :prevent-view-block? false}
+                 {:label :l2 :map (({:draw? & :fields} ...) ...) :corner-chunk Chunk :entity-handler? true :prevent-view-block? true})
  :grid-dim
  :chunk-dim
  :draw-offset-x

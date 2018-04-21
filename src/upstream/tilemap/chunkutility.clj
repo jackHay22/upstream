@@ -34,19 +34,20 @@
   [tx ty dim]
   (list (int (/ tx dim)) (int (/ ty dim))))
 
-(defn get-chunk-indices
+(defn get-chunk-indices-from-corner
   "get the x,y chunk indices of Chunk"
   [chunk dim]
+  (map inc
   (list (/ (:offset-x chunk) dim)
-        (/ (:offset-y chunk) dim)))
+        (/ (:offset-y chunk) dim))))
 
 (defn build-map-from-center
   "take indices of center chunk, build 3 chunk x 3 chunk map
    --return tuple of simplified map and central chunk resource"
   [label center-indices]
-  (let [chunk-array (map #(take 3 (drop (first center-indices) %))
+  (let [chunk-array (map #(take 3 (drop (- (first center-indices) 1) %))
                           ;accounts for empty chunk buffer
-                          (take 3 (drop (second center-indices)
+                          (take 3 (drop (- (second center-indices) 1)
                             (:map (label @chunk-store)))))]
         (list
           (reduce into []
@@ -54,7 +55,7 @@
               (map #(reduce into [] %)
                     (apply map vector (map #(:map %) chunk-row))))
                   chunk-array))
-          (second (second chunk-array)))))
+          (first (first chunk-array)))))
 
 (defn update-entity-chunk
   "take player location, update loaded chunks
@@ -69,13 +70,13 @@
                 (fn [layer]
                     (if (and (not (empty? (:map layer)))
                              (spacial-utility/coords-equal?
-                                (get-chunk-indices (:central-chunk layer) chunk-dim)
+                                (get-chunk-indices-from-corner (:corner-chunk layer) chunk-dim)
                                 (tile-to-chunk tile-x tile-y chunk-dim))) layer
                         ;else: perform reload cycle
                         (let [new-map (build-map-from-center
                                         (:label layer)
                                         (tile-to-chunk tile-x tile-y chunk-dim))]
-                              (merge layer {:map (first new-map) :central-chunk (second new-map)})))) %)))))
+                              (merge layer {:map (first new-map) :corner-chunk (second new-map)})))) %)))))
 
 (defn get-chunk-from-offset
   "returns chunk of master given offset and dim"
@@ -93,12 +94,9 @@
         tiles-across (:tiles-across load-map-resource)
         tiles-down (:tiles-down load-map-resource)]
     (hash-map :map (map (fn [y] (map
-                      (fn [x]
-                        (if (or (< x 0) (< y 0)) ;TODO: make empty chunks on opposite side
-                            (make-empty-chunk chunk-dim x y)
-                            (chunk-loader x y)))
-                  (range (- 0 chunk-dim) tiles-across chunk-dim)))
-                  (range (- 0 chunk-dim) tiles-down chunk-dim))
+                      (fn [x] (chunk-loader x y))
+                  (range 0 tiles-across chunk-dim)))
+                  (range 0 tiles-down chunk-dim))
               :tiles-across tiles-across
               :tiles-down tiles-down)))
 
@@ -118,7 +116,7 @@
                                                           :map '()
                                                           :entity-handler? (:entity-handler? %)
                                                           :prevent-view-block? (:prevent-view-block? %)
-                                                          :central-chunk nil) layers)
+                                                          :corner-chunk nil) layers)
                             :chunk-dim (:chunk-dim (first layers))
                             :grid-dim (:grid-dim (first layers))
                             :draw-offset-x 0

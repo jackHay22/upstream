@@ -11,13 +11,9 @@
   "testing set-position fn"
   [px py map-resource]
   (let [updated-chunk-map (chunkutility/update-entity-chunk map-resource px py)
-        central-chunk (:central-chunk (first (:current-maps updated-chunk-map)))
-        map-offset-x (- (:offset-x central-chunk)
-                        (:chunk-dim updated-chunk-map))
-        map-offset-y (- (:offset-y central-chunk)
-                        (:chunk-dim updated-chunk-map))
-        player-position-x-in-map (- px (* map-offset-x (:grid-dim map-resource)))
-        player-position-y-in-map (- py (* map-offset-y (:grid-dim map-resource)))
+        corner-chunk (:corner-chunk (first (:current-maps updated-chunk-map)))
+        player-position-x-in-map (- px (* (:offset-x corner-chunk) (:grid-dim map-resource)))
+        player-position-y-in-map (- py (* (:offset-y corner-chunk) (:grid-dim map-resource)))
         window-width (/ @config/WINDOW-WIDTH @config/COMPUTED-SCALE)
         window-height (/ @config/WINDOW-HEIGHT @config/COMPUTED-SCALE)
         grid-screen-center (spacialutility/isometric-to-cartesian-transform
@@ -84,11 +80,14 @@
 (defn object-blocks-visible?
   "take object bounds,
   -- return fn that takes an image and checks if blocks"
-  [entity-set]
+  [entity-set scale offset-x offset-y grid-dim]
   (if (= entity-set false)
       (fn [& args] false)
-      (let [entity-x (:x entity-set)
-            entity-y (:y entity-set)]
+      (let [iso-indices (spacialutility/cartesian-to-isometric-transform
+                            (list (+ (* (:x entity-set) grid-dim) offset-x)
+                                  (+ (* (:y entity-set) grid-dim) offset-y)))
+            entity-x (* (first iso-indices) scale)
+            entity-y (* (second iso-indices) scale)]
             (fn [img-map x y]
                 (and (> (:origin-offset-y img-map) entity-y)
                      (> entity-x x)
@@ -149,6 +148,8 @@
   [gr map-resource tile-resource entity-handlers]
   (let [render-map-layer (render-layer gr map-resource tile-resource
                               (spacialutility/lateral-range (* 3 (:chunk-dim map-resource))) ;TODO: doesn't need to be recomputed
-                              (object-blocks-visible? (reduce #(if (:prevent-block? %2) (reduced %2) false) false entity-handlers))
+                              (object-blocks-visible? (reduce #(if (:prevent-block? %2) (reduced %2) false) false entity-handlers)
+                                                      @config/COMPUTED-SCALE (:draw-offset-x map-resource) (:draw-offset-y map-resource)
+                                                      (:grid-dim map-resource))
                               entity-handlers)]
         (doall (map #(render-map-layer %) (:current-maps map-resource)))))
