@@ -70,16 +70,18 @@
               offset-x (* grid-dim (max (- (:offset-x central-chunk) chunk-dim) 0))
               offset-y (* grid-dim (max (- (:offset-y central-chunk) chunk-dim) 0)) ;TODO figure out problem here
               chunk-relative-x (- (:position-x %) offset-x)
-              chunk-relative-y (- (:position-y %) offset-y)]
-              ;(println chunk-relative-x "," chunk-relative-y)
+              chunk-relative-y (- (:position-y %) offset-y)
+              scale @config/COMPUTED-SCALE]
               (hash-map :x (int (/ chunk-relative-x grid-dim))
                         :y (int (/ chunk-relative-y grid-dim))
-                        ;TODO: add prevent-block? for player
+                        :prevent-block? (:render-as-central %)
                         :fn (fn [gr map-offset-x map-offset-y]
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ chunk-relative-x map-offset-x)
                                                             (+ chunk-relative-y map-offset-y)))]
-                                    (draw-entity gr % (first iso-coords) (second iso-coords))))))
+                                    (draw-entity gr %
+                                          (int (* (- (first iso-coords) (:draw-width-offset %)) scale))
+                                          (int (* (- (second iso-coords) (:draw-height-offset %)) scale)))))))
   entities))
 
 (defn entitykeypressed

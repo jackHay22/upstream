@@ -21,10 +21,10 @@
         window-width (/ @config/WINDOW-WIDTH @config/COMPUTED-SCALE)
         window-height (/ @config/WINDOW-HEIGHT @config/COMPUTED-SCALE)
         grid-screen-center (spacialutility/isometric-to-cartesian-transform
-                                  (list (/ window-width 2) (/ window-height 2)))]
+                                  (list (/ window-width 2) (+ (/ window-height 2) 150)))]
         (merge updated-chunk-map
             {:draw-offset-x (int (- (first grid-screen-center) player-position-x-in-map))
-             :draw-offset-y (int (- (second grid-screen-center) player-position-y-in-map))})))
+             :draw-offset-y (int (- (second grid-screen-center) player-position-y-in-map))}))) ;TODO make this more precise
 
 (defn update-chunk-view
   "update an entities chunk without computing draw offsets"

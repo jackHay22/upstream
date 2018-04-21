@@ -32,8 +32,8 @@
 (def MENU-TEXT-COLOR (Color. 252 144 91))
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
 
-(def PLAYER-START-X 800)
-(def PLAYER_START-Y 800)
+(def PLAYER-START-X 700)
+(def PLAYER_START-Y 700)
 
 (def LEVEL-ONE-TILEMAPS
   (list
