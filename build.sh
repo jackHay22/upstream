@@ -69,15 +69,16 @@ elif [ "$1" == "-saveartifact" ]; then
   s3://upstream-build-archive/upstream-archive-build.jar || exit 1
   printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
 elif [ "$1" == "-backup" ]; then
-  printf "${WRENCH}  Performing deep backup of ${RED}Upstream${NC} repo to AWS Glacier ${YELLOW}${1}${NC} \n"
-  zip -r "upstream_sepulchre_$DATE.zip" .
+  printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC} and ${YELLOW}/out${NC} from archive. \n"
+  zip -r "upstream_sepulchre_$DATE.zip" . -x /target/**\* /out/**\* > /dev/null 2>&1
+  printf "${WRENCH}  Uploading ${RED}Upstream${NC} repo to AWS Glacier: ${YELLOW}upstream_sepulchre${NC}. \n"
   aws glacier upload-archive \
       --region us-east-2 \
       --vault-name upstream_sepulchre \
       --account-id - \
       --body upstream_sepulchre_*.zip
   rm upstream_sepulchre_*.zip
-  printf "${WRENCH}   ${YELLOW}Glacier${NC}: repo uploaded with date: $DATE. \n"
+  printf "${WRENCH}   ${YELLOW}Glacier${NC}: repo uploaded with filename: ${YELLOW}upstream_sepulchre_$DATE.zip${NC} \n"
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker
