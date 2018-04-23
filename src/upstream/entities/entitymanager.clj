@@ -44,7 +44,8 @@
                                                                     (map load-image %)))))
                                               directions-map (:all-directions entity)))))
                         state-map (:all-states entity))))
-            :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y))))
+            :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y)
+            :decisions (decisions/load-entity-decisions (:decisions entity)))))
           entity-list)))
 
 (defn get-central-render-map
