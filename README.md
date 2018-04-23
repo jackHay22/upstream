@@ -28,6 +28,7 @@ docker run \
         -p 4000:4000 \
         -p 4444:4444 \
         --env-file ./docker/run.list \
+        --mount source=server_trace_volume,target=/gp_volume \
         upstream_server:latest #change if pulled from ecr
 ```
 - Make sure to change the server mode in ```/docker/run.list```.  This can either be ```-gp``` or ```-server```.

@@ -16,14 +16,18 @@
    :facing (:facing e-state)
    :current-action (:current-action e-state)})
 
+(defn build-path
+  "build path from sub directories"
+  [& subdirs])
+
 (defn get-user-save-location
   "create save location, create directory if doesn't exist"
   [save-filename]
   (let [save-dir (File. (str (System/getProperty "user.home") File/separator ".upstream"))
         save-file (File. (str (System/getProperty "user.home") File/separator ".upstream" File/separator save-filename))]
-    (.createNewFile save-file) ;will only create if doesn't exist
-    (if (not (.exists save-dir)) (.mkdir save-dir))
-    save-file))
+      (.createNewFile save-file) ;will only create if doesn't exist
+      (if (not (.exists save-dir)) (.mkdir save-dir))
+      save-file))
 
 (defn save-state
   "save entity states to file"

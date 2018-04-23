@@ -82,7 +82,7 @@
   -- return fn that takes an image and checks if blocks"
   [entity-set scale offset-x offset-y grid-dim]
   (if (= entity-set false)
-      (fn [& args] false)
+      (constantly false)
       (let [iso-indices (spacialutility/cartesian-to-isometric-transform
                             (list (+ (* (:x entity-set) grid-dim) offset-x)
                                   (+ (* (:y entity-set) grid-dim) offset-y)))

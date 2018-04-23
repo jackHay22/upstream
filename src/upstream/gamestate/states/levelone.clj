@@ -8,7 +8,7 @@
   (:gen-class))
 
 (def tile-resource (atom nil))
-(def player-input-map (atom {}))
+(def player-input-map (atom {:update-facing :south :update-action :at-rest}))
 (def entity-state (atom '()))
 
 (defn init-level-one

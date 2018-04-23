@@ -126,7 +126,9 @@ At load, predicate-actions are loaded as symbols and stored in an entities decis
 ```clojure
 {:run-ttl 60000 ;frames to run simulation for
  :entity-state '({...}) ;entity list to be filled out by preset and used in simulation
- :performance-metrics '(:survival ...) ;list of performance metrics used to create each individual's performance map
+ :performance-metrics {:metrics '(:survival ...) ;list of performance metrics used to create each individual's performance map
+                       :storage-threshold 30 ;performance value or false
+                       :storage-volume "/gp_volume/generation12_indiv1.txt"} ;location to store decision files that meet criteria
 }
 ```
 - The GP functionality of Upstream is meant to operate in conjunction with a distributed GP system like [Darwin](https://github.com/darwingp) which was written by [Nate Symer](https://github.com/natesymer) and I in 2017.

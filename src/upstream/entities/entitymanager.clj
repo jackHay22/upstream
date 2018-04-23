@@ -3,8 +3,27 @@
     [upstream.config :as config]
     [upstream.utilities.images :as images]
     [upstream.tilemap.tilemanager :as tile-manager]
+    [upstream.entities.entitydecisionmanager :as decisions]
     [upstream.utilities.spacial :as spacialutility])
   (:gen-class))
+
+(def update-xy
+  (let [at-angle #(spacialutility/pt-at-angle %1 %2 (Math/toRadians %4) %3)]
+       {:north (fn [x y s] (list x (- y s)))
+        :north-east (fn [x y s] (at-angle x y s 45))
+        :east (fn [x y s] (list (+ x s) y))
+        :south-east (fn [x y s] (at-angle x y s 315))
+        :south (fn [x y s] (list x (+ y s)))
+        :south-west (fn [x y s] (at-angle x y s 225))
+        :west (fn [x y s] (list (- x s) y))
+        :north-west (fn [x y s] (at-angle x y s 135))}))
+
+(defn get-speed
+  "get animation movement vector from action"
+  [action]
+  (cond (= action :walking) config/WALKING-SPEED
+        (= action :running) config/RUNNING-SPEED
+        :else 0))
 
 (defn load-entities
   "perform resource loads on list of entities, TODO: create draw-handler for each"
@@ -35,19 +54,26 @@
 
 (defn update-entities
   "update given entity (either from decisions or player input)"
-  [entities update-map] ;NOTE: update-map may be empty
-  (let [update-facing (:update-facing update-map)
-        update-action (:update-action update-map)]
+  [entities update-map]
     (map (fn [e]
-            (let [facing (:facing e)
-                  action (:current-action e)
-                  map-resource (:map-resource e)
+            (let [map-resource (:map-resource e)
                   px (:position-x e)
-                  py (:position-y e)]
-            (if (:render-as-central e)
-                (assoc e :map-resource (tile-manager/set-position px py map-resource))
-                (assoc e :map-resource (tile-manager/update-chunk-view px py map-resource))))) entities)
-  ))
+                  py (:position-y e)
+                  update-source (if (:render-as-central e) update-map (decisions/make-player-decision e))
+                  updated-facing (:update-facing update-source)
+                  updated-action (:update-action update-source)
+                  updated-position ((updated-facing update-xy) px py (get-speed updated-action))
+                  updated-x (first updated-position)
+                  updated-y (second updated-position)
+                  updated-map (if (:render-as-central e)
+                                  (tile-manager/set-position updated-x updated-y map-resource)
+                                  (tile-manager/update-chunk-view px py map-resource))]
+                  (merge e (hash-map :map-resource updated-map
+                                     :facing updated-facing
+                                     :position-x updated-x
+                                     :position-y updated-y
+                                     :current-action updated-action))))
+           entities))
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
@@ -87,23 +113,37 @@
 (defn entitykeypressed
   "respond to key press"
   [key current-control-map]
-  ;return entity update map i.e.
-  ;calculate running vs. walking with shift
-  (let [update-direction :south ;TODO
+  (let [directional? #(or (= % :up) (= % :down) (= % :left) (= % :right))
+        update-direction (cond
+                            (= key :down) :south
+                            (= key :left) :west
+                            (= key :right) :east
+                            (= key :up) :north
+                            :else (:update-facing current-control-map))
         update-speed (cond (and
-                            (= (:update-action current-control-map) :walking)
-                            (= key :shift)) :running
-                           ; (and
-                           ;  (= (:move-type current-control-map) :at-rest)
-                           ;  (= key )
-                           ;   )
-                             )]
-  {:update-facing update-direction
-   :update-action update-speed}))
+                              (= (:update-action current-control-map) :walking)
+                              (= key :shift)) :running
+                           (and
+                              (= (:update-action current-control-map) :at-rest)
+                              (directional? key)) :walking
+                            :else (:update-action current-control-map))]
+  (hash-map :update-facing update-direction
+            :update-action update-speed)))
 
 (defn entitykeyreleased
   "respond to key release"
   [key current-control-map]
-  ;return entity update map
-  {:update-facing :speed
-   :update-action :at-rest})
+  (let [directional? #(or (= % :up) (= % :down) (= % :left) (= % :right))
+        update-direction (:update-facing current-control-map)
+        ;TODO: make sure both sprint and directional key releases registered
+        update-speed (cond (and
+                              (= (:update-action current-control-map) :running)
+                              (= key :shift)) :walking
+                           (and
+                              (or
+                                (= (:update-action current-control-map) :walking)
+                                (= (:update-action current-control-map) :running))
+                              (directional? key)) :at-rest
+                            :else (:update-action current-control-map))]
+  (hash-map :update-facing update-direction
+            :update-action update-speed)))

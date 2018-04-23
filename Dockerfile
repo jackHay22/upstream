@@ -18,6 +18,8 @@ ADD docker/interface.html /interface.html
 ADD docker/redirect_logs /redirect_logs
 RUN chmod a+x /redirect_logs
 
+RUN mkdir gp_volume
+
 RUN apk update
 RUN apk add curl
 RUN apk add python

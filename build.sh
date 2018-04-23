@@ -70,12 +70,15 @@ elif [ "$1" == "-saveartifact" ]; then
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker
+  #printf "${WRENCH}  ${YELLOW}Docker${NC}: creating volume ${RED}server_trace_volume${NC}... \n"
+  #docker volume create server_trace_volume
   if [ "$#" -eq 2 ]; then
     if [ "$2" == "-run" ]; then
       printf "${WRENCH}  ${YELLOW}Docker${NC}: running ${RED}upstream_server${NC} locally... \n"
       docker run \
               -p 4000:4000 \
               -p 4444:4444 \
+              #-v "$HOME:$HOME" \
               --env-file ./docker/run.list \
               upstream_server:latest
     elif [ "$2" == "-push" ]; then

@@ -6,8 +6,8 @@
   "load decisions from file"
   [file])
 
-(defn make-decision
+(defn make-player-decision
   "make decision at update"
   [entity]
   ; return movement map (sort of like player input)
-  )
+  {:update-facing :south :update-action :at-rest})

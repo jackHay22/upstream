@@ -28,3 +28,10 @@
   [xy1 xy2]
   (and (= (first xy1) (first xy2))
        (= (second xy1) (second xy2))))
+
+(defn pt-at-angle
+  "given angle dist and pt, generate resultant pt"
+  [x y a dist]
+  (list
+      (+ x (* dist (Math/cos a)))
+      (+ y (* dist (Math/sin a)))))
