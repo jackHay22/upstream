@@ -39,6 +39,7 @@ docker run \
 ### Store build artifact
 - Run ```./build -saveartifact``` (requires ```aws``` cli and bucket permissions for ```s3://upstream-build-archive```) to upload standalone jar to a versioned s3 bucket.
 - Note: will not build native app
+- Run  ```./build -backup``` to upload entire repo to deep Glacier cold storage (will archive entire contents of project)
 
 ### Windows build
 - _Not tested_

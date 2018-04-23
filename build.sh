@@ -9,6 +9,7 @@ AWS_ACCOUNT='190175714341'
 ECR_RESOURCE_URI='dkr.ecr.us-east-2.amazonaws.com/upstream_server'
 
 JAVA_RUNTIME=`/usr/libexec/java_home -v 1.8`
+DATE=`date +%Y-%m-%d`
 
 lein_build () {
   lein deps
@@ -67,6 +68,16 @@ elif [ "$1" == "-saveartifact" ]; then
   target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
   s3://upstream-build-archive/upstream-archive-build.jar || exit 1
   printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
+elif [ "$1" == "-backup" ]; then
+  printf "${WRENCH}  Performing deep backup of ${RED}Upstream${NC} repo to AWS Glacier ${YELLOW}${1}${NC} \n"
+  zip -r "upstream_sepulchre_$DATE.zip" .
+  aws glacier upload-archive \
+      --region us-east-2 \
+      --vault-name upstream_sepulchre \
+      --account-id - \
+      --body upstream_sepulchre_*.zip
+  rm upstream_sepulchre_*.zip
+  printf "${WRENCH}   ${YELLOW}Glacier${NC}: repo uploaded with date: $DATE. \n"
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker
