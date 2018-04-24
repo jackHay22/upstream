@@ -20,7 +20,7 @@
 (def ORIGINAL-TILE-WIDTH 64) ;TODO: remove
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))
-(def TILES-ACROSS (atom 15)) ;TODO: find best scale
+(def TILES-ACROSS (atom 14)) ;TODO: find best scale
 (def TILES-DOWN (atom 10))
 
 (def LOAD-SCREEN-TTL 100)

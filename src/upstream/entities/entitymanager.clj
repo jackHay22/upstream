@@ -56,11 +56,15 @@
 (defn update-entities
   "update given entity (either from decisions or player input)"
   [entities update-map]
+  (let [all-positions (map #(list (:position-x %) (:position-y %)) entities)]
     (map (fn [e]
             (let [map-resource (:map-resource e)
                   px (:position-x e)
                   py (:position-y e)
-                  update-source (if (:render-as-central e) update-map (decisions/make-player-decision e))
+                  update-source (if (:render-as-central e)
+                                    update-map
+                                    (decisions/make-player-decision
+                                        (merge e {:all-positions all-positions})))
                   updated-facing (:update-facing update-source)
                   updated-action (:update-action update-source)
                   updated-position ((updated-facing update-xy) px py (get-speed updated-action))
@@ -74,7 +78,7 @@
                                      :position-x updated-x
                                      :position-y updated-y
                                      :current-action updated-action))))
-           entities))
+           entities)))
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
@@ -82,11 +86,7 @@
   (let [action-set ((:current-action e) (:images e))
         current-image (nth ((:facing e) action-set)
                            (:current-frame-index action-set))]
-    (images/draw-image
-      current-image gr
-      (- x (* @config/COMPUTED-SCALE (:draw-width-offset e)))
-      ;TODO: figure out correct image offsets given positioning
-      (- y (* @config/COMPUTED-SCALE (:draw-height-offset e))))))
+    (images/draw-image current-image gr x y)))
 
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
@@ -105,10 +105,10 @@
                         :fn (fn [gr map-offset-x map-offset-y]
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ chunk-relative-x map-offset-x)
-                                                            (+ chunk-relative-y map-offset-y)))]
-                                    (draw-entity gr %
-                                          (int (* (- (first iso-coords) (:draw-width-offset %)) scale))
-                                          (int (* (- (second iso-coords) (:draw-height-offset %)) scale)))))))
+                                                            (+ chunk-relative-y map-offset-y)))
+                                      iso-x (int (Math/ceil (* (- (first iso-coords) (:draw-width-offset %)) scale)))
+                                      iso-y (int (Math/ceil (* (- (second iso-coords) (:draw-height-offset %)) scale)))]
+                                    (draw-entity gr % iso-x iso-y)))))
   entities))
 
 (defn entitykeypressed

@@ -38,7 +38,8 @@
                                          config/ORIGINAL-TILE-WIDTH)]
         (reset! config/WINDOW-WIDTH (.width screenSize))
         (reset! config/WINDOW-HEIGHT (- (.height screenSize) config/HEIGHT-BUFFER))
-        (reset! config/COMPUTED-SCALE scale)
+        (reset! config/COMPUTED-SCALE 1.5)
+
         (reset! config/TILES-DOWN (int (+ ;TODO: is this used?
                                         (/ (.height screenSize) (/ (* scale config/ORIGINAL-TILE-HEIGHT) 2))
                                          2)))

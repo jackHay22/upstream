@@ -5,21 +5,23 @@
 (def prefix-mappings
   {})
 
+;Note: all predicates take their entity context
+;All actions take the current result map and their entity context
+
 (def decision-function-mappings
   {:action {:prefix-1 {}}
-   :predicate {:prefix-1 {}}})
+   :predicate {:prefix-1 {:and :and}}})
 
 (defn get-decision-function
   "take predicate or action and return function"
   [statement-type identifier]
-  (if (or (= true (first identifier)) (= false (first identifier))) (first identifier)
   (get
     (get
       (statement-type decision-function-mappings)
       (first identifier))
-    (second identifier))))
+    (second identifier)))
 
 (defn add-lookup-prefix
   "for each action, add a lookup prefix for more efficient search"
   [symbol]
-)
+  (list (symbol prefix-mappings) symbol))

@@ -10,7 +10,7 @@
        :label :l0
        :entity-handler? false
        :prevent-view-block? false
-       :chunk-dim 16
+       :chunk-dim 20
        :grid-dim 32
        :tiles (list (TileResource. "tiles/test_sheet.png" 32 0 64 32))
        :map-attributes (list :image-index :sound)})
@@ -22,8 +22,8 @@
        :label :l1
        :entity-handler? true
        :prevent-view-block? true
-       :chunk-dim 16
+       :chunk-dim 20
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/poc_sawmill.png" 170 60 1797 1122)
-                    (TileResource. "tiles/tree_set.png" 60 300 130 325))
+       :tiles (list (TileResource. "tiles/tree_set.png" 60 300 130 325)
+                    (TileResource. "tiles/poc_sawmill.png" 170 60 1797 1122))
        :map-attributes (list :image-index :blocked? :height :sound)})

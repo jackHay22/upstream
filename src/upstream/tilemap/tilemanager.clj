@@ -89,11 +89,11 @@
             entity-x (* (first iso-indices) scale)
             entity-y (* (second iso-indices) scale)]
             (fn [img-map x y]
-                (and (> (:origin-offset-y img-map) entity-y)
-                     (> entity-x x)
-                     (> (+ x (:width img-map)) entity-x)
-                     (> entity-y y)
-                     (> (+ y (:height img-map)) entity-y))))))
+                (and
+                  (> entity-x x)
+                  (> entity-y y)
+                  (> (+ x (:width img-map)) entity-x)
+                  (> (+ y (:height img-map)) entity-y))))))
 
 (defn image-visible?
   "take image resource and determine if it needs to be drawn"
@@ -136,9 +136,8 @@
                                 (:image image-resource) gr iso-x iso-y 0.5)
                             (images/draw-image
                                 (:image image-resource) gr iso-x iso-y)))))
-            ;TODO: try to optimize this
-            (if (:entity-handler? current-layer)
-                (entity-handler gr handlers
+              (if (:entity-handler? current-layer)
+                  (entity-handler gr handlers
                       (first tile-coords) (second tile-coords)
                       (:draw-offset-x map-resource) (:draw-offset-y map-resource)))))
           lateral-coordinate-set))))
