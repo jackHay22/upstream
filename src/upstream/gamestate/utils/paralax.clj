@@ -22,6 +22,7 @@
 (defn render-layers
   "render all registered layers (twice)"
   [gr]
+  ;(println @paralax-state)
   (doseq [layer @paralax-state]
     (utils/draw-image (:image layer) gr (:x layer) 0)
     (utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)))

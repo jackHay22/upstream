@@ -10,11 +10,13 @@
 (def tile-resource (atom nil))
 (def player-input-map (atom {:update-facing :south :update-action :at-rest}))
 (def entity-state (atom '()))
+(def test-image (atom nil))
 
 (defn init-level-one
   "load resources"
   []
   (do
+    (reset! test-image (images/load-image "tiles/unit_bright.png"))
     (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
     (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
     (reset! entity-state (entity-manager/load-entities
@@ -50,7 +52,10 @@
   (let [entity-set @entity-state]
   (tile-manager/render-map
               gr (entity-manager/get-central-render-map entity-set)
-              @tile-resource (entity-manager/create-draw-handlers entity-set))))
+              @tile-resource (entity-manager/create-draw-handlers entity-set))
+  (images/draw-image @test-image gr 100 100)
+  ((images/draw-images-brightness gr (float 0.0)) @test-image 150 100)
+              ))
 
 (defn keypressed-level-one
   "key press handler for level one"

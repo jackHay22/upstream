@@ -39,15 +39,16 @@
     (logger/write-log "Starting gamestate manager in state:" starting-state)
     (doall ((:init-handler (nth STATES starting-state))))))
 
-(defn update-and-draw
-  "Update and Draw the current game state"
+(defn state-draw
+  "draw current state"
   [gr]
-  (let [current-state-number @current-game-state]
-       (if ((:update-handler (nth STATES current-state-number)))
-           ((:draw-handler (nth STATES current-state-number)) gr)
-           (do
-              ((:draw-handler (nth STATES (+ current-state-number 1))) gr)
-              (swap! current-game-state inc)))))
+  ((:draw-handler (nth STATES @current-game-state)) gr))
+
+(defn state-update
+  "Update and Draw the current game state"
+  []
+  (if (not ((:update-handler (nth STATES @current-game-state))))
+      (swap! current-game-state inc)))
 
 (defn update-no-draw
   "update without drawing"

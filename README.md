@@ -54,6 +54,8 @@ docker run \
 - Follow input formatting convention found in [documentation](doc/intro.md).
 
 ## TODO:
+- [ ] Reduce Framerate?
+- [ ] Improve CPU performance?
 - [ ] Fix object-blocks-visible? fn
 - [ ] Redesign gp evaluation reduce to be list based
 - [ ] Redesign level 1 init file problem for docker image

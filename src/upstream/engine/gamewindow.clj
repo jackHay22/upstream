@@ -19,8 +19,9 @@
 
 (defn start-window
   "initialize the game window"
-  [title]
-  (let [canvas (sawcore/canvas
+  [title framerate]
+  (let [frame-delay (int (/ 1000 framerate))
+        canvas (sawcore/canvas
                   :id :canvas
                   :background :black
                   :size [@config/WINDOW-WIDTH :by @config/WINDOW-HEIGHT]
@@ -44,7 +45,7 @@
                                 (state/keyreleased (control-keys k))))]
                   :on-close :exit)
         ;delay 20 is around 50 fps
-        main-loop (sawcore/timer (fn [e] (sawcore/repaint! frame)) :delay 20 :start? false)]
+        main-loop (sawcore/timer (fn [e] (sawcore/repaint! frame)) :delay frame-delay :start? false)]
 
     ;run window loop
     (sawcore/native!)
@@ -53,8 +54,9 @@
 
 (defn start-headless
   "start update timer without creating window"
-  []
+  [framerate]
+  (let [frame-delay (int (/ 1000 framerate))]
   (loop []
     (state/update-no-draw)
-    (Thread/sleep 20)
-    (recur)))
+    (Thread/sleep frame-delay)
+    (recur))))

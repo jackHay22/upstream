@@ -1,11 +1,10 @@
 (ns upstream.utilities.images
-  (:require
-    [seesaw.graphics :as sawgr]
-    [seesaw.icon :as sawicon])
   (:gen-class))
 
 (import java.awt.Image)
 (import java.awt.AlphaComposite)
+(import java.awt.image.RescaleOp)
+(import java.awt.image.BufferedImage)
 
 (defn sub-image-loader
   "gets a subimage the size of a tile from the big image"
@@ -21,26 +20,23 @@
 (defn scale-loaded-image-by-width
   "scale loaded image, wrap with icon"
   [img new-w]
-  (sawicon/icon
     (.getScaledInstance img
       new-w (* new-w (/ (.getHeight img) (.getWidth img)))
-      Image/SCALE_DEFAULT)))
+      Image/SCALE_DEFAULT))
 
 (defn scale-loaded-image-by-factor
   "take image, rescale by new x"
   [img scale]
-  (sawicon/icon
     (.getScaledInstance img
       (* scale (.getWidth img))
       (* scale (.getHeight img))
-      Image/SCALE_DEFAULT)))
+      Image/SCALE_DEFAULT))
 
 (defn load-image
     "load an image from resources"
     [loc]
-    (sawicon/icon
       (javax.imageio.ImageIO/read
-          (clojure.java.io/resource loc))))
+          (clojure.java.io/resource loc)))
 
 (defn get-resource-dim
   "take resouce and get tuple of w,h"
@@ -57,7 +53,7 @@
         current-w (.getWidth loaded)
         current-h (.getHeight loaded)
         new-h (* new-w (/ current-h current-w))]
-        (sawicon/icon (.getScaledInstance loaded new-w new-h Image/SCALE_DEFAULT))))
+        (.getScaledInstance loaded new-w new-h Image/SCALE_DEFAULT)))
 
 (defn load-image-scale-by-factor
   "load a raw image by a set scale"
@@ -66,20 +62,34 @@
                   (clojure.java.io/resource image))
         w (* scale (.getWidth loaded))
         h (* scale (.getHeight loaded))]
-    (sawicon/icon (.getScaledInstance loaded w h Image/SCALE_DEFAULT))))
+    (.getScaledInstance loaded w h Image/SCALE_DEFAULT)))
+
+; (defn draw-image
+;   "take image, gr, x,y, draw"
+;   [img gr x y]
+;     (sawgr/draw gr
+;       (sawgr/image-shape x y (sawicon/icon img)) (sawgr/style)))
 
 (defn draw-image
-  "take image, gr, x,y, draw"
   [img gr x y]
-    (sawgr/draw gr
-      (sawgr/image-shape x y img) (sawgr/style)))
+  (.drawImage gr img x y nil))
 
 (defn draw-image-alpha
   "take image, gr, x, y, alpha value, draw"
   [img gr x y a]
-  (let [alpha-fn #(.setComposite gr
-                    (AlphaComposite/getInstance AlphaComposite/SRC_OVER %))]
-    (do
-      (alpha-fn (min (max a 0) 1))
+  ;TODO: fix
+  ; (let [alpha-fn #(.setComposite gr
+  ;                   (AlphaComposite/getInstance AlphaComposite/SRC_OVER %))]
+  ;   (do
+  ;     (alpha-fn (min (max a 0) 1))
       (draw-image img gr x y)
-      (alpha-fn 1))))
+      )
+      ;(alpha-fn 1))))
+
+(defn draw-images-brightness
+  "gr, brightness value, return brightness draw fn"
+  [gr b]
+  (let [bfilter (RescaleOp. (float b) 0.0 nil)]
+        (fn [img x y]
+            (let [filtered-image (.filter bfilter img nil)]
+            (draw-image filtered-image gr x y)))))

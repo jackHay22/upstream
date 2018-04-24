@@ -17,8 +17,8 @@
   [path fields]
   (with-open [reader (clojure.java.io/reader (io/resource path))]
   (let [loaded-map
-        (map (fn [line]
-          (map (fn [sub-line]
+        (pmap (fn [line]
+          (pmap (fn [sub-line]
                   (let [location-set
                           (zipmap fields (map #(Integer. %)
                             (clojure.string/split sub-line #",")))]
