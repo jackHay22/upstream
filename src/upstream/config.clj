@@ -20,7 +20,7 @@
 (def ORIGINAL-TILE-WIDTH 64) ;TODO: remove
 (def ORIGINAL-TILE-HEIGHT 32)
 (def COMPUTED-SCALE (atom 1))
-(def FRAMERATE (atom 60)) ;TODO dynamic?
+(def FRAMERATE (atom 30)) ;TODO dynamic?
 ;dynamic scale computation
 (def TILES-ACROSS 15)
 

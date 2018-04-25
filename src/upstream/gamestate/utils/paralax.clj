@@ -9,7 +9,7 @@
   [layer-maps width]
   (reset! paralax-state
     (map #(assoc % :width width)
-        (map #(assoc % :x 10) layer-maps))))
+         (map #(assoc % :x 10) layer-maps))))
 
 (defn update-layers
   "update all registered layers"
@@ -22,7 +22,8 @@
 (defn render-layers
   "render all registered layers (twice)"
   [gr]
-  ;(println @paralax-state)
   (doseq [layer @paralax-state]
-    (utils/draw-image (:image layer) gr (:x layer) 0)
-    (utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)))
+    (try
+      (utils/draw-image (:image layer) gr (:x layer) 0)
+      (utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)
+      (catch Exception e (println (:image layer))))))

@@ -71,8 +71,11 @@
 ;       (sawgr/image-shape x y (sawicon/icon img)) (sawgr/style)))
 
 (defn draw-image
+  "draw an image to the gr object"
   [img gr x y]
-  (.drawImage gr img x y nil))
+  (try
+    (.drawImage gr img x y nil)
+    (catch Exception e (println "Upstream => Failed to render image:" img))))
 
 (defn draw-image-alpha
   "take image, gr, x, y, alpha value, draw"

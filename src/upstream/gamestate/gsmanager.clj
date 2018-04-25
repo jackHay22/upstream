@@ -42,11 +42,13 @@
 (defn state-draw
   "draw current state"
   [gr]
+  (println "getting draw")
   ((:draw-handler (nth STATES @current-game-state)) gr))
 
 (defn state-update
   "Update and Draw the current game state"
   []
+  (println "getting update")
   (if (not ((:update-handler (nth STATES @current-game-state))))
       (swap! current-game-state inc)))
 

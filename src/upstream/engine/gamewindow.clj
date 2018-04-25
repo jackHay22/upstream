@@ -5,52 +5,77 @@
             [upstream.config :as config]
             [upstream.gamestate.gsmanager :as state]))
 
-(def control-keys {java.awt.event.KeyEvent/VK_UP :up
-                   java.awt.event.KeyEvent/VK_DOWN :down
-                   java.awt.event.KeyEvent/VK_LEFT :left
-                   java.awt.event.KeyEvent/VK_RIGHT :right
-                   java.awt.event.KeyEvent/VK_SPACE :space
-                   java.awt.event.KeyEvent/VK_ENTER :enter
-                   java.awt.event.KeyEvent/VK_SHIFT :shift
-                   java.awt.event.KeyEvent/VK_P :p
-                   java.awt.event.KeyEvent/VK_S :s
-                   java.awt.event.KeyEvent/VK_L :l
-                   java.awt.event.KeyEvent/VK_R :r})
+(import java.awt.event.KeyListener)
+(import java.awt.event.KeyEvent)
+(import java.awt.image.BufferedImage)
+(import javax.swing.JPanel)
+(import javax.swing.JFrame)
+(import java.awt.Graphics2D)
+(import java.awt.Graphics)
+(import java.awt.Dimension)
+
+(def control-keys
+      {java.awt.event.KeyEvent/VK_UP :up
+       java.awt.event.KeyEvent/VK_DOWN :down
+       java.awt.event.KeyEvent/VK_LEFT :left
+       java.awt.event.KeyEvent/VK_RIGHT :right
+       java.awt.event.KeyEvent/VK_SPACE :space
+       java.awt.event.KeyEvent/VK_ENTER :enter
+       java.awt.event.KeyEvent/VK_SHIFT :shift
+       java.awt.event.KeyEvent/VK_P :p
+       java.awt.event.KeyEvent/VK_S :s
+       java.awt.event.KeyEvent/VK_L :l
+       java.awt.event.KeyEvent/VK_R :r})
+
+(def system-thread (atom nil))
+
+(defn graphical-panel
+  [w h fd]
+  (let [base-image (BufferedImage. w h BufferedImage/TYPE_INT_ARGB)]
+  (proxy [JPanel Runnable KeyListener] []
+            (addNotify []
+              (do
+                (proxy-super addNotify)
+                (if (= @system-thread nil)
+                    (reset! system-thread (.start (Thread. this))))))
+            (keyPressed [e]
+              (state/keypressed (control-keys (.getKeyCode e))))
+            (keyReleased [e]
+              (state/keyreleased (control-keys (.getKeyCode e))))
+            (keyTyped [e])
+            (run [] (loop []
+                      (let [render-start (System/nanoTime)]
+                      (do
+                        (state/state-update)
+                        (state/state-draw (.getGraphics base-image))
+                        (let [gr (.getGraphics this)]
+                          (.drawImage gr base-image 0 0 nil)
+                          (.dispose gr))
+                        (let [render-elapsed (- (System/nanoTime) render-start)
+                              frame-delay (- fd (/ render-elapsed 1000000))
+                              actual-delay (if (> 0 frame-delay) 5 frame-delay)]
+                        (Thread/sleep actual-delay))))
+                      (recur))))))
 
 (defn start-window
-  "initialize the game window"
-  [title framerate]
-  (let [frame-delay (int (/ 1000 framerate))
-        canvas (sawcore/canvas
-                  :id :canvas
-                  :background :black
-                  :size [@config/WINDOW-WIDTH :by @config/WINDOW-HEIGHT]
-                  :paint (fn [c g]
-                           (state/update-and-draw g)))
-        panel (sawcore/vertical-panel
-                  :id :panel
-                  :items [canvas])
-        frame (sawcore/frame
-                  :title title
-                  :width @config/WINDOW-WIDTH
-                  :height @config/WINDOW-HEIGHT
-                  :content panel
-                  :resizable? false
-                  :id :frame
-                  :listen [:key-pressed
-                            (fn [e] (let [k (.getKeyCode e)]
-                                (state/keypressed (control-keys k))))
-                           :key-released
-                            (fn [e] (let [k (.getKeyCode e)]
-                                (state/keyreleased (control-keys k))))]
-                  :on-close :exit)
-        ;delay 20 is around 50 fps
-        main-loop (sawcore/timer (fn [e] (sawcore/repaint! frame)) :delay frame-delay :start? false)]
-
-    ;run window loop
-    (sawcore/native!)
-    (sawcore/show! frame)
-    (.start main-loop)))
+  "start window"
+  [title width height framerate]
+  (let [target-delay (/ 1000 framerate)
+        panel (graphical-panel width height target-delay)
+        window (JFrame. title)]
+        (doto panel
+          (.setPreferredSize (Dimension. width height))
+          (.setFocusable true)
+          (.requestFocus)
+          (.addKeyListener panel))
+        (doto window
+          (.setContentPane panel)
+          (.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
+          (.setResizable false)
+          (.pack)
+          (.setVisible true)
+          (.validate)
+          (.repaint))))
 
 (defn start-headless
   "start update timer without creating window"

@@ -1,5 +1,5 @@
 (ns upstream.core
-  (:require [upstream.engine.gamewindowtwo :as engine]
+  (:require [upstream.engine.gamewindow :as engine]
             [upstream.utilities.log :as logger]
             [upstream.utilities.gpsys :as gpsys]
             [upstream.config :as config]

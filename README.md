@@ -54,6 +54,7 @@ docker run \
 - Follow input formatting convention found in [documentation](doc/intro.md).
 
 ## TODO:
+- [ ] reify instead of proxy in engine
 - [ ] Reduce Framerate?
 - [ ] Improve CPU performance?
 - [ ] Fix object-blocks-visible? fn
