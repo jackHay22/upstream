@@ -1,10 +1,7 @@
 (ns upstream.engine.gamewindow
   (:gen-class)
-  (:require [seesaw.core :as sawcore]
-            [seesaw.graphics :as sawgr]
-            [upstream.config :as config]
+  (:require [upstream.config :as config]
             [upstream.gamestate.gsmanager :as state]))
-
 (import java.awt.event.KeyListener)
 (import java.awt.event.KeyEvent)
 (import java.awt.image.BufferedImage)
@@ -28,16 +25,20 @@
        java.awt.event.KeyEvent/VK_R :r})
 
 (def system-thread (atom nil))
+(def sleep-ticks-per-second 1000)
 
 (defn graphical-panel
-  [w h fd]
+  "-extends JPanel, implements Runnable and KeyListener-
+   Run performs active render loop using double buffering
+   and dynamically calculates thread sleep for consistent
+   framerate"
+  [w h s td]
   (let [base-image (BufferedImage. w h BufferedImage/TYPE_INT_ARGB)]
   (proxy [JPanel Runnable KeyListener] []
             (addNotify []
-              (do
-                (proxy-super addNotify)
-                (if (= @system-thread nil)
-                    (reset! system-thread (.start (Thread. this))))))
+              (do (proxy-super addNotify)
+                  (if (= @system-thread nil)
+                      (reset! system-thread (.start (Thread. this))))))
             (keyPressed [e]
               (state/keypressed (control-keys (.getKeyCode e))))
             (keyReleased [e]
@@ -45,26 +46,28 @@
             (keyTyped [e])
             (run [] (loop []
                       (let [render-start (System/nanoTime)]
-                      (do
-                        (state/state-update)
-                        (state/state-draw (.getGraphics base-image))
-                        (let [gr (.getGraphics this)]
-                          (.drawImage gr base-image 0 0 nil)
-                          (.dispose gr))
-                        (let [render-elapsed (- (System/nanoTime) render-start)
-                              frame-delay (- fd (/ render-elapsed 1000000))
-                              actual-delay (if (> 0 frame-delay) 5 frame-delay)]
-                        (Thread/sleep actual-delay))))
+                      (do (state/state-update)
+                          (state/state-draw (.getGraphics base-image))
+                          (let [gr (.getGraphics this)]
+                             (.drawImage gr base-image 0 0 (* w s) (* h s) nil)
+                             (.dispose gr))
+                          (let [render-elapsed (- (System/nanoTime) render-start)
+                                frame-delay (- td (/ render-elapsed 1000000))
+                                actual-delay (if (> 0 frame-delay) 5 frame-delay)]
+                             (Thread/sleep actual-delay))))
                       (recur))))))
 
 (defn start-window
-  "start window"
-  [title width height framerate]
-  (let [target-delay (/ 1000 framerate)
-        panel (graphical-panel width height target-delay)
+  "start JFrame and add JPanel extension as content"
+  [title w-resource framerate]
+  (let [width (:width w-resource)
+        height (:height w-resource)
+        scale (:scale w-resource)
+        target-delay (/ sleep-ticks-per-second framerate)
+        panel (graphical-panel width height scale target-delay)
         window (JFrame. title)]
         (doto panel
-          (.setPreferredSize (Dimension. width height))
+          (.setPreferredSize (Dimension. (* width scale) (* height scale)))
           (.setFocusable true)
           (.requestFocus)
           (.addKeyListener panel))
@@ -80,8 +83,9 @@
 (defn start-headless
   "start update timer without creating window"
   [framerate]
-  (let [frame-delay (int (/ 1000 framerate))]
+  (let [frame-delay (int (/ sleep-ticks-per-second framerate))]
   (loop []
+    ;TODO: potentially implement better delay calculation
     (state/update-no-draw)
     (Thread/sleep frame-delay)
     (recur))))

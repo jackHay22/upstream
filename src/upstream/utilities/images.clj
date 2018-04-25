@@ -64,12 +64,6 @@
         h (* scale (.getHeight loaded))]
     (.getScaledInstance loaded w h Image/SCALE_DEFAULT)))
 
-; (defn draw-image
-;   "take image, gr, x,y, draw"
-;   [img gr x y]
-;     (sawgr/draw gr
-;       (sawgr/image-shape x y (sawicon/icon img)) (sawgr/style)))
-
 (defn draw-image
   "draw an image to the gr object"
   [img gr x y]

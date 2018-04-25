@@ -1,7 +1,6 @@
 (defproject upstream "0.1.0-SNAPSHOT"
   :description "Isometric Game by Jack Hay"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [seesaw "1.4.5"]
                  [clj-http "3.7.0"]
                  [org.clojure/core.async "0.3.443"]]
   :main ^:skip-aot upstream.core

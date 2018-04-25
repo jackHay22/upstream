@@ -9,7 +9,11 @@
 
 (def WINDOW-WIDTH (atom 0)) ;set by dynamic screen maximization
 (def WINDOW-HEIGHT (atom 0)) ;set by dynamic screen maximization
-(def HEIGHT-BUFFER 100) ;fit doc at bottom of screen
+
+(def WINDOW-RESOURCE-WIDTH (atom 0))
+(def WINDOW-RESOURCE-HEIGHT (atom 0))
+
+(def HEIGHT-BUFFER 80) ;fit doc at bottom of screen
 (def VERSION "0.1.0")
 (def SERVER-VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
@@ -17,10 +21,9 @@
 (def SAVE-FILE "game_saves.txt")
 (def AUTO-SAVE-SLEEP 10000) ;Autosave every 10 seconds
 
-(def ORIGINAL-TILE-WIDTH 64) ;TODO: remove
-(def ORIGINAL-TILE-HEIGHT 32)
+(def ORIGINAL-TILE-WIDTH 64)
 (def COMPUTED-SCALE (atom 1))
-(def FRAMERATE (atom 30)) ;TODO dynamic?
+(def FRAMERATE 60)
 ;dynamic scale computation
 (def TILES-ACROSS 15)
 
