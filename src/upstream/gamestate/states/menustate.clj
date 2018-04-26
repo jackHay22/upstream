@@ -10,11 +10,11 @@
 (defn load-title-image
   "load title image at init"
   []
-  (util/load-image-scale-by-width "menus/menu_title.png" @config/WINDOW-WIDTH))
+  (util/load-image "menus/menu_title.png"))
 
 (defn load-overlay
   []
-  (util/load-image-scale-by-width "menus/menu_overlay.png" @config/WINDOW-WIDTH))
+  (util/load-image "menus/menu_overlay.png"))
 
 (def load-screen-fade (atom {}))
 (def title-image (atom {}))
@@ -28,8 +28,7 @@
   "build paralax set with new width"
   []
   (let [width @config/WINDOW-WIDTH
-        load-scaled (fn [img]
-            (util/load-image-scale-by-width img width))]
+        load-scaled #(util/load-image %)]
   (list
     {:image (load-scaled "menus/menu_paralax/paralax2_0.png") :dx 0}
     {:image (load-scaled "menus/menu_paralax/paralax2_1.png") :dx 0.2}
@@ -41,8 +40,7 @@
 (defn load-menu-selectable-fields
   []
   (let [width @config/WINDOW-WIDTH
-        load-scaled (fn [img]
-            (util/load-image-scale-by-width img width))]
+        load-scaled #(util/load-image %)]
   (list
     {:selected   (load-scaled "menus/optiontext/start_selected.png")
      :deselected (load-scaled "menus/optiontext/start_deselected.png")}

@@ -35,6 +35,7 @@
                                 (* config/ORIGINAL-TILE-WIDTH config/TILES-ACROSS))]
         (reset! config/WINDOW-RESOURCE-WIDTH (:width window-resource))
         (reset! config/WINDOW-RESOURCE-HEIGHT (:height window-resource))
-        (gsm/init-gsm 0)
+        (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
+        (gsm/init-gsm 2)
         (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
         (gsm/start-subsequent-loads)))))

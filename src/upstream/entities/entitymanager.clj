@@ -29,7 +29,7 @@
   "perform resource loads on list of entities, TODO: create draw-handler for each"
   [entity-list]
   ;TODO: load decisions if added
-  (let [load-image #(images/load-image-scale-by-factor % @config/COMPUTED-SCALE)]
+  (let [load-image #(images/load-image %)]
     (map (fn [entity]
           (let [starting-x (:position-x entity)
                 starting-y (:position-y entity)]
@@ -97,8 +97,7 @@
               offset-x (* grid-dim (:offset-x corner-chunk) 0)
               offset-y (* grid-dim (:offset-y corner-chunk) 0) ;TODO figure out problem here
               chunk-relative-x (- (:position-x %) offset-x)
-              chunk-relative-y (- (:position-y %) offset-y)
-              scale @config/COMPUTED-SCALE]
+              chunk-relative-y (- (:position-y %) offset-y)]
               (hash-map :x (int (/ chunk-relative-x grid-dim))
                         :y (int (/ chunk-relative-y grid-dim))
                         :prevent-block? (:render-as-central %)
@@ -106,8 +105,8 @@
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ chunk-relative-x map-offset-x)
                                                             (+ chunk-relative-y map-offset-y)))
-                                      iso-x (int (Math/ceil (* (- (first iso-coords) (:draw-width-offset %)) scale)))
-                                      iso-y (int (Math/ceil (* (- (second iso-coords) (:draw-height-offset %)) scale)))]
+                                      iso-x (int (- (first iso-coords) (:draw-width-offset %)))
+                                      iso-y (int (- (second iso-coords) (:draw-height-offset %)))]
                                     (draw-entity gr % iso-x iso-y)))))
   entities))
 

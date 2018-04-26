@@ -40,7 +40,6 @@
               (do (draw-screen-alpha layer gr) layer)
               (do (utils/draw-image (:image layer) gr 0 0) layer))
                 layer))]
-
   (if (list? presets)
       (doall (map #(process-fn % gr) presets))
       (do (process-fn presets gr)))))

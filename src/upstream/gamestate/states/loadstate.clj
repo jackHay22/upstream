@@ -13,8 +13,7 @@
   (if (not @config/HEADLESS-SERVER?)
   (do
     (reset! static-screen
-      {:image (util/load-image-scale-by-width
-                  "menus/temp_splash3.png" @config/WINDOW-WIDTH)
+      {:image (util/load-image "menus/temp_splash3.png")
       :fade? false
       :start-delay (/ config/LOAD-SCREEN-TTL 2)
       :draw? true

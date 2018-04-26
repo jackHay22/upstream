@@ -14,8 +14,8 @@
         corner-chunk (:corner-chunk (first (:current-maps updated-chunk-map)))
         player-position-x-in-map (- px (* (:offset-x corner-chunk) (:grid-dim map-resource)))
         player-position-y-in-map (- py (* (:offset-y corner-chunk) (:grid-dim map-resource)))
-        window-width (/ @config/WINDOW-WIDTH @config/COMPUTED-SCALE)
-        window-height (/ @config/WINDOW-HEIGHT @config/COMPUTED-SCALE)
+        window-width @config/WINDOW-RESOURCE-WIDTH
+        window-height @config/WINDOW-RESOURCE-HEIGHT
         grid-screen-center (spacialutility/isometric-to-cartesian-transform
                                   (list (/ window-width 2) (+ (/ window-height 2) 150)))]
         (merge updated-chunk-map
@@ -53,12 +53,8 @@
     (fn [loaded-tile-resource layer]
         (if (not @config/HEADLESS-SERVER?)
             (let [all-tiles (mapcat
-                              (fn [tileset]
-                                (doall (map (fn [loaded-resource]
-                                                (update-in loaded-resource [:image]
-                                                  #(images/scale-loaded-image-by-factor % @config/COMPUTED-SCALE)))
-                                            (split-master-image
-                                                (images/sub-image-loader (:path tileset)) tileset))))
+                              (fn [tileset] (split-master-image
+                                                (images/sub-image-loader (:path tileset)) tileset))
                               (:tiles layer))]
                   (assoc loaded-tile-resource (:label layer)
                     {:images all-tiles
@@ -80,14 +76,14 @@
 (defn object-blocks-visible?
   "take object bounds,
   -- return fn that takes an image and checks if blocks"
-  [entity-set scale offset-x offset-y grid-dim]
+  [entity-set offset-x offset-y grid-dim]
   (if (= entity-set false)
       (constantly false)
       (let [iso-indices (spacialutility/cartesian-to-isometric-transform
                             (list (+ (* (:x entity-set) grid-dim) offset-x)
                                   (+ (* (:y entity-set) grid-dim) offset-y)))
-            entity-x (* (first iso-indices) scale)
-            entity-y (* (second iso-indices) scale)]
+            entity-x (first iso-indices)
+            entity-y (second iso-indices)]
             (fn [img-map x y]
                 (and
                   (> entity-x x)
@@ -97,16 +93,18 @@
 
 (defn image-visible?
   "take image resource and determine if it needs to be drawn"
-  [x y image-resource scale]
-  (let [image-height (* (:height image-resource) scale)
-        image-width (* (:width image-resource) scale)
+  [x y image-resource]
+  (let [image-height (:height image-resource)
+        image-width (:width image-resource)
+        window-width @config/WINDOW-RESOURCE-WIDTH
+        window-height @config/WINDOW-RESOURCE-HEIGHT
         center-visible? (fn [x y w h]
                           (or
-                            (and (< x 0) (> (+ x w) @config/WINDOW-WIDTH))
-                            (and (< y 0) (> (+ y h) @config/WINDOW-HEIGHT))))
+                            (and (< x 0) (> (+ x w) window-width))
+                            (and (< y 0) (> (+ y h) window-height))))
         corner-visible? (fn [x y] (and (> x 0) (> y 0)
-                                       (< x @config/WINDOW-WIDTH)
-                                       (< y @config/WINDOW-HEIGHT)))]
+                                       (< x window-width)
+                                       (< y window-height)))]
         (or (center-visible? x y image-width image-height)
             (corner-visible? x y)
             (corner-visible? (+ x image-width) y)
@@ -122,15 +120,14 @@
             (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))]
             (if (:draw? tile)
               (let [image-set ((:label current-layer) tile-resource)
-                    scale @config/COMPUTED-SCALE
                     image-resource (nth (:images image-set) (:image-index tile))
                     iso-coords (spacialutility/cartesian-to-isometric-transform
                                   (list
                                     (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
-                    iso-x (int (Math/ceil (* (- (first iso-coords) (:origin-offset-x image-resource)) scale)))
-                    iso-y (int (Math/ceil (* (- (second iso-coords) (:origin-offset-y image-resource)) scale)))]
-                    (if (image-visible? iso-x iso-y image-resource scale)
+                    iso-x (int (- (first iso-coords) (:origin-offset-x image-resource)))
+                    iso-y (int (- (second iso-coords) (:origin-offset-y image-resource)))]
+                    (if (image-visible? iso-x iso-y image-resource)
                         (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
                             (images/draw-image-alpha
                                 (:image image-resource) gr iso-x iso-y 0.5)
@@ -148,7 +145,7 @@
   (let [render-map-layer (render-layer gr map-resource tile-resource
                               (spacialutility/lateral-range (* 3 (:chunk-dim map-resource))) ;TODO: doesn't need to be recomputed
                               (object-blocks-visible? (reduce #(if (:prevent-block? %2) (reduced %2) false) false entity-handlers)
-                                                      @config/COMPUTED-SCALE (:draw-offset-x map-resource) (:draw-offset-y map-resource)
+                                                      (:draw-offset-x map-resource) (:draw-offset-y map-resource)
                                                       (:grid-dim map-resource))
                               entity-handlers)]
         (doall (map #(render-map-layer %) (:current-maps map-resource)))))

@@ -25,5 +25,5 @@
   (doseq [layer @paralax-state]
     (try
       (utils/draw-image (:image layer) gr (:x layer) 0)
-      (utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)
+      ;(utils/draw-image (:image layer) gr (- (:x layer) (:width layer)) 0)
       (catch Exception e (println (:image layer))))))
