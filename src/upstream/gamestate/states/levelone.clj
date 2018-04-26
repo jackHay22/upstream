@@ -10,6 +10,7 @@
 (def tile-resource (atom nil))
 (def player-input-map (atom {:update-facing :south :update-action :at-rest}))
 (def entity-state (atom '()))
+(def test-image (images/load-image "tiles/unit_bright.png"))
 
 (defn init-level-one
   "load resources, return draw safe state pipeline"

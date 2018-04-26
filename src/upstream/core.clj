@@ -38,5 +38,5 @@
         (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
         (gsm/init-gsm 2)
         (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
-        ;(gsm/start-subsequent-loads)
+        (gsm/start-subsequent-loads)
         ))))

@@ -5,6 +5,8 @@
 (import java.awt.AlphaComposite)
 (import java.awt.image.RescaleOp)
 (import java.awt.image.BufferedImage)
+(import java.awt.geom.AffineTransform)
+(import java.awt.image.AffineTransformOp)
 
 (defn sub-image-loader
   "gets a subimage the size of a tile from the big image"
@@ -23,12 +25,22 @@
       (javax.imageio.ImageIO/read
           (clojure.java.io/resource loc)))
 
-(defn get-resource-dim
-  "take resouce and get tuple of w,h"
-  [path]
-  (let [resource (javax.imageio.ImageIO/read
-                  (clojure.java.io/resource path))]
-      (list (.getWidth resource) (.getHeight resource))))
+(defn load-image-scale-by-width
+  "take image, rescale by new x"
+  [image new-w] ;TODO fix
+  (let [loaded (cast BufferedImage (javax.imageio.ImageIO/read
+                  (clojure.java.io/resource image)))
+                  ]
+                  loaded))
+                  ;TODO
+      ;   current-w (.getWidth loaded)
+      ;   current-h (.getHeight loaded)
+      ;   scale-factor (/ new-w current-w)
+      ;   transform (.scale (AffineTransform.) scale-factor scale-factor)
+      ;   operation (AffineTransformOp. transform AffineTransformOp/TYPE_BILINEAR)
+      ;   scaled-instance (BufferedImage.
+      ;             (* current-w scale-factor) (* current-h scale-factor) BufferedImage/TYPE_INT_ARGB)]
+      ; (.filter operation loaded scaled-instance)))
 
 (defn draw-image
   "draw an image to the gr object"
@@ -49,10 +61,24 @@
       )
       ;(alpha-fn 1))))
 
-(defn draw-images-brightness
+(defn draw-image-fade
+  ;TODO: not working
+  [img gr target fade x y]
+    (let [offset (* target (- 1.0 fade))
+          offsets (float-array [offset offset offset 0.0])
+          scales (float-array [fade fade fade 0.0])
+          disp (BufferedImage. (.getWidth img nil) (.getHeight img nil) BufferedImage/TYPE_INT_ARGB)]
+          (do
+            (.drawImage (.getGraphics disp)  img 0 0 nil)
+            (let [filtered-image (.filter (RescaleOp. scales offsets nil) img disp)] ;b-o (currently overriding offset)
+              (draw-image disp gr x y)))))
+
+
+(defn draw-image-brightness
   "gr, brightness value, return brightness draw fn"
-  [gr b]
-  (let [bfilter (RescaleOp. (float b) 0.0 nil)]
-        (fn [img x y]
-            (let [filtered-image (.filter bfilter img nil)]
-            (draw-image filtered-image gr x y)))))
+  [img gr b b-o x y]
+    (let [disp (BufferedImage. (.getWidth img nil) (.getHeight img nil) BufferedImage/TYPE_INT_ARGB)]
+          (do
+            (.drawImage (.getGraphics disp)  img 0 0 nil)
+            (let [filtered-image (.filter (RescaleOp. (float b) 10.0 nil) img disp)] ;b-o (currently overriding offset)
+              (draw-image disp gr x y)))))

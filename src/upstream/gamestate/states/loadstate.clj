@@ -11,7 +11,7 @@
   "perform all necessary resource loads"
   []
   (if (not @config/HEADLESS-SERVER?)
-      {:image (util/load-image "menus/temp_splash3.png")
+     {:image (util/load-image-scale-by-width "menus/temp_splash3.png" @config/WINDOW-RESOURCE-WIDTH)
       :fade? false
       :start-delay (/ config/LOAD-SCREEN-TTL 2)
       :draw? true

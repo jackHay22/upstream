@@ -35,7 +35,7 @@
   "take other init functions and load in new thread"
   []
   ;TODO: broken
-  (.start (Thread. #(doseq [s (rest STATES)] (doall ((:init-handler s)))))))
+  (.start (Thread. #(doseq [s (rest STATES)] (doall (reset! (:pipeline-ref s) ((:init-handler s))))))))
 
 (defn init-gsm
   "perform resource loads"
@@ -55,9 +55,11 @@
 (defn state-update
   "Update and Draw the current game state"
   []
-  (let [state-record (nth STATES @current-game-state)]
-    (reset! (:pipeline-ref state-record)
-        ((:update-handler state-record) @(:pipeline-ref state-record)))))
+  (let [state-record (nth STATES @current-game-state)
+        state-transform ((:update-handler state-record) @(:pipeline-ref state-record))]
+      (if (= state-transform nil)
+          (swap! current-game-state inc)
+          (reset! (:pipeline-ref state-record) state-transform))))
 
 (defn update-no-draw
   "update without drawing"
