@@ -56,7 +56,7 @@
                       (do (state/state-update)
                           (.repaint this)
                           (Thread/sleep td)))
-                      (recur))))))
+                    (recur))))))
 
 (defn start-window
   "start JFrame and add JPanel extension as content"
