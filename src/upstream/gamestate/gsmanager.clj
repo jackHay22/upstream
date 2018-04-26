@@ -7,54 +7,64 @@
 
 (def current-game-state (atom 0))
 (defrecord GameState [draw-handler update-handler
-                      key-press-handler key-release-handler init-handler])
+                      key-press-handler key-release-handler init-handler pipeline-ref])
+
+(defn new-state-pipeline [] (atom nil))
 
 (def STATES
-  [(GameState. #(loadstate/draw-load %)
-                #(loadstate/update-load)
+  [(GameState. #(loadstate/draw-load %1 %2)
+                #(loadstate/update-load %)
                 #(loadstate/keypressed-load %)
                 #(loadstate/keyreleased-load %)
-                #(loadstate/init-load))
-    (GameState. #(menu/draw-menu %)
-                #(menu/update-menu)
+                #(loadstate/init-load)
+                (new-state-pipeline))
+    (GameState. #(menu/draw-menu %1 %2)
+                #(menu/update-menu %)
                 #(menu/keypressed-menu %)
                 #(menu/keyreleased-menu %)
-                #(menu/init-menu))
-    (GameState. #(level/draw-level-one %)
-                #(level/update-level-one)
+                #(menu/init-menu)
+                (new-state-pipeline))
+    (GameState. #(level/draw-level-one %1 %2)
+                #(level/update-level-one %)
                 #(level/keypressed-level-one %)
                 #(level/keyreleased-level-one %)
-                #(level/init-level-one))])
+                #(level/init-level-one)
+                (new-state-pipeline))])
 
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
   []
+  ;TODO: broken
   (.start (Thread. #(doseq [s (rest STATES)] (doall ((:init-handler s)))))))
 
 (defn init-gsm
   "perform resource loads"
   [starting-state]
+  (let [state-record (nth STATES starting-state)]
   (do
     (reset! current-game-state starting-state)
     (logger/write-log "Starting gamestate manager in state:" starting-state)
-    (doall ((:init-handler (nth STATES starting-state))))))
+    (doall (reset! (:pipeline-ref state-record) ((:init-handler state-record)))))))
 
 (defn state-draw
   "draw current state"
   [gr]
-  ((:draw-handler (nth STATES @current-game-state)) gr))
+  (let [state-record (nth STATES @current-game-state)]
+    ((:draw-handler state-record) gr @(:pipeline-ref state-record))))
 
 (defn state-update
   "Update and Draw the current game state"
   []
-  (if (not ((:update-handler (nth STATES @current-game-state))))
-      (swap! current-game-state inc)))
+  (let [state-record (nth STATES @current-game-state)]
+    (reset! (:pipeline-ref state-record)
+        ((:update-handler state-record) @(:pipeline-ref state-record)))))
 
 (defn update-no-draw
   "update without drawing"
   []
-  (if (not ((:update-handler (nth STATES @current-game-state))))
-      (swap! current-game-state inc)))
+  (let [state-record (nth STATES @current-game-state)]
+  (reset! (:pipeline-ref state-record)
+      ((:update-handler state-record) @(:pipeline-ref state-record)))))
 
 (defn network-update
   "receive playerstate update from remote and return gamestate"

@@ -27,14 +27,13 @@
 (def system-thread (atom nil))
 (def sleep-ticks-per-second 1000)
 
-(defn graphical-panel-development
+(defn graphical-panel
   "-extends JPanel, implements Runnable and KeyListener-
    Run performs active render loop using double buffering
    and dynamically calculates thread sleep for consistent
    framerate"
   [w h s td]
   (let [base-image (BufferedImage. w h BufferedImage/TYPE_INT_ARGB)
-        ;g (cast Graphics2D (.getGraphics base-image))
         g (cast Graphics2D (.createGraphics base-image))
         window-width (* w s)
         window-height (* h s)]
@@ -56,13 +55,7 @@
                       (let [render-start (System/nanoTime)]
                       (do (state/state-update)
                           (.repaint this)
-                          (Thread/sleep td)
-                          ; (let [render-elapsed (- (System/nanoTime) render-start)
-                          ;       frame-delay (- td (/ render-elapsed 1000000))
-                          ;       actual-delay (if (> 0 frame-delay) 5 frame-delay)]
-                          ;   (try (Thread/sleep actual-delay)
-                          ;         (catch Exception s (println (.getMessage s)))))
-                                  ))
+                          (Thread/sleep td)))
                       (recur))))))
 
 (defn start-window
@@ -72,7 +65,7 @@
         height (:height w-resource)
         scale (:scale w-resource)
         target-delay (/ sleep-ticks-per-second framerate)
-        panel (graphical-panel-development width height scale target-delay)
+        panel (graphical-panel width height scale target-delay)
         window (JFrame. title)]
         (doto panel
           (.setPreferredSize (Dimension. (* width scale) (* height scale)))

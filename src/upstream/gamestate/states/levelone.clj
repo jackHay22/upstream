@@ -17,10 +17,11 @@
   (do
     (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod
     (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
-    (reset! entity-state (entity-manager/load-entities
-                                (save/load-from-save config/LEVEL-ONE-ENTITIES)))
+
     ;(save/start-autosaver entity-state) ; --> add in prod
-      ))
+    ;returns state entity-state-pipeline
+    (entity-manager/load-entities
+            (save/load-from-save config/LEVEL-ONE-ENTITIES))))
       ; (do ;NOTE: this causes a bug (with headless_server check)
       ;   ;server mode (no image load and no autosave) -- Note: if in GP mode
       ;   (reset! entity-state (entity-manager/load-entities config/LEVEL-ONE-ENTITIES)))))
@@ -38,28 +39,23 @@
   )
 
 (defn update-level-one
-  "update level1"
-  []
-  (let [current-entity-state @entity-state]
-       (reset! entity-state (entity-manager/update-entities current-entity-state @player-input-map))
-  true))
+  "update level1, return pipeline"
+  [entity-state-pipeline]
+  (entity-manager/update-entities entity-state-pipeline @player-input-map))
 
 (defn draw-level-one
   "update and draw handler for level one"
-  [gr]
-  (let [entity-set @entity-state]
+  [gr entity-state-pipeline]
   (tile-manager/render-map
-              gr (entity-manager/get-central-render-map entity-set)
-              @tile-resource (entity-manager/create-draw-handlers entity-set))
-  ;((images/draw-images-brightness gr (float 0.0)) @test-image 150 100)
-              ))
+              gr (entity-manager/get-central-render-map entity-state-pipeline)
+              @tile-resource (entity-manager/create-draw-handlers entity-state-pipeline)))
 
 (defn keypressed-level-one
   "key press handler for level one"
   [key]
-  (cond
-    (= key :r) (init-level-one) ;--> remove in prod ;this will cause problems if not removed and hotswapping is enabled
-    (= key :s) (save/save-state @entity-state))
+  ; (cond
+  ;   (= key :r) (init-level-one) ;--> remove in prod ;this will cause problems if not removed and hotswapping is enabled
+  ;   )
   (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
   false)
 
