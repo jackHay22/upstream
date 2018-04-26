@@ -105,8 +105,8 @@
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ chunk-relative-x map-offset-x)
                                                             (+ chunk-relative-y map-offset-y)))
-                                      iso-x (int (- (first iso-coords) (:draw-width-offset %)))
-                                      iso-y (int (- (second iso-coords) (:draw-height-offset %)))]
+                                      iso-x (- (int (first iso-coords)) (:draw-width-offset %))
+                                      iso-y (- (int (second iso-coords)) (:draw-height-offset %))]
                                     (draw-entity gr % iso-x iso-y)))))
   entities))
 

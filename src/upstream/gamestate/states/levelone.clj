@@ -12,7 +12,7 @@
 (def entity-state (atom '()))
 
 (defn init-level-one
-  "load resources"
+  "load resources, return draw safe state pipeline"
   []
   (do
     (reset! chunk-reload/chunk-store-loaded? false) ;note: map hotswapping should be done with the autosaver off --> remove in prod

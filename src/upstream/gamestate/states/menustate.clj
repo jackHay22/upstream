@@ -72,7 +72,7 @@
 
 (defn update-menu
   "update"
-  []
+  [state-pipeline]
   (do
     (reset! load-screen-fade (screen/update-alpha-layers @load-screen-fade))
     (paralax/update-layers)
@@ -80,7 +80,7 @@
 
 (defn draw-menu
   "update and draw handler for menu state"
-  [gr]
+  [gr state-pipeline]
   (do
     (paralax/render-layers gr)
     (screen/draw-static-screen-from-preset @title-image gr)
