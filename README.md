@@ -54,6 +54,7 @@ docker run \
 - Follow input formatting convention found in [documentation](doc/intro.md).
 
 ## TODO:
+- [ ] Try opaque image approach for depth
 - [ ] reify instead of proxy in engine
 - [ ] Reduce Framerate?
 - [ ] Improve CPU performance?

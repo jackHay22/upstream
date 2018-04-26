@@ -7,6 +7,8 @@
     [upstream.tilemap.chunkutility :as chunkutility])
   (:gen-class))
 
+(def atmosphere (images/load-image "tiles/atmosphere_layer.png"))
+
 (defn set-position
   "testing set-position fn"
   [px py map-resource]
@@ -117,9 +119,9 @@
   (fn [current-layer]
     (doall (map
           (fn [tile-coords]
+            (if (= (first tile-coords) :draw-atmosphere) (images/draw-image atmosphere gr -1 (min 0 (+ -300 (second tile-coords))))
             (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))
-                  layer-brightness (nth tile-coords 2)
-                  brightness-offset (nth tile-coords 3)]
+                  layer-brightness (nth tile-coords 2)]
             (if (:draw? tile)
               (let [image-set ((:label current-layer) tile-resource)
                     image-resource (nth (:images image-set) (:image-index tile))
@@ -133,14 +135,14 @@
                         (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
                             (images/draw-image-alpha
                                 (:image image-resource) gr iso-x iso-y 0.5)
-                            ; (images/draw-image
-                            ;     (:image image-resource) gr iso-x iso-y)
-                            (images/draw-image-brightness (:image image-resource) gr layer-brightness brightness-offset iso-x iso-y)
+                            (images/draw-image
+                                (:image image-resource) gr iso-x iso-y)
+                            ;(images/draw-image-brightness (:image image-resource) gr layer-brightness brightness-offset iso-x iso-y)
                                 ))))
               (if (:entity-handler? current-layer)
                   (entity-handler gr handlers
                       (first tile-coords) (second tile-coords)
-                      (:draw-offset-x map-resource) (:draw-offset-y map-resource)))))
+                      (:draw-offset-x map-resource) (:draw-offset-y map-resource))))))
           lateral-coordinate-set))))
 
 (defn render-map
