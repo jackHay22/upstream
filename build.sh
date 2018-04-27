@@ -77,7 +77,9 @@ elif [ "$1" == "-editor" ]; then
   ./build.sh
 elif [ "$1" == "-backup" ]; then
   printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC} and ${YELLOW}/out${NC} from archive. \n"
-  zip -r "upstream_sepulchre_$DATE.zip" . -x /target/**\* /out/**\* > /dev/null 2>&1
+  zip -r "upstream_sepulchre_$DATE.zip" . \
+          -x /target/**\* /out/**\* \
+          /editor/dist**\* /editor/resources**\* > /dev/null 2>&1
   printf "${WRENCH}  Uploading ${RED}Upstream${NC} repo to AWS Glacier: ${YELLOW}upstream_sepulchre${NC}. \n"
   aws glacier upload-archive \
       --region us-east-2 \
