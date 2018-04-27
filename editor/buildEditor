@@ -3,19 +3,20 @@
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
-WRENCH='\xF0\x9F\x94\xA7'
+PENCIL='\xE2\x9C\x8F'
 
 build_procedure () {
+  printf "${PENCIL}  Using ant to build ${RED}Upstream Editor${NC} jar binary... \n"
   ant
+  printf "${PENCIL}  ${RED}Upstream Editor${NC} build complete \n"
   rm -r build
 }
 
 if command -v lein >/dev/null 2>&1; then
-  printf "${WRENCH}  Using ant to build ${RED}Editor${NC} jar binary... \n"
   build_procedure
 else
-  printf "${WRENCH}  ${Yellow}Warning:${NC} ${RED}ant${NC} not installed. \n"
-  printf "${WRENCH}  Attempting ${RED}ant${NC} installation with brew \n"
+  printf "${PENCIL}  ${Yellow}Warning:${NC} ${RED}ant${NC} not installed. \n"
+  printf "${PENCIL}  Attempting ${RED}ant${NC} installation with brew \n"
   brew install ant
   build_procedure
 fi
