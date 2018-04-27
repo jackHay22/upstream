@@ -110,7 +110,8 @@ _See [documentation](doc/intro.md) for completed list_
 ## Planned Iteration Schedule
 - [ ] _0.2.0_ Minimum playable environment (Late April 2018)
   - Acceptance Standards:
-    - [x] Working tilemap system for 2 layers, collision system
+    - [x] Working tilemap system for 2 layers
+    - [ ] Collision system
     - [ ] Player idle and movement animations
     - [ ] Initial pass at game art
     - [x] Viable art development pipeline
