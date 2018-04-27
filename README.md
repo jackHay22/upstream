@@ -53,6 +53,11 @@ docker run \
 - Run UpstreamGP with the argument ```-gp```.
 - Follow input formatting convention found in [documentation](doc/intro.md).
 
+## Map Editor Operation
+- Run ```./build.sh -editor``` to build and run the editing tool.
+- Note ```./buildEditor``` should only be run as a subroutine of ```build.sh``` to verify that resources are correctly copied to the editor's working directory.
+- This tool uses ```ant``` to orchestrate the java build and will attempt to use brew to download this tool if it can't find it in ```$PATH```.
+
 ## TODO:
 - [ ] Try opaque image approach for depth
 - [ ] reify instead of proxy in engine

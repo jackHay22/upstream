@@ -73,9 +73,10 @@ elif [ "$1" == "-editor" ]; then
   cp -R resources/tiles/. editor/resources/tiles
   cp -R resources/maps/. editor/resources/maps
   printf "${WRENCH}  Building ${RED}Editor${NC} tool using ${YELLOW}/editor/buildEditor${NC}. \n"
-  ./editor/buildEditor
+  cd editor
+  ./buildEditor
   printf "${WRENCH}  Starting editor... \n"
-  java -jar /editor/dist/UpstreamEditor_*.jar
+  java -jar dist/UpstreamEditor_*.jar
 elif [ "$1" == "-backup" ]; then
   printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC} and ${YELLOW}/out${NC} from archive. \n"
   zip -r "upstream_sepulchre_$DATE.zip" . -x /target/**\* /out/**\* > /dev/null 2>&1
