@@ -42,7 +42,10 @@ public class DisplayPanel extends JPanel implements Runnable, KeyListener{
 		g = (Graphics2D) image.getGraphics();
 		running = true;
 		manager = new MapManager(this.map1, this.map2, 32);
-		//manager.loadLayerOneTiles()
+		manager.loadLayerOneTiles("tiles/test_sheet.png", 64, 32, 32, 0);
+		manager.loadLayerTwoTiles("tiles/tree_set.png", 130, 325, 60, 300);
+		//manager.loadLayerOneTiles("tiles/test_sheet.png", 64, 32, 32, 0);
+
 //TODO
 	}
 	public void run() {

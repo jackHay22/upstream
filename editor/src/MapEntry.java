@@ -11,4 +11,5 @@ public class MapEntry {
   }
   public int getField(int index) { return fields.get(index); }
   public int getImageIndex() { return fields.get(0); }
+  public void setImageIndex(int newVal) { fields.set(0,newVal); }
 }

@@ -119,6 +119,7 @@ _See [documentation](doc/intro.md) for completed list_
     - [ ] Collision system
     - [ ] Player idle and movement animations
     - [ ] Initial pass at game art
+    - [ ] Map editing toolset
     - [x] Viable art development pipeline
 - [ ] _0.3.0_ Minimum playable game (Mid July 2018)
   - Acceptance Standards:

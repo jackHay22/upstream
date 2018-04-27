@@ -100,7 +100,7 @@ public class MapManager {
   private ArrayList<Tile> loadTiles(String resource, int local_tile_dimx, int local_tile_dimy, int draw_offset_x, int draw_offset_y) {
     ArrayList<Tile> res = new ArrayList<Tile>();
     try {
-			BufferedImage newtileSet = ImageIO.read(getClass().getResourceAsStream(resource));
+      BufferedImage newtileSet = ImageIO.read(getClass().getResourceAsStream(resource));
 
 			//calculate tiles in image (x and y)
 			//load tiles into arrayList as subimages of tileset
@@ -134,7 +134,7 @@ public class MapManager {
 				if(y < 0) break;
 				int rc = map1[x][y].getImageIndex();
         Coordinates transform = new Coordinates(x * this.grid_dim, y * this.grid_dim);
-        Tile current = tiles_one.get(rc);
+        Tile current = tiles_one.get(rc); //out of bounds exception here
         g.drawImage(current.getImage(),
                     (int) this.x + transform.getIsometricX() - current.getDrawOffsetX(),
                     (int) this.y + transform.getIsometricX() - current.getDrawOffsetY(), null);
