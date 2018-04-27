@@ -72,9 +72,9 @@ elif [ "$1" == "-editor" ]; then
   printf "${WRENCH}  Copying resources to current working directory... \n"
   cp -R resources/tiles/. editor/resources/tiles
   cp -R resources/maps/. editor/resources/maps
-  printf "${WRENCH}  Building ${RED}Editor${NC} tool using ${YELLOW}/editor/build${NC}. \n"
+  printf "${WRENCH}  Building ${RED}Editor${NC} tool using ${YELLOW}/editor/build-editor${NC}. \n"
   cd editor
-  ./build.sh
+  ./build-editor.sh
 elif [ "$1" == "-backup" ]; then
   printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC} and ${YELLOW}/out${NC} from archive. \n"
   zip -r "upstream_sepulchre_$DATE.zip" . \

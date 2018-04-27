@@ -3,6 +3,7 @@
     [upstream.config :as config]
     [upstream.utilities.images :as images]
     [upstream.tilemap.tilemanager :as tile-manager]
+    [upstream.tilemap.tileinterface :as tile-interface]
     [upstream.entities.entitydecisionmanager :as decisions]
     [upstream.utilities.spacial :as spacialutility])
   (:gen-class))
@@ -67,7 +68,9 @@
                                         (merge e {:all-positions all-positions})))
                   updated-facing (:update-facing update-source)
                   updated-action (:update-action update-source)
-                  updated-position ((updated-facing update-xy) px py (get-speed updated-action))
+                  updated-position (tile-interface/try-move
+                                              (updated-facing update-xy) px py (get-speed updated-action)
+                                              map-resource)
                   updated-x (first updated-position)
                   updated-y (second updated-position)
                   updated-map (if (:render-as-central e)
@@ -94,8 +97,8 @@
   (map #(let [corner-chunk (:corner-chunk (first (:current-maps (:map-resource %))))
               chunk-dim (:chunk-dim (:map-resource %))
               grid-dim (:grid-dim (:map-resource %))
-              offset-x (* grid-dim (:offset-x corner-chunk) 0)
-              offset-y (* grid-dim (:offset-y corner-chunk) 0) ;TODO figure out problem here
+              offset-x (* grid-dim (:offset-x corner-chunk))
+              offset-y (* grid-dim (:offset-y corner-chunk))
               chunk-relative-x (- (:position-x %) offset-x)
               chunk-relative-y (- (:position-y %) offset-y)]
               (hash-map :x (int (/ chunk-relative-x grid-dim))

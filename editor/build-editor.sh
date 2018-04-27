@@ -7,8 +7,9 @@ PENCIL='\xE2\x9C\x8F'
 
 build_procedure () {
   printf "${PENCIL}  Using ant to build ${RED}Upstream Editor${NC} jar binary... \n"
+  printf "${PENCIL}  Found build configuration: ${YELLOW}$(find . -name '*.xml')${NC}. \n"
   ant
-  printf "${PENCIL}  ${RED}Upstream Editor${NC} build complete \n"
+  printf "${PENCIL}  ${RED}Upstream Editor${NC} ant build complete \n"
   rm -r build
   printf "${PENCIL}  Starting editor... \n"
   java -jar dist/UpstreamEditor_*.jar \

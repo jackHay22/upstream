@@ -134,10 +134,15 @@ public class MapManager {
 				if(y < 0) break;
 				int rc = map1[x][y].getImageIndex();
         Coordinates transform = new Coordinates(x * this.grid_dim, y * this.grid_dim);
-        Tile current = tiles_one.get(rc); //out of bounds exception here
-        g.drawImage(current.getImage(),
+        try {
+          Tile current = tiles_one.get(rc); //out of bounds exception here
+          g.drawImage(current.getImage(),
                     (int) this.x + transform.getIsometricX() - current.getDrawOffsetX(),
                     (int) this.y + transform.getIsometricX() - current.getDrawOffsetY(), null);
+        } catch (Exception e) {
+          e.printStackTrace();
+          System.out.println("tried to get index: " + rc);
+        }
 			}
 		}
     for (int x = this.startXDisplay; x < this.startXDisplay + displayAcross; x++) {
@@ -150,10 +155,12 @@ public class MapManager {
 				if(y < 0) break;
 				int rc = map2[x][y].getImageIndex();
         Coordinates transform = new Coordinates(x * this.grid_dim, y * this.grid_dim);
-        Tile current = tiles_two.get(rc);
-				g.drawImage(current.getImage(),
-                    (int) this.x + transform.getIsometricX() - current.getDrawOffsetX(),
-                    (int) this.y + transform.getIsometricX() - current.getDrawOffsetY(), null);
+        if (rc != -1) {
+          Tile current = tiles_two.get(rc);
+  				g.drawImage(current.getImage(),
+                      (int) this.x + (int) transform.getIsometricX() - current.getDrawOffsetX(),
+                      (int) this.y + (int) transform.getIsometricX() - current.getDrawOffsetY(), null);
+        }
 			}
 		}
   }
