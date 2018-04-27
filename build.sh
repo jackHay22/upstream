@@ -70,7 +70,7 @@ elif [ "$1" == "-saveartifact" ]; then
   printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
 elif [ "$1" == "-editor" ]; then
   printf "${WRENCH}  Copying resources to current working directory... \n"
-  cp -R resources/tiles/. editor/resources/tiles/
+  cp -R resources/tiles/. editor/resources/tiles
   cp -R resources/maps/. editor/resources/maps
   printf "${WRENCH}  Building ${RED}Editor${NC} tool using ${YELLOW}/editor/buildEditor${NC}. \n"
   ./editor/buildEditor
