@@ -16,6 +16,8 @@
    :facing (:facing e-state)
    :current-action (:current-action e-state)})
 
+(def FILE-AVAILABLE? (atom true))
+
 (defn build-path
   "build path from sub directories"
   [& subdirs])
@@ -39,24 +41,28 @@
 (defn load-from-save
   "load entities state from save file, take list of config states to merge with"
   [to-merge]
-  (with-open [save-reader (clojure.java.io/reader (get-user-save-location config/SAVE-FILE))]
-    (let [raw-save-state (clojure.string/join "\n" (line-seq save-reader))
-          to-load (if (empty? raw-save-state)
-                      (repeat nil)
+  (do
+    (reset! FILE-AVAILABLE? false)
+    (with-open [save-reader (clojure.java.io/reader (get-user-save-location config/SAVE-FILE))]
+      (let [raw-save-state (clojure.string/join "\n" (line-seq save-reader))
+            to-load (if (empty? raw-save-state)
+                        (repeat nil)
                       (try
                         (read-string raw-save-state)
                       (catch Exception e
                         (do
                           (log/write-log "Error loading saved game state, reverting to preset: \n\n" (pr-str to-merge))
                           (repeat nil)))))]
-           (map merge to-merge to-load))))
+           (map merge to-merge to-load)))))
+           ;TODO
+    ;(reset! FILE-AVAILABLE? true))))
 
 (defn start-autosaver
   "start autosaver"
   [state-reference]
   (.start (Thread.
       (loop []
-          (save-state @state-reference)
+          (if @FILE-AVAILABLE? (save-state @state-reference))
           (Thread/sleep config/AUTO-SAVE-SLEEP)
       (recur)))))
 

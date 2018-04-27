@@ -14,9 +14,6 @@
         doc-inset (.getScreenInsets toolkit (.getDefaultConfiguration device-graphics))
         scale (/ (.width screenSize) resource-total-width) ;.getBounds()
         resource-total-height (int (/ (.height screenSize) scale))] ;TODO  doc-inset/bottom)
-        (println resource-total-height)
-        (println (.getBounds (.getDefaultConfiguration device-graphics)))
-        (println screenSize)
     (hash-map :width resource-total-width
-              :height (- resource-total-height 100)
+              :height (- resource-total-height 80) ;TODO: figure out the actual size of the inset
               :scale scale)))

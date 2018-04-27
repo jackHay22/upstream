@@ -76,7 +76,8 @@ elif [ "$1" == "-editor" ]; then
   cd editor
   ./build-editor.sh
 elif [ "$1" == "-backup" ]; then
-  printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC} and ${YELLOW}/out${NC} from archive. \n"
+  printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC}, ${YELLOW}/out${NC}, "
+  printf  "${YELLOW}/editor/dist${NC} and ${YELLOW}/editor/resources${NC} from archive. \n"
   zip -r "upstream_sepulchre_$DATE.zip" . \
           -x /target/**\* /out/**\* \
           /editor/dist**\* /editor/resources**\* > /dev/null 2>&1

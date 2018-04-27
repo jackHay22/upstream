@@ -17,7 +17,7 @@
         window-width @config/WINDOW-RESOURCE-WIDTH
         window-height @config/WINDOW-RESOURCE-HEIGHT
         grid-screen-center (spacialutility/isometric-to-cartesian-transform
-                                  (list (/ window-width 2) (+ (/ window-height 2) 150)))]
+                                  (list (/ window-width 2) (+ (/ window-height 2) 50)))]
         (merge updated-chunk-map
             {:draw-offset-x (int (- (first grid-screen-center) player-position-x-in-map))
              :draw-offset-y (int (- (second grid-screen-center) player-position-y-in-map))}))) ;TODO make this more precise

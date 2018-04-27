@@ -29,6 +29,7 @@
   "check if loaded tile is blocked"
   [map-resource x y]
   (= 1 (get-tile-attribute map-resource :blocked? :l1 x y)))
+  ;TODO
 
 (defn try-move
   "check if player can make a move to the next tile"

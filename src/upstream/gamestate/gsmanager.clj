@@ -1,7 +1,9 @@
 (ns upstream.gamestate.gsmanager
   (:require [upstream.gamestate.states.menustate :as menu]
             [upstream.gamestate.states.levelone :as level]
+            [upstream.config :as config]
             [upstream.utilities.log :as logger]
+            [upstream.utilities.save :as save]
             [upstream.gamestate.states.loadstate :as loadstate])
   (:gen-class))
 
@@ -34,7 +36,6 @@
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
   []
-  ;TODO: broken
   (.start (Thread. #(doseq [s (rest STATES)] (doall (reset! (:pipeline-ref s) ((:init-handler s))))))))
 
 (defn init-gsm
@@ -43,6 +44,8 @@
   (let [state-record (nth STATES starting-state)]
   (do
     (reset! current-game-state starting-state)
+     ; (if (not @config/HEADLESS-SERVER?)
+     ;   (save/start-autosaver (:pipeline-ref (nth STATES 2)))) ;TODO
     (logger/write-log "Starting gamestate manager in state:" starting-state)
     (doall (reset! (:pipeline-ref state-record) ((:init-handler state-record)))))))
 
