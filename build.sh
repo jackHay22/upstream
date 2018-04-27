@@ -75,8 +75,6 @@ elif [ "$1" == "-editor" ]; then
   printf "${WRENCH}  Building ${RED}Editor${NC} tool using ${YELLOW}/editor/buildEditor${NC}. \n"
   cd editor
   ./buildEditor
-  printf "${WRENCH}  Starting editor... \n"
-  java -jar dist/UpstreamEditor_*.jar
 elif [ "$1" == "-backup" ]; then
   printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC} and ${YELLOW}/out${NC} from archive. \n"
   zip -r "upstream_sepulchre_$DATE.zip" . -x /target/**\* /out/**\* > /dev/null 2>&1

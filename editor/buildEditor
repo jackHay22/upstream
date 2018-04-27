@@ -10,6 +10,10 @@ build_procedure () {
   ant
   printf "${PENCIL}  ${RED}Upstream Editor${NC} build complete \n"
   rm -r build
+  printf "${PENCIL}  Starting editor... \n"
+  java -jar dist/UpstreamEditor_*.jar \
+             maps/level_1-layer_0.txt \
+             maps/level_1-layer_1.txt
 }
 
 if command -v lein >/dev/null 2>&1; then

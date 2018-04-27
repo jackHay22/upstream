@@ -7,8 +7,6 @@
     [upstream.tilemap.chunkutility :as chunkutility])
   (:gen-class))
 
-(def atmosphere (images/load-image "tiles/atmosphere_layer.png"))
-
 (defn set-position
   "testing set-position fn"
   [px py map-resource]
@@ -119,7 +117,6 @@
   (fn [current-layer]
     (doall (map
           (fn [tile-coords]
-            (if (= (first tile-coords) :draw-atmosphere) (images/draw-image atmosphere gr -1 (min 0 (+ -300 (second tile-coords))))
             (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))
                   layer-brightness (nth tile-coords 2)]
             (if (:draw? tile)
@@ -142,7 +139,7 @@
               (if (:entity-handler? current-layer)
                   (entity-handler gr handlers
                       (first tile-coords) (second tile-coords)
-                      (:draw-offset-x map-resource) (:draw-offset-y map-resource))))))
+                      (:draw-offset-x map-resource) (:draw-offset-y map-resource)))))
           lateral-coordinate-set))))
 
 (defn render-map

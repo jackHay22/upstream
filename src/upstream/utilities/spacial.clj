@@ -7,13 +7,10 @@
   [grid-dim]
   (let [make-range-layer #(map vector
                   (take (+ %1 1) (range)) (take (+ %1 1) (range %1 -1 -1)) (repeat %2))]
-  (mapcat (fn [row remove b-factor rows]
-                (let [new-row (take (- grid-dim remove) (drop remove (make-range-layer row b-factor)))]
-                    (if (integer? (/ rows 8)) (conj new-row (list :draw-atmosphere (* rows 4))) new-row)))
+  (mapcat (fn [row remove b-factor] (take (- grid-dim remove) (drop remove (make-range-layer row b-factor))))
           (range (- (* grid-dim 2) 1))
           (concat (repeat (- grid-dim 1) 0) (range grid-dim))
-          (range 0.8 1.8 (/ 0.5 grid-dim))
-          (range))))
+          (range 0.8 1.8 (/ 0.5 grid-dim)))))
 
 (defn cartesian-to-isometric-transform
   "take cartesian (x,y) and map to isometric (x,y)"

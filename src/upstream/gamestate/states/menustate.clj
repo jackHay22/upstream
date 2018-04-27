@@ -27,8 +27,7 @@
 (defn load-paralax-preset
   "build paralax set with new width"
   []
-  (let [width @config/WINDOW-WIDTH
-        load-scaled #(util/load-image-scale-by-width % @config/WINDOW-RESOURCE-WIDTH)]
+  (let [load-scaled #(util/load-image-scale-by-width % @config/WINDOW-RESOURCE-WIDTH)]
   (list
     {:image (load-scaled "menus/menu_paralax/paralax2_0.png") :dx 0}
     {:image (load-scaled "menus/menu_paralax/paralax2_1.png") :dx 0.2}
@@ -39,8 +38,7 @@
 
 (defn load-menu-selectable-fields
   []
-  (let [width @config/WINDOW-WIDTH
-        load-scaled #(util/load-image-scale-by-width % @config/WINDOW-RESOURCE-WIDTH)]
+  (let [load-scaled #(util/load-image-scale-by-width % @config/WINDOW-RESOURCE-WIDTH)]
   (list
     {:selected   (load-scaled "menus/optiontext/start_selected.png")
      :deselected (load-scaled "menus/optiontext/start_deselected.png")}
@@ -68,7 +66,7 @@
                            :fade? false
                            :draw? true})
       (menu/register-menu-options (load-menu-selectable-fields))
-      (paralax/register-layers (load-paralax-preset) @config/WINDOW-WIDTH))))
+      (paralax/register-layers (load-paralax-preset) @config/WINDOW-RESOURCE-WIDTH))))
 
 (defn update-menu
   "update"
