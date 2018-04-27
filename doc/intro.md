@@ -139,6 +139,21 @@ At load, predicate-actions are loaded as symbols and stored in an entities decis
 - Save a stack trace or debug message to a file in .upstream directory: ```(log/save-critical-log filename message)```
 
 ## Completed TODO list
+- [x] Try opaque image approach for depth
+- [x] Make entity handler fn map relative instead of chunk relative
+- [x] Fix jittering problem that originates when origin offsets are non-zero?
+- [x] Fix bug: superblocks don't get drawn if they are bigger than a chunk (split superblocks up)
+- [x] Fix bug: using a larger chunk dimension for l1 causes placement of superblocks to jump around
+- [x] Keyboard input control
+- [x] Try to make render smoother
+- [x] Initial entity movement
+- [x] refactor core/-main
+- [x] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn
+- [x] Entity manager code
+- [x] Entity decision formatting
+- [x] General system optimizations
+- [x] Prevent image/file loads if headless server (this is important in several areas)
+- [x] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [x] Fix docker server save file bug (only load or save to file when not server)
 - [x] Each entity has an associated map-resource (the player is the only one used in tilemap render)
 - [x] Entity manager associates map resource with player

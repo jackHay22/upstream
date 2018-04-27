@@ -59,36 +59,18 @@ docker run \
 - This tool uses ```ant``` to orchestrate the java build and will attempt to use brew to download this tool if it can't find it in ```$PATH```.
 
 ## TODO:
-- [ ] Try opaque image approach for depth
-- [ ] reify instead of proxy in engine
-- [ ] Reduce Framerate?
-- [ ] Improve CPU performance?
+- [ ] Try additional light/depth techniques
 - [ ] Fix object-blocks-visible? fn
 - [ ] Redesign gp evaluation reduce to be list based
 - [ ] Redesign level 1 init file problem for docker image
-- [ ] Potential efficiency problem with more entities by looking through list for one to use to render (if central-render is first in list this isn't a big problem)
-- [ ] Make entity handler fn map relative instead of chunk relative
 - [ ] Something wrong with opacity function
-- [ ] Fix jittering problem that originates when origin offsets are non-zero?
-- [ ] Fix bug: superblocks don't get drawn if they are bigger than a chunk (split superblocks up)
-- [ ] Fix bug: using a larger chunk dimension for l1 causes placement of superblocks to jump around
 - [ ] Tilemap blocked intersections
-- [ ] Keyboard input control
-- [ ] Try to make render smoother
-- [ ] Initial entity movement
-- [ ] refactor core/-main
 - [ ] Don't need two sound layers: make layer two a sound layer and update layer 1 accordingly
 - [ ] Don't always recompute spacial range (chunk size is constant)
 - [ ] Make entity draw handler efficient
-- [ ] Entities have their own maps and the tilemap render function takes the map of the entity to be drawn
 - [ ] Edge testing
 - [ ] Bundle tilemap config and add function for updating
-- [ ] Entity manager code
-- [ ] Entity decision formatting
-- [ ] General system optimizations
 - [ ] Add server support to all updates made
-- [ ] Prevent image/file loads if headless server (this is important in several areas)
-- [ ] Calculate base layer tiles down at config startup sequence to clean up tilemap layer init fn
 - [ ] Height attribute for l1 layer blocks (and draw player at updated height)
 - [ ] Pause menu in level1
 - [ ] Refactor temporary fixes to menu and load screens, improve code and reduce atomics
@@ -113,59 +95,63 @@ docker run \
 _See [documentation](doc/intro.md) for completed list_
 
 ## Planned Iteration Schedule
-- [ ] _0.2.0_ Minimum playable environment (Late April 2018)
+- [ ] _0.2.0_ Minimum playable environment (Mid May 2018)
   - Acceptance Standards:
     - [x] Working tilemap system for 2 layers
     - [ ] Collision system
-    - [ ] Player idle and movement animations
+    - [x] Stand-in player movement images
     - [ ] Initial pass at game art
-    - [ ] Map editing toolset
     - [x] Viable art development pipeline
-- [ ] _0.3.0_ Minimum playable game (Mid July 2018)
+- [ ] _0.3.0_ Stable production environment (Mid June 2018)
   - Acceptance Standards:
+    - [ ] _Useful_ map editing toolset and build orchestration
+    - [ ] Better game environment production systems
+- [ ] _0.4.0_ Minimum playable game (Mid July 2018)
+  - Acceptance Standards:
+    - [ ] Player idle and movement animations
     - [ ] Full map design and initial art pass on entire map
     - [ ] Running and fighting player animations
     - [ ] First pass on hostile enemy system
     - [ ] Polished art in key locations
     - [ ] Dynamic undergrowth system @ layer 3
-- [ ] _0.4.0_ Testing release (Early August 2018)
+- [ ] _0.5.0_ Testing release (Early August 2018)
   - Acceptance Standards:
     - [ ] Distribute game to initial group for local gameplay testing
     - [ ] Working website with download functionality (testing for macOS gatekeeper)
-- [ ] _0.5.0_ Genetic Programming Release (End of Summer 2018)
+- [ ] _0.6.0_ Genetic Programming Release (End of Summer 2018)
   - Acceptance Standards:
     - [ ] Working distributed evaluation system
     - [ ] Running UpstreamGP image on cluster
     - [ ] Basic decision instruction generation
     - [ ] Optimized UpstreamGP individual evaluation
     - [ ] Testing GP individuals with human-coded individuals
-- [ ] _0.6.0_ Testing release 2 (Early Fall 2018)
+- [ ] _0.7.0_ Testing release 2 (Early Fall 2018)
   - Acceptance Standards:
     - [ ] Resolve inevitable bugs
     - [ ] Iterate on feedback
     - [ ] Re-release with changes made
-- [ ] _0.7.0_ Minimum viable server environment (End of Summer 2018)
+- [ ] _0.8.0_ Minimum viable server environment (End of Summer 2018)
   - Acceptance Standards:
     - [ ] Deployment to raspberry pi cluster through docker
     - [ ] Monitoring orchestration
     - [ ] Redis background server
     - [ ] Multicast server
     - [ ] Basic user authentication mechanism
-- [ ] _0.8.0_ Production server environment (Mid Fall 2018)
+- [ ] _0.9.0_ Production server environment (Mid Fall 2018)
   - Acceptance Standards:
     - [ ] Terraform deployment automation (or cloudformation)
     - [ ] Full AWS server environment
-- [ ] _0.9.0_ Distribution Release (Late Fall 2018)
-  - Acceptance Standards:
-    - [ ] Live website distribution testing
-    - [ ] System architecture testing
-    - [ ] Resource and load optimizations
 - [ ] _1.0.0_ Full Release (End 2018)
   - Acceptance Standards:
     - [ ] It's what it sounds like
     - [ ] Website
     - [ ] Full release available on website
     - [ ] BTS videos?
+- [ ] _1.0.1_ System optimization of full release (End 2018)
+  - Acceptance Standards:
+    - [ ] Live website distribution testing
+    - [ ] System architecture testing
+    - [ ] Resource and load optimizations
 - [ ] _*.0.0_ LTS (Through Summer 2019)
   - Acceptance Standards:
     - [ ] Iterate on feedback with well-tested, stable releases
