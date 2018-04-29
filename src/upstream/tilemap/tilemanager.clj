@@ -118,6 +118,10 @@
   (fn [current-layer]
     (doall (map
           (fn [tile-coords]
+            (if (= tile-coords :render-lighting)
+                (lighting/render-lighting gr
+                  (/ @config/WINDOW-RESOURCE-WIDTH 2)
+                  (/ @config/WINDOW-RESOURCE-HEIGHT 2) (:label current-layer))
             (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))
                   layer-brightness (nth tile-coords 2)]
             (if (:draw? tile)
@@ -140,18 +144,16 @@
               (if (:entity-handler? current-layer)
                   (entity-handler gr handlers
                       (first tile-coords) (second tile-coords)
-                      (:draw-offset-x map-resource) (:draw-offset-y map-resource)))))
+                      (:draw-offset-x map-resource) (:draw-offset-y map-resource))))))
           lateral-coordinate-set))))
 
 (defn render-map
   "take graphics object and render all map layers"
   [gr map-resource tile-resource entity-handlers]
   (let [render-map-layer (render-layer gr map-resource tile-resource
-                              (spacialutility/lateral-range (* 3 (:chunk-dim map-resource))) ;TODO: doesn't need to be recomputed
+                              (concat (spacialutility/lateral-range (* 3 (:chunk-dim map-resource))) '(:render-lighting))
                               (object-blocks-visible? (reduce #(if (:prevent-block? %2) (reduced %2) false) false entity-handlers)
                                                       (:draw-offset-x map-resource) (:draw-offset-y map-resource)
                                                       (:grid-dim map-resource))
                               entity-handlers)]
-        (doall (map #(render-map-layer %) (:current-maps map-resource)))
-        ;(lighting/render-lighting gr 200.0 200.0 500.0)
-        ))
+        (doall (map #(render-map-layer %) (:current-maps map-resource)))))
