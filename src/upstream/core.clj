@@ -8,6 +8,8 @@
             [upstream.utilities.windowutil :as windowutility])
   (:gen-class))
 
+(set! *warn-on-reflection* true)
+
 (defn -main
   "entrypoint"
   [& args]

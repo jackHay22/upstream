@@ -4,6 +4,7 @@
     [clojure.java.io :as io]
     [upstream.utilities.images :as images]
     [upstream.utilities.spacial :as spacialutility]
+    [upstream.utilities.lighting :as lighting]
     [upstream.tilemap.chunkutility :as chunkutility])
   (:gen-class))
 
@@ -151,4 +152,6 @@
                                                       (:draw-offset-x map-resource) (:draw-offset-y map-resource)
                                                       (:grid-dim map-resource))
                               entity-handlers)]
-        (doall (map #(render-map-layer %) (:current-maps map-resource)))))
+        (doall (map #(render-map-layer %) (:current-maps map-resource)))
+        ;(lighting/render-lighting gr 200.0 200.0 500.0)
+        ))

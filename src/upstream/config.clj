@@ -34,7 +34,7 @@
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
 
 (def PLAYER-START-X 700)
-(def PLAYER_START-Y 700)
+(def PLAYER_START-Y 740)
 (def WALKING-SPEED 1)
 (def RUNNING-SPEED 2)
 
