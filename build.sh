@@ -87,11 +87,11 @@ elif [ "$1" == "-backup" ]; then
           --vault-name upstream_sepulchre \
           --account-id - \
           --body upstream_sepulchre_*.zip; then
-    printf "${WRENCH}  Removing  ${upstream_sepulchre_*.zip} \n"
+    #printf "${WRENCH}  Removing  ${upstream_sepulchre_*.zip} \n"
     rm upstream_sepulchre_*.zip
     printf "${WRENCH}  ${YELLOW}Glacier${NC}: repo uploaded with filename: ${YELLOW}upstream_sepulchre_$DATE.zip${NC} \n"
   else
-    printf "${WRENCH}  Removing  $(echo upstream_sepulchre_*.zip)"
+    #printf "${WRENCH}  Removing  $(echo upstream_sepulchre_*.zip)"
     rm upstream_sepulchre_*.zip
     printf "${WRENCH}  ${YELLOW}Glacier${NC}: ERROR: archive not uploaded to AWS glacier. \n"
     exit 1
