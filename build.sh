@@ -82,13 +82,20 @@ elif [ "$1" == "-backup" ]; then
           -x /target/**\* /out/**\* \
           /editor/dist**\* /editor/resources**\* > /dev/null 2>&1
   printf "${WRENCH}  Uploading ${RED}Upstream${NC} repo to AWS Glacier: ${YELLOW}upstream_sepulchre${NC}. \n"
-  aws glacier upload-archive \
-      --region us-east-2 \
-      --vault-name upstream_sepulchre \
-      --account-id - \
-      --body upstream_sepulchre_*.zip
-  rm upstream_sepulchre_*.zip
-  printf "${WRENCH}   ${YELLOW}Glacier${NC}: repo uploaded with filename: ${YELLOW}upstream_sepulchre_$DATE.zip${NC} \n"
+  if aws glacier upload-archive \
+          --region us-east-2 \
+          --vault-name upstream_sepulchre \
+          --account-id - \
+          --body upstream_sepulchre_*.zip; then
+    printf "${WRENCH}  Removing  ${upstream_sepulchre_*.zip} \n"
+    rm upstream_sepulchre_*.zip
+    printf "${WRENCH}  ${YELLOW}Glacier${NC}: repo uploaded with filename: ${YELLOW}upstream_sepulchre_$DATE.zip${NC} \n"
+  else
+    printf "${WRENCH}  Removing  $(echo upstream_sepulchre_*.zip)"
+    rm upstream_sepulchre_*.zip
+    printf "${WRENCH}  ${YELLOW}Glacier${NC}: ERROR: archive not uploaded to AWS glacier. \n"
+    exit 1
+  fi
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker

@@ -26,8 +26,9 @@
         lighting-profile (get-lighting-profile layer x y)
         radial-color (into-array Color [(Color. 0.0 0.0 0.0 0.0) (:color lighting-profile)])
         gradient (RadialGradientPaint. (float x) (float y) (:radius lighting-profile) dist radial-color)]
-        (.setPaint g2d gradient)
-        (.setComposite g2d (AlphaComposite/getInstance AlphaComposite/SRC_OVER 0.95))
-        (.fillRect g2d 0 0 win-width win-height)
-        (.drawImage gr lighting-layer 0 0 win-width win-height nil)
-        (.dispose g2d)))
+        (do
+          (.setPaint g2d gradient)
+          (.setComposite g2d (AlphaComposite/getInstance AlphaComposite/SRC_OVER 0.95))
+          (.fillRect g2d 0 0 win-width win-height)
+          (.drawImage gr lighting-layer 0 0 win-width win-height nil)
+          (.dispose g2d))))
