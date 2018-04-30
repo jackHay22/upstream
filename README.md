@@ -11,6 +11,7 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ### OSX build
 - To build upstream.app: ```./build.sh``` (requires ```lein```, ```javapackager```)
 - If build script fails to install lein, install [here](https://leiningen.org/#install).
+- To release the current build to s3://upstream-release, run ```./build.sh -release```.
 
 ### Linux server build
 - (Not necessary) Remove ```-Xdock:name=Upstream``` from ```:jvm-opts``` in [project file](https://github.com/jackHay22/upstream/blob/38cd4494e082e59086f5ed9636aa0a4d1f11f7cd/project.clj#L8) and make sure [lein](https://leiningen.org/#install) is installed separately from build script. (optional: add ```"-Xmx1g" "-server"``` to ```:jvm-opts```)
@@ -36,9 +37,7 @@ docker run \
 - Alternatively, run app in server mode: ```java -jar target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar -server```.
 - Vagrant vm: ```vagrant up``` and then run ```vagrant provision``` to prep vm and pull ECR image. (login stage currently broken)
 
-### Store build artifact
-- Run ```./build -saveartifact``` (requires ```aws``` cli and bucket permissions for ```s3://upstream-build-archive```) to upload standalone jar to a versioned s3 bucket.
-- Note: will not build native app
+### Backup
 - Run  ```./build -backup``` to upload entire repo to deep Glacier cold storage (will archive entire contents of project)
 
 ### Windows build

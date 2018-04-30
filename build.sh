@@ -16,6 +16,21 @@ lein_build () {
   lein uberjar || exit 1
 }
 
+build_native () {
+  printf "${WRENCH}  Building ${RED}Upstream${NC} app package... ${YELLOW}${1}${NC} \n"
+  javapackager -deploy \
+      -native image \
+      -outdir out \
+      -outfile upstream.app \
+      -srcfiles target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
+      -appclass upstream.core \
+      -name "Upstream" \
+      -title "Upstream" \
+      -Bruntime=${JAVA_RUNTIME} \
+      -Bicon=resources/app/peavey.icns && \
+  printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
+}
+
 start_docker() {
   printf "${WRENCH}  ${YELLOW}Warning${NC}: trying to start docker daemon. \n"
   open -a Docker || exit 1
@@ -50,24 +65,18 @@ else
 fi
 
 if [ $# -eq 0 ]; then
-  printf "${WRENCH}  Building ${RED}Upstream${NC} app package... ${YELLOW}${1}${NC} \n"
-  javapackager -deploy \
-      -native image \
-      -outdir out \
-      -outfile upstream.app \
-      -srcfiles target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
-      -appclass upstream.core \
-      -name "Upstream" \
-      -title "Upstream" \
-      -Bruntime=${JAVA_RUNTIME} \
-      -Bicon=resources/app/peavey.icns && \
-  printf "${WRENCH}  ${RED}Upstream.app${NC} built to ${YELLOW}/out/bundles/Upstream${NC}. \n"
-elif [ "$1" == "-saveartifact" ]; then
-  printf "${WRENCH}  Uploading ${RED}Upstream${NC} jar build to AWS s3 as: ${YELLOW}s3://upstream-build-archive/upstream-archive-build.jar${NC} using s3 versioning scheme. \n"
-  aws s3 cp \
-  target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar \
-  s3://upstream-build-archive/upstream-archive-build.jar || exit 1
-  printf "${WRENCH}   ${YELLOW}S3${NC}: build uploaded. \n"
+  build_native
+elif [ "$1" == "-release" ]; then
+  build_native
+  BUILD_NAME="Upstream-$(echo target/uberjar/upstream*.jar | awk -F"-" '{ print $2 }').zip"
+  VERSION="$(echo target/uberjar/upstream*.jar | awk -F"-" '{ print $2 }')"
+  pushd out/bundles
+  zip -r $BUILD_NAME ./Upstream.app > /dev/null 2>&1
+  printf "${WRENCH}  Pushing build to ${YELLOW}s3${NC} as ${BUILD_NAME}\n"
+  aws s3 cp $BUILD_NAME s3://upstream-release/$BUILD_NAME
+  rm $BUILD_NAME
+  popd
+  printf "${WRENCH}  Build ${YELLOW}$VERSION${NC} release complete \n"
 elif [ "$1" == "-editor" ]; then
   printf "${WRENCH}  Copying resources to current working directory... \n"
   cp -R resources/tiles/. editor/resources/tiles
@@ -103,7 +112,8 @@ elif [ "$1" == "-server" ]; then
   #docker volume create server_trace_volume
   if [ "$#" -eq 2 ]; then
     if [ "$2" == "-run" ]; then
-      printf "${WRENCH}  ${YELLOW}Docker${NC}: running ${RED}upstream_server${NC} locally... \n"
+      printf "${WRENCH}  ${YELLOW}Docker${NC}: running ${RED}upstream_server${NC} with the following params: \n"
+      cat docker/run.list
       docker run \
               -p 4000:4000 \
               -p 4444:4444 \

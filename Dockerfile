@@ -4,6 +4,7 @@ MAINTAINER Jack Hay "https://github.com/jackHay22"
 
 ENV WEB_INTERFACE=4444
 ENV SERVER_ARGS=-server
+ENV WELCOME_SERVER=4000
 
 ADD target/uberjar/upstream-*.*.*-SNAPSHOT-standalone.jar app.jar
 
@@ -24,7 +25,7 @@ RUN apk update
 RUN apk add curl
 RUN apk add python
 
-EXPOSE 4444
-EXPOSE 4000
+EXPOSE $WEB_INTERFACE
+EXPOSE $WELCOME_SERVER
 
-CMD /run.sh $SERVER_ARGS $WEB_INTERFACE
+CMD /run.sh $SERVER_ARGS $WEB_INTERFACE $WELCOME_SERVER

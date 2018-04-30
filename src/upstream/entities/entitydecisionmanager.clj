@@ -31,12 +31,12 @@
   "perform action and return result"
   [actions entity-context]
   (reduce #(%2 %1 entity-context) standard-result-map
-          (map #(decisionlib/get-decision-function :action %) actions)))
+          (map #(decisionlib/get-decision-function-cached :action %) actions)))
 
 (defn evaluate-predicates
   "take predicates and evaluate"
   [preds entity-context]
-  (let [resolve-symbols (map #(decisionlib/get-decision-function :predicate %) preds)]
+  (let [resolve-symbols (map #(decisionlib/get-decision-function-cached :predicate %) preds)]
       (reduce #((first resolve-symbols) %1 (%2 entity-context)) true (rest resolve-symbols))))
 
 (defn make-player-decision

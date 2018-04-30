@@ -20,7 +20,8 @@
       (statement-type decision-function-mappings)
       (first identifier))
     (second identifier)))
-    ;TODO: memoize
+
+(def get-decision-function-cached (memoize get-decision-function))
 
 (defn add-lookup-prefix
   "for each action, add a lookup prefix for more efficient search"
