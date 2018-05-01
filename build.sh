@@ -131,10 +131,11 @@ elif [ "$1" == "-server" ]; then
       printf "${WRENCH}  ${YELLOW}ECR${NC}: Images in upstream_server repository: \n"
       aws ecr describe-images --repository-name upstream_server --region us-east-2
     else
-      printf "${WRENCH}  Error: ${YELLOW}"$2"${NC} not a valid server build mode. \n"
+      printf "${WRENCH}  Error: ${YELLOW}"$2"${NC} not a valid server build mode. Use ${YELLOW}-run${NC} or ${YELLOW}-push${NC}\n"
     fi
   fi
 else
-  printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. \n"
+  printf "${WRENCH}  Error: ${YELLOW}"$1"${NC} not a valid build mode. "
+  printf "Use ${YELLOW}-release${NC}, ${YELLOW}-editor${NC}, ${YELLOW}-backup${NC} or ${YELLOW}-server${NC}. \n"
   exit 1
 fi

@@ -62,6 +62,7 @@
             (let [map-resource (:map-resource e)
                   px (:position-x e)
                   py (:position-y e)
+                  ;TODO: support for list of entity control maps and merging with entity list
                   update-source (if (:render-as-central e)
                                     update-map
                                     (decisions/make-player-decision

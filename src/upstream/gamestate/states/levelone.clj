@@ -9,15 +9,17 @@
 (def tile-resource (atom nil))
 (def player-input-map (atom {:update-facing :south :update-action :at-rest}))
 
+(defn init-actual-state
+  "load actual gamestate information"
+  []
+  (entity-manager/load-entities
+          (save/load-from-save config/LEVEL-ONE-ENTITIES)))
+
 (defn init-level-one
   "load resources, return draw safe state pipeline"
   []
-  (do
-    (reset! chunk-reload/chunk-store-loaded? false)
-    (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
-    ;returns state entity-state-pipeline
-    (entity-manager/load-entities
-            (save/load-from-save config/LEVEL-ONE-ENTITIES))))
+  (do (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
+      (init-actual-state)))
 
 (defn continuous-state-update
   "take entity-state and return update

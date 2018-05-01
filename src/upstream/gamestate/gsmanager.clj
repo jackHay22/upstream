@@ -2,16 +2,25 @@
   (:require [upstream.gamestate.states.menustate :as menu]
             [upstream.gamestate.states.levelone :as level]
             [upstream.config :as config]
+            [upstream.utilities.gpsys :as gpsys]
             [upstream.utilities.log :as logger]
             [upstream.utilities.save :as save]
             [upstream.gamestate.states.loadstate :as loadstate])
   (:gen-class))
 
-(def current-game-state (atom 0))
 (defrecord GameState [draw-handler update-handler
                       key-press-handler key-release-handler init-handler pipeline-ref])
 
 (defn new-state-pipeline [] (atom nil))
+
+(def LOAD-STATE 0)
+(def MENU-STATE 1)
+(def LEVEL-STATE 2)
+(def CLIENT-STATE 3)
+(def SERVER-STATE 4)
+(def GP-STATE 5)
+
+(def current-game-state (atom LOAD-STATE))
 
 (def STATES
   [(GameState. #(loadstate/draw-load %1 %2)
@@ -31,6 +40,22 @@
                 #(level/keypressed-level-one %)
                 #(level/keyreleased-level-one %)
                 #(level/init-level-one)
+                (new-state-pipeline))
+    (GameState. #(level/draw-level-one %1 %2) ;TODO
+                #(level/update-level-one %)
+                #(level/keypressed-level-one %)
+                #(level/keyreleased-level-one %)
+                #(level/init-level-one)
+                (new-state-pipeline))
+    (GameState. nil ;SERVER
+                #(level/update-level-one %) ;TODO: update to accept server based inputs
+                nil nil
+                #(level/init-actual-state)
+                (new-state-pipeline))
+    (GameState. nil ;GP
+                #(level/continuous-state-update %)
+                nil nil
+                nil ;TODO redesign start
                 (new-state-pipeline))])
 
 (defn start-subsequent-loads
