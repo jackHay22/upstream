@@ -96,11 +96,9 @@ elif [ "$1" == "-backup" ]; then
           --vault-name upstream_sepulchre \
           --account-id - \
           --body upstream_sepulchre_*.zip; then
-    #printf "${WRENCH}  Removing  ${upstream_sepulchre_*.zip} \n"
     rm upstream_sepulchre_*.zip
     printf "${WRENCH}  ${YELLOW}Glacier${NC}: repo uploaded with filename: ${YELLOW}upstream_sepulchre_$DATE.zip${NC} \n"
   else
-    #printf "${WRENCH}  Removing  $(echo upstream_sepulchre_*.zip)"
     rm upstream_sepulchre_*.zip
     printf "${WRENCH}  ${YELLOW}Glacier${NC}: ERROR: archive not uploaded to AWS glacier. \n"
     exit 1
@@ -108,18 +106,11 @@ elif [ "$1" == "-backup" ]; then
 elif [ "$1" == "-server" ]; then
   printf "${WRENCH}  ${YELLOW}Docker${NC}: building ${RED}upstream_server${NC}... \n"
   docker build --tag upstream_server . || start_docker
-  #printf "${WRENCH}  ${YELLOW}Docker${NC}: creating volume ${RED}server_trace_volume${NC}... \n"
-  #docker volume create server_trace_volume
   if [ "$#" -eq 2 ]; then
     if [ "$2" == "-run" ]; then
       printf "${WRENCH}  ${YELLOW}Docker${NC}: running ${RED}upstream_server${NC} with the following params: \n"
       cat docker/run.list
-      docker run \
-              -p 4000:4000 \
-              -p 4444:4444 \
-              #-v "$HOME:$HOME" \
-              --env-file ./docker/run.list \
-              upstream_server:latest
+      docker run --env-file ./docker/run.list upstream_server:latest
     elif [ "$2" == "-push" ]; then
       printf "${WRENCH}  Tagging ${RED}upstream_server:latest${NC} as ${YELLOW}190175714341.dkr.ecr.us-east-2.amazonaws.com/upstream_server:latest${NC} \n"
       docker tag upstream_server:latest ${AWS_ACCOUNT}.${ECR_RESOURCE_URI}:latest

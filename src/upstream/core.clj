@@ -26,6 +26,7 @@
             (reset! config/HEADLESS-SERVER? true)
             (logger/write-log "Starting UpstreamGP...")
             (gsm/init-gsm gsm/GP-STATE)
+
             ;(server/start-server config/SERVER-LISTEN-PORT gpsys/start-gp-simulation "UpstreamGP")
             )
       :else

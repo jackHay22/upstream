@@ -1,6 +1,7 @@
 (ns upstream.gamestate.gsmanager
   (:require [upstream.gamestate.states.menustate :as menu]
             [upstream.gamestate.states.levelone :as level]
+            [upstream.gamestate.states.multiplayer :as multiplayer]
             [upstream.config :as config]
             [upstream.utilities.gpsys :as gpsys]
             [upstream.utilities.log :as logger]
@@ -41,19 +42,19 @@
                 #(level/keyreleased-level-one %)
                 #(level/init-level-one)
                 (new-state-pipeline))
-    (GameState. #(level/draw-level-one %1 %2) ;TODO
-                #(level/update-level-one %)
+    (GameState. #(level/draw-level-one %1 %2)
+                #(multiplayer/client-update %)
                 #(level/keypressed-level-one %)
                 #(level/keyreleased-level-one %)
                 #(level/init-level-one)
                 (new-state-pipeline))
     (GameState. nil ;SERVER
-                #(level/update-level-one %) ;TODO: update to accept server based inputs
+                #(multiplayer/server-update %)
                 nil nil
                 #(level/init-actual-state)
                 (new-state-pipeline))
     (GameState. nil ;GP
-                #(level/continuous-state-update %)
+                #(multiplayer/continuous-state-update %)
                 nil nil
                 nil ;TODO redesign start
                 (new-state-pipeline))])
@@ -95,18 +96,6 @@
   (let [state-record (nth STATES @current-game-state)]
   (reset! (:pipeline-ref state-record)
       ((:update-handler state-record) @(:pipeline-ref state-record)))))
-
-(defn network-update
-  "receive playerstate update from remote and return gamestate"
-  [updated-player-state]
-  ;needs to check for valid code from user and authenticate information
-  ;return game state
-  "{:state :test}")
-
-(defn authenticate-user
-  "get user code, return new port for game connection"
-  [user-id]
-  "test")
 
 (defn keypressed
     "respond to keypress event"

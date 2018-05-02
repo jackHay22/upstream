@@ -63,6 +63,7 @@
                   px (:position-x e)
                   py (:position-y e)
                   ;TODO: support for list of entity control maps and merging with entity list
+                  ;(or empty input)
                   update-source (if (:render-as-central e)
                                     update-map
                                     (decisions/make-player-decision
@@ -83,6 +84,10 @@
                                      :position-y updated-y
                                      :current-action updated-action))))
            entities)))
+
+(defn associate-update-maps
+  "add update maps to entities"
+  [entities])
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"

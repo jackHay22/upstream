@@ -5,9 +5,18 @@
             [upstream.utilities.log :as logger])
   (:gen-class))
 
+(defn gp-init
+  []
+  ;TODO: start server and wait for information, then start looping system
+  {}
+  )
+
 (defn start-gp-simulation
   "start the gp simulation from server input"
   [starting-simulation-state]
+
+  ;TODO: redesign
+
   (let [performance-metrics (:performance-metrics starting-simulation-state)
         run-ttl (:run-ttl starting-simulation-state)
         entity-load (entity-manager/load-entities

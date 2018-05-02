@@ -21,16 +21,15 @@
   (do (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
       (init-actual-state)))
 
-(defn continuous-state-update
-  "take entity-state and return update
-  state as continuous update for gp"
-  [entities]
-  (entity-manager/update-entities entities {}))
+(defn update-with-input
+  "make updates with control map and state"
+  [state-pipeline control-maps]
+  (entity-manager/update-entities state-pipeline control-maps))
 
 (defn update-level-one
   "update level1, return pipeline"
   [entity-state-pipeline]
-  (entity-manager/update-entities entity-state-pipeline @player-input-map))
+  (update-with-input entity-state-pipeline @player-input-map))
 
 (defn draw-level-one
   "update and draw handler for level one"
@@ -49,3 +48,7 @@
   "key release handler for level one"
   [key]
   (reset! player-input-map (entity-manager/entitykeyreleased key @player-input-map)))
+
+(defn get-input-map
+  "return local input map"
+  [] @player-input-map)
