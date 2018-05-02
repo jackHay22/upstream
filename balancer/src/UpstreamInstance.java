@@ -5,7 +5,7 @@ public class UpstreamInstance {
   private int port;
   public UpstreamInstance(String ip, int port) {
     IPAddress = InetAddress.getByName(ip);
-    socket = new DatagramSocket();
+    socket = new DatagramSocket(port);
     this.port = port;
   }
   public void routeToInstance(String packet) {

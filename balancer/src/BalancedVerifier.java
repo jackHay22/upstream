@@ -4,7 +4,7 @@ public class BalancedVerifier {
   private ArrayList<String> allowed_action_messages;
   int current_instance;
   int total_instances;
-  
+
   public BalancedVerifier(String[] facing_messages, String[] action_messages) {
     this.game_instances = new ArrayList<UpstreamInstance>();
     this.current_instance = 0;
@@ -36,19 +36,22 @@ public class BalancedVerifier {
 
     if (sub_components[1] == ":update-facing") {
       //TODO
-      return false;
-    } elif (sub_components[1] == ":update-action") {
-      //TODO
-    } else {
+      if (sub_components[3] == ":update-action") {
+        //TODO
+      }
       return false;
     }
-
-    if (sub_components[3] == ":update-facing") {
+    elif (sub_components[1] == ":update-action") {
       //TODO
-      return false;
-    } elif (sub_components[3] == ":update-action") {
-      //TODO
-    } else {
+      if (sub_components[3] == ":update-facing") {
+        //TODO
+        return false;
+      }
+    }
+    elif (sub_components[1] == ":user-auth") {
+//TODO fix
+    }
+    else {
       return false;
     }
 
@@ -61,6 +64,8 @@ public class BalancedVerifier {
     if (verifyContents(output)) {
       game_instances.get(current_instance).routeToInstance(output);
       current_instance = (current_instance + 1) % total_instances;
+      //TODO as a game server the server number should be specified in the control packet
+      //TODO remove instance ID too
     } else {
       System.out.println("Error: dropped packet after verification attempt: " + payload);
     }
