@@ -6,15 +6,11 @@ NC='\033[0m'
 PENCIL='\xE2\x9C\x8F'
 
 build_procedure () {
-  printf "${PENCIL}  Using ant to build ${RED}Upstream Editor${NC} jar binary... \n"
+  printf "${PENCIL}  Using ant to build ${RED}UpstreamBalancer${NC} jar binary... \n"
   printf "${PENCIL}  Found build configuration: ${YELLOW}$(find . -name '*.xml')${NC}. \n"
   ant
-  printf "${PENCIL}  ${RED}Upstream Editor${NC} ant build complete \n"
+  printf "${PENCIL}  ${RED}UpstreamBalancer${NC} ant build complete \n"
   rm -r build
-  printf "${PENCIL}  Starting editor... \n"
-  java -jar dist/UpstreamEditor_*.jar \
-             maps/level_1-layer_0.txt \
-             maps/level_1-layer_1.txt
 }
 
 if command -v ant >/dev/null 2>&1; then

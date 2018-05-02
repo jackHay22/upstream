@@ -1,0 +1,4 @@
+:north :east :south :west :northeast :northwest :southeast :southwest
+:at-rest :walking :running :punching
+4000
+127.0.0.1 4001

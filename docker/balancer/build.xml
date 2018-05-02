@@ -1,10 +1,11 @@
-<project name="UpstreamBalancer" default="dist" basedir=".">
+<project name="UpstreamEditor" default="dist" basedir=".">
   <description>
-    Build UpstreamBalancer Jar File
+    Build Upstream Editor Jar File
   </description>
   <property name="src" location="src"/>
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
+  <property name="resources" location="resources"/>
   <target name="init">
     <tstamp/>
     <mkdir dir="${build}"/>
@@ -16,10 +17,11 @@
   <target name="dist" depends="compile"
         description="generate dist directory">
     <mkdir dir="${dist}"/>
-    <jar destfile="${dist}/UpstreamBalancer_${DSTAMP}.jar">
+    <jar destfile="${dist}/UpstreamEditor_${DSTAMP}.jar">
+      <fileset dir="${resources}"/>
       <fileset dir="${build}"/>
       <manifest>
-        <attribute name="Main-Class" value="ServerBalancer"/>
+        <attribute name="Main-Class" value="MapEditor"/>
       </manifest>
     </jar>
   </target>
