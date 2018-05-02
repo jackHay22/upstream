@@ -53,9 +53,7 @@ docker run \
 - Follow input formatting convention found in [documentation](doc/intro.md).
 
 ## Map Editor Operation
-- Run ```./build.sh -editor``` to build and run the editing tool.
-- Note ```./buildEditor``` should only be run as a subroutine of ```build.sh``` to verify that resources are correctly copied to the editor's working directory.
-- This tool uses ```ant``` to orchestrate the java build and will attempt to use brew to download this tool if it can't find it in ```$PATH```.
+- This project has been moved to [upstream_editor](https://github.com/jackHay22/upstream_editor).
 
 ## TODO:
 - [ ] Try additional light/depth techniques

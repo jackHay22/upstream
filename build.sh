@@ -77,13 +77,8 @@ elif [ "$1" == "-release" ]; then
   rm $BUILD_NAME
   popd
   printf "${WRENCH}  Build ${YELLOW}$VERSION${NC} release complete \n"
-elif [ "$1" == "-editor" ]; then
-  printf "${WRENCH}  Copying resources to current working directory... \n"
-  cp -R resources/tiles/. editor/resources/tiles
-  cp -R resources/maps/. editor/resources/maps
-  printf "${WRENCH}  Building ${RED}Editor${NC} tool using ${YELLOW}/editor/build-editor${NC}. \n"
-  cd editor
-  ./build-editor.sh
+elif [ "$1" == "-balancer" ]; then
+  printf "TODO"
 elif [ "$1" == "-backup" ]; then
   printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC}, ${YELLOW}/out${NC}, "
   printf  "${YELLOW}/editor/dist${NC} and ${YELLOW}/editor/resources${NC} from archive. \n"
