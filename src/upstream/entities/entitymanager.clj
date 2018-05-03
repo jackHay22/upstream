@@ -54,20 +54,42 @@
   [entity-list]
   (reduce #(if (:render-as-central %2) (reduced (:map-resource %2)) %1) false entity-list))
 
+(defn update-online
+  "update entity system but optimized for server input"
+  [entities]
+  (let [all-positions (map #(list (:position-x %) (:position-y %)) entities)]
+    (map (fn [e]
+          (let [map-resource (:map-resource e)
+                px (:position-x e)
+                py (:position-y e)
+                update-source (if (= (:control-input e) :decisions)
+                                  (decisions/make-player-decision
+                                    (merge e {:all-positions all-positions}))
+                                  (:control-input e))
+                updated-facing (:update-facing update-source)
+                updated-action (:update-action update-source)
+                updated-position (tile-interface/try-move
+                                            (updated-facing update-xy) px py (get-speed updated-action)
+                                            map-resource)
+                updated-x (first updated-position)
+                updated-y (second updated-position)]
+                (merge e (hash-map :map-resource (tile-manager/update-chunk-view updated-x updated-y map-resource)
+                                   :facing updated-facing
+                                   :position-x updated-x
+                                   :position-y updated-y
+                                   :current-action updated-action))))
+         entities)))
+
 (defn update-entities
   "update given entity (either from decisions or player input)"
   [entities]
-  ;pairs formatted as '(entity {update map}), '(entity :decisions)
   (let [all-positions (map #(list (:position-x %) (:position-y %)) entities)]
-    (map (fn [e]
-            (let [update-source (:control-input e)
-                  map-resource (:map-resource e)
+    (map (fn [e num]
+            (let [map-resource (:map-resource e)
                   px (:position-x e)
                   py (:position-y e)
-                  ;TODO: support for list of entity control maps and merging with entity list
-                  ;(or empty input)
-                  update-source (if (:render-as-central e)
-                                    update-map
+                  update-source (if (= num 0)
+                                    (:control-input e) ;centrally rendered player
                                     (decisions/make-player-decision
                                         (merge e {:all-positions all-positions})))
                   updated-facing (:update-facing update-source)
@@ -77,15 +99,15 @@
                                               map-resource)
                   updated-x (first updated-position)
                   updated-y (second updated-position)
-                  updated-map (if (:render-as-central e)
+                  updated-map (if (= num 0)
                                   (tile-manager/set-position updated-x updated-y map-resource)
-                                  (tile-manager/update-chunk-view px py map-resource))]
+                                  (tile-manager/update-chunk-view updated-x updated-y map-resource))]
                   (merge e (hash-map :map-resource updated-map
                                      :facing updated-facing
                                      :position-x updated-x
                                      :position-y updated-y
                                      :current-action updated-action))))
-           entities)))
+           entities (range))))
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"

@@ -86,7 +86,7 @@
                         :south :south-west
                         :west :north-west)
   :logical-entity-id :id
-  :control-input {:update-facing :update-action}  -or- :decisions
+  :control-input {:update-facing :update-action} ;or :decisions
   :decisions nil
   :performance {}
   :map-resource nil
