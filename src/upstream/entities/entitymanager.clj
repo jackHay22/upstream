@@ -55,8 +55,7 @@
   (reduce #(if (:render-as-central %2) (reduced (:map-resource %2)) %1) false entity-list))
 
 (defn update-entities
-  "update given entity (either from decisions or player input)
-  INPUT: one entity uses control map as input and needs graphical update, rest of Entities use decisions"
+  "update given entity (either from decisions or player input) (works with both online and local)"
   [entities make-graphical-adjustment?]
   (let [all-positions (map #(list (:position-x %) (:position-y %)) entities)]
     (map (fn [e]

@@ -45,6 +45,10 @@
 
 (def LEVEL-ONE-ENTITIES
   ;Define render as central at front for efficiency
-  (list
-    (assoc (entity-preset/player-preset-1 PLAYER-START-X PLAYER_START-Y) :render-as-central true)
+  (list ;NOTE: when running offline, main character must be first in state list
+    (entity-preset/player-preset-1 PLAYER-START-X PLAYER_START-Y)
     ))
+
+(def ONLINE-ENTITIES
+  (list entity-preset/ai-preset-1)
+  )

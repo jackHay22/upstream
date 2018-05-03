@@ -19,7 +19,7 @@
            (reset! config/HEADLESS-SERVER? true)
            (logger/write-log "Starting in server mode...")
            (gsm/init-gsm gsm/SERVER-STATE)
-           (server/start-server config/SERVER-LISTEN-PORT gsm/authenticate-user "Game Server")
+           ;(server/start-server config/SERVER-LISTEN-PORT gsm/authenticate-user "Game Server")
            (engine/start-headless config/FRAMERATE))
       (= (first args) "-gp")
           (do
@@ -42,5 +42,5 @@
         (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
         (gsm/init-gsm gsm/LEVEL-STATE)
         (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
-        (gsm/start-subsequent-loads)
+        ;(gsm/start-subsequent-loads)
         ))))

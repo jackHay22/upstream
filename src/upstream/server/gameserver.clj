@@ -14,21 +14,21 @@
 (def close-socket (fn [socket] (.close socket)))
 (def socket-closed? (fn [socket] (.isClosed socket)))
 
-(defn persistent-connection
-  "start persistent, long-running data connection with user"
-  [port user-auth]
-  (let [socket (ServerSocket. port)]
-  (future
-    (while @running
-      ;get data, process in testbench, send back
-      (with-open [server (.accept socket)]
-      ;TODO: keep this open
-        (let [new-data (.readLine (io/reader server))
-              updated-state (manager/network-update (read-string new-data))
-              processed (pr-str updated-state)
-              writer (io/writer server)]
-              (.write writer processed)
-              (.flush writer))))) running))
+; (defn persistent-connection
+;   "start persistent, long-running data connection with user"
+;   [port user-auth]
+;   (let [socket (ServerSocket. port)]
+;   (future
+;     (while @running
+;       ;get data, process in testbench, send back
+;       (with-open [server (.accept socket)]
+;       ;TODO: keep this open
+;         (let [new-data (.readLine (io/reader server))
+;               updated-state (manager/network-update (read-string new-data))
+;               processed (pr-str updated-state)
+;               writer (io/writer server)]
+;               (.write writer processed)
+;               (.flush writer))))) running))
 
 (defn persistent-server
     "persistent async TCP server to communicate data connection to remote users"

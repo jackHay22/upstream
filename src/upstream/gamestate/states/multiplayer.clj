@@ -8,7 +8,7 @@
   "gsm state manager function for server"
   [state-pipeline]
   (state-manager/distribute-state
-    (level-one-actual/update-entities state-pipeline false) ;TODO: merge client-input buffer with pipeline
+    (level-one-actual/update-level-one state-pipeline false) ;TODO: merge client-input buffer with pipeline
     ))
       ;(state-manager/get-client-input-buffer))))
 
@@ -18,11 +18,5 @@
   (do
     (state-manager/distribute-input-map
       (:control-input state-pipeline))
-    ;return state from server
+    ;return state from server display
     (state-manager/merge-server-state state-pipeline)))
-
-(defn continuous-state-update
-  "take entity-state and return update
-  state as continuous update for gp"
-  [entities]
-  (level-one-actual/update-entities entities false))

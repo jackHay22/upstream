@@ -21,6 +21,9 @@
                     (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
     false))
 
+(defn make-player-decision
+  [entity-context]
+  {:update-facing :south :update-action :at-rest})
 ; (defn evaluate-actions
 ;   "perform action and return result"
 ;   [actions entity-context]

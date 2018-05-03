@@ -37,24 +37,24 @@
                 #(menu/init-menu)
                 (new-state-pipeline))
     (GameState. #(level/draw-level-one %1 %2)
-                #(level/update-level-one %)
+                #(level/update-level-one % true)
                 #(level/keypressed-level-one %1 %2)
                 #(level/keyreleased-level-one %1 %2)
-                #(level/init-level-one)
+                #(level/init-level-one (save/load-from-save config/LEVEL-ONE-ENTITIES))
                 (new-state-pipeline))
     (GameState. #(level/draw-level-one %1 %2)
                 #(multiplayer/client-update %)
                 #(level/keypressed-level-one %1 %2)
                 #(level/keyreleased-level-one %1 %2)
-                #(level/init-level-one)
+                #(level/init-level-one (save/load-from-save config/LEVEL-ONE-ENTITIES)) ;TODO: none?
                 (new-state-pipeline))
     (GameState. nil ;SERVER
                 #(multiplayer/server-update %)
                 nil nil
-                #(level/init-actual-state)
+                #(level/init-actual-state config/ONLINE-ENTITIES)
                 (new-state-pipeline))
     (GameState. nil ;GP
-                #(multiplayer/continuous-state-update %)
+                #(level/update-level-one % false)
                 nil nil
                 nil ;TODO redesign start
                 (new-state-pipeline))])
@@ -64,14 +64,16 @@
   []
   (.start (Thread. #(doseq [s (rest STATES)] (doall (reset! (:pipeline-ref s) ((:init-handler s))))))))
 
+(defn start-pipeline-autosave
+  [state-to-save]
+  (save/start-autosaver (:pipeline-ref (nth STATES state-to-save))))
+
 (defn init-gsm
   "perform resource loads"
   [starting-state]
   (let [state-record (nth STATES starting-state)]
   (do
     (reset! current-game-state starting-state)
-     ; (if (not @config/HEADLESS-SERVER?)
-     ;   (save/start-autosaver (:pipeline-ref (nth STATES 2)))) ;TODO
     (logger/write-log "Starting gamestate manager in state:" starting-state)
     (doall (reset! (:pipeline-ref state-record) ((:init-handler state-record)))))))
 
@@ -100,15 +102,13 @@
 (defn keypressed
     "respond to keypress event"
     [key]
-    (let [state-record @current-game-state
-          current-pipeline-state (:pipeline-ref state-record)]
-          (reset! current-pipeline-state
-            ((:key-press-handler (nth STATES state-record)) key @current-pipeline-state))))
+    (let [state-record (nth STATES @current-game-state)]
+      (reset! (:pipeline-ref state-record)
+          ((:key-press-handler state-record) key @(:pipeline-ref state-record)))))
 
 (defn keyreleased
     "respond to keyrelease event"
     [key]
-    (let [state-record @current-game-state
-          current-pipeline-state (:pipeline-ref state-record)]
-    (reset! current-pipeline-state
-      ((:key-release-handler (nth STATES state-record)) key @current-pipeline-state))))
+    (let [state-record (nth STATES @current-game-state)]
+      (reset! (:pipeline-ref state-record)
+          ((:key-release-handler state-record) key @(:pipeline-ref state-record)))))

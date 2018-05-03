@@ -1,7 +1,6 @@
 (ns upstream.gamestate.states.levelone
   (:require [upstream.config :as config]
             [upstream.entities.entitymanager :as entity-manager]
-            [upstream.utilities.save :as save]
             [upstream.tilemap.chunkutility :as chunk-reload]
             [upstream.tilemap.tilemanager :as tile-manager])
   (:gen-class))
@@ -10,21 +9,20 @@
 
 (defn init-actual-state
   "load actual gamestate information"
-  []
+  [base-state]
   ;Important note: for local gameplay, the main player MUST be first in state list
-  (entity-manager/load-entities
-          (save/load-from-save config/LEVEL-ONE-ENTITIES)))
+  (entity-manager/load-entities base-state))
 
 (defn init-level-one
   "load resources, return draw safe state pipeline"
-  []
+  [base]
   (do (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
-      (init-actual-state)))
+      (init-actual-state base)))
 
 (defn update-level-one
   "make updates with control map and state"
-  [entity-state-pipeline]
-  (entity-manager/update-entities entity-state-pipeline true))
+  [entity-state-pipeline graphics?]
+  (entity-manager/update-entities entity-state-pipeline graphics?))
 
 (defn draw-level-one
   "update and draw handler for level one"
@@ -37,7 +35,7 @@
   "key press handler for level one"
   [key entity-state-pipeline]
   (update-in entity-state-pipeline [0 :control-input]
-          #(entity-manager/entitykeypressed key %)))
+          #(entity-manager/entitykeypressed key %))) ;TODO problem here 
 
 (defn keyreleased-level-one
   "key release handler for level one"
