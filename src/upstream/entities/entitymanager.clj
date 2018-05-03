@@ -56,10 +56,12 @@
 
 (defn update-entities
   "update given entity (either from decisions or player input)"
-  [entities update-map]
+  [entities]
+  ;pairs formatted as '(entity {update map}), '(entity :decisions)
   (let [all-positions (map #(list (:position-x %) (:position-y %)) entities)]
     (map (fn [e]
-            (let [map-resource (:map-resource e)
+            (let [update-source (:control-input e)
+                  map-resource (:map-resource e)
                   px (:position-x e)
                   py (:position-y e)
                   ;TODO: support for list of entity control maps and merging with entity list
@@ -84,10 +86,6 @@
                                      :position-y updated-y
                                      :current-action updated-action))))
            entities)))
-
-(defn associate-update-maps
-  "add update maps to entities"
-  [entities])
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"

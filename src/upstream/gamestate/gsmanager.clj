@@ -26,26 +26,26 @@
 (def STATES
   [(GameState. #(loadstate/draw-load %1 %2)
                 #(loadstate/update-load %)
-                #(loadstate/keypressed-load %)
-                #(loadstate/keyreleased-load %)
+                #(loadstate/keypressed-load %1 %2)
+                #(loadstate/keyreleased-load %1 %2)
                 #(loadstate/init-load)
                 (new-state-pipeline))
     (GameState. #(menu/draw-menu %1 %2)
                 #(menu/update-menu %)
-                #(menu/keypressed-menu %)
-                #(menu/keyreleased-menu %)
+                #(menu/keypressed-menu %1 %2)
+                #(menu/keyreleased-menu %1 %2)
                 #(menu/init-menu)
                 (new-state-pipeline))
     (GameState. #(level/draw-level-one %1 %2)
                 #(level/update-level-one %)
-                #(level/keypressed-level-one %)
-                #(level/keyreleased-level-one %)
+                #(level/keypressed-level-one %1 %2)
+                #(level/keyreleased-level-one %1 %2)
                 #(level/init-level-one)
                 (new-state-pipeline))
     (GameState. #(level/draw-level-one %1 %2)
                 #(multiplayer/client-update %)
-                #(level/keypressed-level-one %)
-                #(level/keyreleased-level-one %)
+                #(level/keypressed-level-one %1 %2)
+                #(level/keyreleased-level-one %1 %2)
                 #(level/init-level-one)
                 (new-state-pipeline))
     (GameState. nil ;SERVER
@@ -100,10 +100,15 @@
 (defn keypressed
     "respond to keypress event"
     [key]
-    (let [result ((:key-press-handler (nth STATES @current-game-state)) key)]
-      (if result (reset! current-game-state result))))
+    (let [state-record @current-game-state
+          current-pipeline-state (:pipeline-ref state-record)]
+          (reset! current-pipeline-state
+            ((:key-press-handler (nth STATES state-record)) key @current-pipeline-state))))
 
 (defn keyreleased
     "respond to keyrelease event"
     [key]
-    ((:key-release-handler (nth STATES @current-game-state)) key))
+    (let [state-record @current-game-state
+          current-pipeline-state (:pipeline-ref state-record)]
+    (reset! current-pipeline-state
+      ((:key-release-handler (nth STATES state-record)) key @current-pipeline-state))))

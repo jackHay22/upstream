@@ -85,11 +85,11 @@
                         :east :south-east
                         :south :south-west
                         :west :north-west)
-  :logical-entity-id 0
-  :decisions false
+  :logical-entity-id :id
+  :control-input {:update-facing :update-action}  -or- :decisions
+  :decisions nil
   :performance {}
   :map-resource nil
-  :render-as-central false
   :position-x starting-x
   :position-y starting-y
   :draw-height-offset 20

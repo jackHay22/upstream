@@ -26,14 +26,14 @@
                           :south :south-west
                           :west :north-west)
     :logical-entity-id 0
-    :decisions false
+    :control-input {:update-facing :south :update-action :at-rest}
+    :decisions nil ;decisions listing
     :performance {}
     :map-resource nil
-    :render-as-central false
     :position-x starting-x
     :position-y starting-y
     :draw-height-offset 110
     :draw-width-offset 22
-    :facing :south-west
+    :facing :south-west ;TODO remove?
     :current-action :at-rest
     :run-stamina 300 })

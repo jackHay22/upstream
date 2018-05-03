@@ -7,11 +7,11 @@
   (:gen-class))
 
 (def tile-resource (atom nil))
-(def player-input-map (atom {:update-facing :south :update-action :at-rest}))
 
 (defn init-actual-state
   "load actual gamestate information"
   []
+  ;Important note: for local gameplay, the main player MUST be first in state list
   (entity-manager/load-entities
           (save/load-from-save config/LEVEL-ONE-ENTITIES)))
 
@@ -21,15 +21,10 @@
   (do (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
       (init-actual-state)))
 
-(defn update-with-input
-  "make updates with control map and state"
-  [state-pipeline control-maps]
-  (entity-manager/update-entities state-pipeline control-maps))
-
 (defn update-level-one
-  "update level1, return pipeline"
+  "make updates with control map and state"
   [entity-state-pipeline]
-  (update-with-input entity-state-pipeline @player-input-map))
+  (entity-manager/update-entities entity-state-pipeline))
 
 (defn draw-level-one
   "update and draw handler for level one"
@@ -40,15 +35,12 @@
 
 (defn keypressed-level-one
   "key press handler for level one"
-  [key]
-  (reset! player-input-map (entity-manager/entitykeypressed key @player-input-map))
-  false)
+  [key entity-state-pipeline]
+  (update-in entity-state-pipeline [0 :control-input]
+          #(entity-manager/entitykeypressed key %)))
 
 (defn keyreleased-level-one
   "key release handler for level one"
-  [key]
-  (reset! player-input-map (entity-manager/entitykeyreleased key @player-input-map)))
-
-(defn get-input-map
-  "return local input map"
-  [] @player-input-map)
+  [key entity-state-pipeline]
+  (update-in entity-state-pipeline [0 :control-input]
+          #(entity-manager/entitykeyreleased key %)))
