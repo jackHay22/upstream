@@ -34,11 +34,11 @@
 (defn keypressed-level-one
   "key press handler for level one"
   [key entity-state-pipeline]
-  (update-in entity-state-pipeline [0 :control-input]
-          #(entity-manager/entitykeypressed key %))) ;TODO problem here 
+  (update-in (into [] entity-state-pipeline) [0 :control-input]
+          #(entity-manager/entitykeypressed key %)))
 
 (defn keyreleased-level-one
   "key release handler for level one"
   [key entity-state-pipeline]
-  (update-in entity-state-pipeline [0 :control-input]
+  (update-in (into [] entity-state-pipeline) [0 :control-input]
           #(entity-manager/entitykeyreleased key %)))
