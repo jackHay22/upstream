@@ -24,7 +24,7 @@
 (defn update-level-one
   "make updates with control map and state"
   [entity-state-pipeline]
-  (entity-manager/update-entities entity-state-pipeline))
+  (entity-manager/update-entities entity-state-pipeline true))
 
 (defn draw-level-one
   "update and draw handler for level one"

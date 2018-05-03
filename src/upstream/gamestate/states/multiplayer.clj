@@ -8,7 +8,7 @@
   "gsm state manager function for server"
   [state-pipeline]
   (state-manager/distribute-state
-    (level-one-actual/update-online state-pipeline) ;TODO: merge client-input buffer with pipeline
+    (level-one-actual/update-entities state-pipeline false) ;TODO: merge client-input buffer with pipeline
     ))
       ;(state-manager/get-client-input-buffer))))
 
@@ -17,7 +17,7 @@
   [state-pipeline]
   (do
     (state-manager/distribute-input-map
-      (level-one-actual/get-input-map))
+      (:control-input state-pipeline))
     ;return state from server
     (state-manager/merge-server-state state-pipeline)))
 
@@ -25,4 +25,4 @@
   "take entity-state and return update
   state as continuous update for gp"
   [entities]
-  (level-one-actual/update-online entities))
+  (level-one-actual/update-entities entities false))
