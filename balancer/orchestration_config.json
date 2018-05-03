@@ -1,0 +1,19 @@
+{
+   "verification": {
+         "facing": ":north :east :south :west :northeast :northwest :southeast :southwest",
+         "action": ":at-rest :walking :running :punching"
+    },
+    "port": "4000",
+    "hosts": [
+         {
+              "address": "127.0.0.1",
+              "port": "4001",
+              "multicast-port": "4002"
+         },
+         {
+              "address": "0.0.0.0",
+              "port": "4001",
+              "multicast-port": "4002"
+         }
+    ]
+}

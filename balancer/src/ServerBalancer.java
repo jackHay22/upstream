@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import org.json.*;
 
 public class ServerBalancer {
   public static void main(String[] args) {
@@ -8,31 +9,28 @@ public class ServerBalancer {
       System.out.println("Error: specify configuration file");
       return;
     }
+    JSONParser parser = new JSONParser();
+    Object obj = parser.parse(new FileReader(args[0]));
+    JSONObject instance_config =  (JSONObject) obj;
 
-    BufferedReader config_reader = new BufferedReader(new FileReader(args[0]));
+    JSONObject verification_config = instance_config.get("verification");
+    String[] facing_messages = verification_config.get("facing").split(" ");
+    String[] facing_messages = verification_config.get("action").split(" ");
 
-    //determine verifiable symbols from file
-    String line;
-    line = config_reader.readLine();
-    String[] facing_messages = line.split(" ")
-    line = config_reader.readLine();
-    String[] action_messages = line.split(" ")
     BalancedVerifier balancer = new BalancedVerifier(facing_messages, action_messages);
 
-    //determine port to listen on from file
-    line = config_reader.readLine();
-    int listener_port = Integer.parseInt(line);
-
-    //load IP, PORT pairs from file
-    line = config_reader.readLine();
-    while (line != null) {
-        String[] components = line.split(" ");
-        System.out.println("Loading instance at: " + components[0]);
-        balancer.addInstance(components[0], Integer.parseInt(components[1]));
-        line = config_reader.readLine();
+    JSONArray hosts = instance_config.getJSONArray("hosts");
+    String host_addr;
+    String host_port;
+    for (int i = 0; i < hosts.length(); i++) {
+        host_addr = hosts.getJSONObject(i).get("address");
+        host_port = hosts.getJSONObject(i).get("port");
+        multicast_port = hosts.getJSONObject(i).get("multicast-port");
+        balancer.addInstance(host_addr, Integer.parseInt(host_port), Integer.parseInt(multicast_port));
     }
 
     //networking
+    String listener_port = instance_config.getJSONObject("port");
     DatagramSocket balancer_connection = new DatagramSocket(Integer.parseInt(listener_port));
     byte[] receive_input = new byte[1024];
     byte[] send_output = new byte[1024];
