@@ -56,6 +56,7 @@ docker run \
 - This project has been moved to [upstream_editor](https://github.com/jackHay22/upstream_editor).
 
 ## TODO:
+- [ ] Test intersection with player's width for better bounds checking
 - [x] Try additional light/depth techniques
 - [ ] Fix object-blocks-visible? fn
 - [ ] Redesign gp evaluation reduce to be list based

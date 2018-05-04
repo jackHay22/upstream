@@ -13,12 +13,13 @@
   (if file
     ;TODO: add prefixes to loaded decisions (predicates and actions)
     ; TODO: load as decisions
+    (println
     (with-open [reader (clojure.java.io/reader (io/resource file))]
             (map (fn [instr-pair]
                       (map (fn [instr]
                         (map #(read-string %) (clojure.string/split instr #" "))) instr-pair))
                 (map (fn [line] (clojure.string/split line #" | "))
-                    (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
+                    (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader)))))))
     false))
 
 (defn make-player-decision

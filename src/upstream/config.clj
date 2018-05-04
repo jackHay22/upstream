@@ -11,7 +11,7 @@
 (def WINDOW-RESOURCE-HEIGHT (atom 0))
 
 (def HEIGHT-BUFFER 80) ;fit doc at bottom of screen
-(def VERSION "0.1.1")
+(def VERSION "0.1.3")
 (def SERVER-VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
 
@@ -46,6 +46,7 @@
 (def LEVEL-ONE-ENTITIES
   ;Define render as central at front for efficiency
   (list ;NOTE: when running offline, main character must be first in state list
+        ;for correct key press association
     (entity-preset/player-preset-1 PLAYER-START-X PLAYER_START-Y)
     ))
 
