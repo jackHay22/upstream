@@ -4,7 +4,6 @@
             [upstream.config :as config]
             [upstream.gamestate.gsmanager :as gsm]
             [upstream.server.gameserver :as server]
-            [upstream.entities.entitydecisionmanager :as testing]
             [upstream.utilities.windowutil :as windowutility])
   (:gen-class))
 
@@ -41,8 +40,7 @@
         (reset! config/WINDOW-RESOURCE-WIDTH (:width window-resource))
         (reset! config/WINDOW-RESOURCE-HEIGHT (:height window-resource))
         (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
-        ;(gsm/init-gsm gsm/LEVEL-STATE)
-        ;(engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
-        (println (testing/load-entity-decisions "decisions/decisions_1.txt"))
+        (gsm/init-gsm gsm/LEVEL-STATE)
+        (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
         ;(gsm/start-subsequent-loads)
         ))))
