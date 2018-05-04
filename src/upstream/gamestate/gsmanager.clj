@@ -46,7 +46,7 @@
                 #(multiplayer/client-update %)
                 #(level/keypressed-level-one %1 %2)
                 #(level/keyreleased-level-one %1 %2)
-                #(level/init-level-one (save/load-from-save config/LEVEL-ONE-ENTITIES)) ;TODO: none?
+                #(level/init-level-one config/LEVEL-ONE-ENTITIES) ;TODO: none? (just needed for merging images)
                 (new-state-pipeline))
     (GameState. nil ;SERVER
                 #(multiplayer/server-update %)
@@ -62,9 +62,11 @@
 (defn start-subsequent-loads
   "take other init functions and load in new thread"
   []
+  ;TODO: doesn't need to load multiplayer states
   (.start (Thread. #(doseq [s (rest STATES)] (doall (reset! (:pipeline-ref s) ((:init-handler s))))))))
 
 (defn start-pipeline-autosave
+  "start the autosaver with a reference to l1 state"
   [state-to-save]
   (save/start-autosaver (:pipeline-ref (nth STATES state-to-save))))
 

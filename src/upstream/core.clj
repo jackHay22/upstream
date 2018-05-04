@@ -16,14 +16,14 @@
     (cond
       (= (first args) "-server")
          (do
-           (reset! config/HEADLESS-SERVER? true)
+           (reset! config/HEADLESS-SERVER? true) ;TODO: find and remove
            (logger/write-log "Starting in server mode...")
            (gsm/init-gsm gsm/SERVER-STATE)
            ;(server/start-server config/SERVER-LISTEN-PORT gsm/authenticate-user "Game Server")
            (engine/start-headless config/FRAMERATE))
       (= (first args) "-gp")
           (do
-            (reset! config/HEADLESS-SERVER? true)
+            (reset! config/HEADLESS-SERVER? true) ;TODO: find and remove
             (logger/write-log "Starting UpstreamGP...")
             (gsm/init-gsm gsm/GP-STATE)
 

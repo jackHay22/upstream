@@ -11,7 +11,7 @@
 (def WINDOW-RESOURCE-HEIGHT (atom 0))
 
 (def HEIGHT-BUFFER 80) ;fit doc at bottom of screen
-(def VERSION "0.1.0")
+(def VERSION "0.1.1")
 (def SERVER-VERSION "0.1.0")
 (def WINDOW-TITLE "Upstream")
 
@@ -30,11 +30,11 @@
 (def SERVER-LISTEN-PORT 4000)
 (def SERVER-DATA-PORTS '(4001 4002 4003 4004))
 
-(def MENU-TEXT-COLOR (Color. 252 144 91))
+(def MENU-TEXT-COLOR (Color. 252 144 91)) ;TODO: remove? (or test as non image menu options)
 (def MENU-TEXT-FONT (Font. "Gloucester MT Extra Condensed" Font/PLAIN 60))
 
-(def PLAYER-START-X 700)
-(def PLAYER_START-Y 740)
+(def PLAYER-START-X 850)
+(def PLAYER_START-Y 850)
 (def WALKING-SPEED 1)
 (def RUNNING-SPEED 2)
 

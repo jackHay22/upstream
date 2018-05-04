@@ -16,7 +16,7 @@
          chunk-tile-index-x (int (/ chunk-relative-x grid-dim))
          chunk-tile-index-y (int (/ chunk-relative-y grid-dim))]
          (map #(hash-map :tile (nth (nth (:map %) chunk-tile-index-y) chunk-tile-index-x)
-                         :layer (:layer %))
+                         :layer (:label %))
                 (:current-maps map-resource))))
 
 (defn get-tile-attribute
@@ -29,7 +29,6 @@
   "check if loaded tile is blocked"
   [map-resource x y]
   (= 1 (get-tile-attribute map-resource :blocked? :l1 x y)))
-  ;TODO
 
 (defn try-move
   "check if player can make a move to the next tile"

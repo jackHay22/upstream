@@ -56,12 +56,12 @@ docker run \
 - This project has been moved to [upstream_editor](https://github.com/jackHay22/upstream_editor).
 
 ## TODO:
-- [ ] Try additional light/depth techniques
+- [x] Try additional light/depth techniques
 - [ ] Fix object-blocks-visible? fn
 - [ ] Redesign gp evaluation reduce to be list based
-- [ ] Redesign level 1 init file problem for docker image
+- [x] Redesign level 1 init file problem for docker image
 - [ ] Something wrong with opacity function
-- [ ] Tilemap blocked intersections
+- [x] Tilemap blocked intersections
 - [ ] Don't need two sound layers: make layer two a sound layer and update layer 1 accordingly
 - [ ] Don't always recompute spacial range (chunk size is constant)
 - [ ] Make entity draw handler efficient
@@ -95,7 +95,7 @@ _See [documentation](doc/intro.md) for completed list_
 - [ ] _0.2.0_ Minimum playable environment (Mid May 2018)
   - Acceptance Standards:
     - [x] Working tilemap system for 2 layers
-    - [ ] Collision system
+    - [x] Collision system
     - [x] Stand-in player movement images
     - [ ] Initial pass at game art
     - [x] Viable art development pipeline
@@ -114,6 +114,7 @@ _See [documentation](doc/intro.md) for completed list_
 - [ ] _0.5.0_ Testing release (Early August 2018)
   - Acceptance Standards:
     - [ ] Distribute game to initial group for local gameplay testing
+    - [x] Local testing distribution system
     - [ ] Working website with download functionality (testing for macOS gatekeeper)
 - [ ] _0.6.0_ Genetic Programming Release (End of Summer 2018)
   - Acceptance Standards:
@@ -132,7 +133,7 @@ _See [documentation](doc/intro.md) for completed list_
     - [ ] Deployment to raspberry pi cluster through docker
     - [ ] Monitoring orchestration
     - [ ] Redis background server
-    - [ ] Multicast server
+    - [ ] Multicast server and verifier
     - [ ] Basic user authentication mechanism
 - [ ] _0.9.0_ Production server environment (Mid Fall 2018)
   - Acceptance Standards:

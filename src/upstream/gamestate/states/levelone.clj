@@ -39,6 +39,6 @@
 
 (defn keyreleased-level-one
   "key release handler for level one"
-  [key entity-state-pipeline]
+  [key entity-state-pipeline] ;TODO: potentially needs optimization with large numbers of entities (into vector)
   (update-in (into [] entity-state-pipeline) [0 :control-input]
           #(entity-manager/entitykeyreleased key %)))
