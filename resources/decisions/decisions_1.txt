@@ -1,1 +1,1 @@
-:and :enemy-visible? | :attack-closest
+and enemy-visible? : attack-closest

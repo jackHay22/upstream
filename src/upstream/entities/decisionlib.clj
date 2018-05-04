@@ -16,8 +16,10 @@
       (list 'fn '[res-map entity-context]
               (list operation 'res-map 'entity-context))))
 
-;EXAMPLE
-(defaction test_ #(println %1))
+(defpredicate and_ and)
+(defpredicate or_ or)
+(defpredicate enemy-visible?_ #(println %1))
+(defaction attack-closest_ #(println %1))
 
 (defn resolve-loaded-name
   "resolve action to qualified function name"
@@ -27,12 +29,10 @@
 
 (defn evaluate-predicates
   "take list of predicates and evaluate"
-  [predicates-list]
-
-  )
+  [predicates-list entity-context]
+  (reduce #((first predicates-list) %1 (%2 entity-context)) true predicates-list))
 
 (defn evaluate-actions
   "take list of actions and operate on state"
-  [actions-list]
-
-  )
+  [actions-list entity-context] ;TODO: add res-map
+  (reduce #(%2 %1) entity-context actions-list))
