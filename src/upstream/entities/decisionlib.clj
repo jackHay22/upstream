@@ -7,14 +7,14 @@
   [name operation]
   (list 'def (symbol (str name "_"))
         (list 'fn '[entity-context]
-                  (list operation 'entity-context))))
+              (list operation 'entity-context))))
 
 (defmacro redefine
   "Macro for redefining boolean operators"
   [name operator]
   (list 'def (symbol (str name "_"))
         (list 'fn '[& operators]
-                  (list 'reduce operator 'operators))))
+              (list 'reduce operator 'operators))))
 
 (redefine || 'or)
 (redefine && 'and)

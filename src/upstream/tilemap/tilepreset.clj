@@ -20,7 +20,7 @@
 (def level-one-layer-1
     ;if images are loaded using list functionality, factor in indices of previous
     ;images in list for current
-      {:map "maps/level_1-layer_1.txt"
+      {:map "maps/level_1-layer_1.txt" 
        :label :l1
        :entity-handler? true
        :prevent-view-block? true

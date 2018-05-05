@@ -9,6 +9,20 @@
 
 (set! *warn-on-reflection* true)
 
+(defn normal-start-procedure
+  "normal game starting procedure"
+  []
+  (do
+  (System/setProperty "sun.java2d.opengl" "true")
+  (let [window-resource (windowutility/compute-window-resource
+                            (* config/ORIGINAL-TILE-WIDTH config/TILES-ACROSS))]
+    (reset! config/WINDOW-RESOURCE-WIDTH (:width window-resource))
+    (reset! config/WINDOW-RESOURCE-HEIGHT (:height window-resource))
+    (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
+    (gsm/init-gsm gsm/LEVEL-STATE)
+    (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
+  )))
+
 (defn -main
   "entrypoint"
   [& args]
@@ -29,18 +43,14 @@
 
             ;(server/start-server config/SERVER-LISTEN-PORT gpsys/start-gp-simulation "UpstreamGP")
             )
+        (= (first args) "-debug")
+            (do
+              (logger/start-log-window "Debugger")
+              (normal-start-procedure))
       :else
           (do
             (reset! config/HEADLESS-SERVER? true)
             (logger/write-log "ERROR: bad initialization argument:" (first args))))
     (do
-      (System/setProperty "sun.java2d.opengl" "true")
-      (let [window-resource (windowutility/compute-window-resource
-                                (* config/ORIGINAL-TILE-WIDTH config/TILES-ACROSS))]
-        (reset! config/WINDOW-RESOURCE-WIDTH (:width window-resource))
-        (reset! config/WINDOW-RESOURCE-HEIGHT (:height window-resource))
-        (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
-        (gsm/init-gsm gsm/LEVEL-STATE)
-        (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
-        ;(gsm/start-subsequent-loads)
-        ))))
+        (normal-start-procedure)
+        )))
