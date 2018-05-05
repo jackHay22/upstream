@@ -3,7 +3,7 @@
 
 (import java.awt.Color)
 
-(defrecord TileResource [path origin-offset-x origin-offset-y width height])
+(defrecord TileResource [path width height occlusion-offset-x occlusion-offset-y])
 
 (def level-one-layer-0
     ;if images are loaded using list functionality, factor in indices of previous
@@ -14,21 +14,21 @@
        :prevent-view-block? false
        :chunk-dim 20
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/test_sheet.png" 32 0 64 32))
+       :tiles (list (TileResource. "tiles/test_sheet.png" 64 32 0 16))
        :map-attributes (list :image-index :sound)})
 
 (def level-one-layer-1
     ;if images are loaded using list functionality, factor in indices of previous
     ;images in list for current
-      {:map "maps/level_1-layer_1.txt" 
+      {:map "maps/level_1-layer_1.txt"
        :label :l1
        :entity-handler? true
        :prevent-view-block? true
        :chunk-dim 20
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/tree_set.png" 60 300 130 325) ;indices: 0-4
-                    (TileResource. "tiles/poc_sawmill.png" 170 60 1797 1122) ;index 5
-                    (TileResource. "tiles/bunk_house.png" 727 373 1087 924)) ;index 6 :TODO: shadow and more contrast
+       :tiles (list (TileResource. "tiles/tree_set.png" 130 325 45 325) ;indices: 0-4
+                    (TileResource. "tiles/poc_sawmill.png" 1797 1122 170 60) ;index 5
+                    (TileResource. "tiles/bunk_house.png" 1087 924 727 373)) ;index 6 :TODO: shadow and more contrast
        :map-attributes (list :image-index :blocked? :height :sound)})
 
 (def layer-1-lighting-opacity 200)

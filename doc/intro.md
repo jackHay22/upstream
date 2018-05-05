@@ -43,7 +43,7 @@
 ### Loaded Resource Formats:
 - Tile resource (same for all individual entity chunk views)
 ```clojure
-{:l1 {:images '({:image :origin-offset-x :origin-offset-y :width :height} ...)
+{:l1 {:images '({:image :occlusion-offset-x :occlusion-offset-y :width :height} ...)
       :widest
       :tallest}
  :l2 ...}

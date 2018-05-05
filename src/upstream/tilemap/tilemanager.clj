@@ -131,8 +131,8 @@
                                   (list
                                     (+ (* (first tile-coords) (:grid-dim map-resource)) (:draw-offset-x map-resource))
                                     (+ (* (second tile-coords) (:grid-dim map-resource)) (:draw-offset-y map-resource))))
-                    iso-x (- (int (first iso-coords)) (:origin-offset-x image-resource)) ;TODO occlusion offset
-                    iso-y (- (int (second iso-coords)) (:origin-offset-y image-resource))]
+                    iso-x (- (int (first iso-coords)) (:occlusion-offset-x image-resource)) ;TODO occlusion offset
+                    iso-y (- (int (second iso-coords)) (:occlusion-offset-y image-resource))]
                     (if (image-visible? iso-x iso-y image-resource)
                         (if (and (:prevent-view-block? current-layer) (blocks-visible? image-resource iso-x iso-y))
                             (images/draw-image-alpha

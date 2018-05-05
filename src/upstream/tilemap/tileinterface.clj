@@ -27,13 +27,18 @@
 
 (defn blocked?
   "check if loaded tile is blocked"
-  [map-resource x y]
-  (= 1 (get-tile-attribute map-resource :blocked? :l1 x y)))
+  [map-resource x y collider]
+  (let [check-corner #(= 1 (get-tile-attribute map-resource :blocked? :l1 %1 %2))]
+  (or
+    (check-corner (+ x collider) y)
+    (check-corner (+ x collider) (- y collider))
+    (check-corner x (- y collider))
+    (check-corner x y))))
 
 (defn try-move
   "check if player can make a move to the next tile"
-  [move-fn px py speed map-resource]
+  [move-fn px py collision-diameter speed map-resource]
   (let [proposed-move (move-fn px py speed)]
       (if (blocked? map-resource
-            (first proposed-move) (second proposed-move))
+            (first proposed-move) (second proposed-move) collision-diameter)
             (list px py) proposed-move)))

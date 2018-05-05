@@ -69,7 +69,9 @@
                   updated-facing (:update-facing update-source)
                   updated-action (:update-action update-source)
                   updated-position (tile-interface/try-move
-                                              (updated-facing update-xy) px py (get-speed updated-action)
+                                              (updated-facing update-xy) px py
+                                              (:collision-diameter e)
+                                              (get-speed updated-action)
                                               map-resource)
                   updated-x (first updated-position)
                   updated-y (second updated-position)

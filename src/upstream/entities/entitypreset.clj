@@ -33,8 +33,9 @@
     :map-resource nil
     :position-x starting-x
     :position-y starting-y
-    :draw-height-offset 110
-    :draw-width-offset 22
+    :draw-height-offset 120
+    :draw-width-offset 3
+    :collision-diameter 30
     :facing :south-west ;TODO remove?
     :current-action :at-rest
     :run-stamina 300 })
@@ -63,8 +64,9 @@
     :map-resource nil
     :position-x 700
     :position-y 700
-    :draw-height-offset 110
-    :draw-width-offset 22
+    :draw-height-offset 120
+    :draw-width-offset 3
+    :collision-diameter 30
     :facing :south-west ;TODO remove?
     :current-action :at-rest
     :run-stamina 300 })
