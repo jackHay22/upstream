@@ -1,6 +1,7 @@
 (ns upstream.tilemap.tileinterface
   (:require
-    [upstream.config :as config])
+    [upstream.config :as config]
+    [upstream.utilities.spacial :as spacialutility])
   (:gen-class))
 
 (defn get-player-tiles
@@ -9,13 +10,12 @@
    [map-resource px py]
    (let [grid-dim (:grid-dim map-resource)
          corner-chunk (:corner-chunk (first (:current-maps map-resource)))
-         offset-x (* grid-dim (:offset-x corner-chunk))
-         offset-y (* grid-dim (:offset-y corner-chunk))
-         chunk-relative-x (- px offset-x)
-         chunk-relative-y (- py offset-y)
-         chunk-tile-index-x (int (/ chunk-relative-x grid-dim))
-         chunk-tile-index-y (int (/ chunk-relative-y grid-dim))]
-         (map #(hash-map :tile (nth (nth (:map %) chunk-tile-index-y) chunk-tile-index-x)
+         chunk-relative-pt (spacialutility/map-relative-to-chunk-relative
+                               px py
+                               (:offset-x corner-chunk) (:offset-y corner-chunk)
+                               grid-dim)
+         tile-location-pt (spacialutility/pt-to-grid chunk-relative-pt grid-dim)]
+         (map #(hash-map :tile (nth (nth (:map %) (second tile-location-pt)) (first tile-location-pt))
                          :layer (:label %))
                 (:current-maps map-resource))))
 

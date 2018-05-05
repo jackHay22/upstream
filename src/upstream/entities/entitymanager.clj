@@ -95,19 +95,19 @@
   "take all entities in list and create a list of draw handlers"
   [entities]
   (map #(let [corner-chunk (:corner-chunk (first (:current-maps (:map-resource %))))
-              chunk-dim (:chunk-dim (:map-resource %))
               grid-dim (:grid-dim (:map-resource %))
-              offset-x (* grid-dim (:offset-x corner-chunk))
-              offset-y (* grid-dim (:offset-y corner-chunk))
-              chunk-relative-x (- (:position-x %) offset-x)
-              chunk-relative-y (- (:position-y %) offset-y)]
-              (hash-map :x (int (/ chunk-relative-x grid-dim))
-                        :y (int (/ chunk-relative-y grid-dim))
+              chunk-relative-pt (spacialutility/map-relative-to-chunk-relative
+                                    (:position-x %) (:position-y %)
+                                    (:offset-x corner-chunk) (:offset-y corner-chunk)
+                                    grid-dim)
+              tile-location-pt (spacialutility/pt-to-grid chunk-relative-pt grid-dim)]
+              (hash-map :x (first tile-location-pt)
+                        :y (second tile-location-pt)
                         :prevent-block? (:render-as-central %)
                         :fn (fn [gr map-offset-x map-offset-y]
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
-                                                      (list (+ chunk-relative-x map-offset-x)
-                                                            (+ chunk-relative-y map-offset-y)))
+                                                      (list (+ (first chunk-relative-pt) map-offset-x)
+                                                            (+ (second chunk-relative-pt) map-offset-y)))
                                       iso-x (- (int (first iso-coords)) (:draw-width-offset %))
                                       iso-y (- (int (second iso-coords)) (:draw-height-offset %))]
 

@@ -43,10 +43,6 @@
 
             ;(server/start-server config/SERVER-LISTEN-PORT gpsys/start-gp-simulation "UpstreamGP")
             )
-        (= (first args) "-debug")
-            (do
-              (logger/start-log-window "Debugger")
-              (normal-start-procedure))
       :else
           (do
             (reset! config/HEADLESS-SERVER? true)

@@ -12,6 +12,20 @@
           (concat (repeat (- grid-dim 1) 0) (range grid-dim))
           (range 0.8 1.8 (/ 0.5 grid-dim)))))
 
+(defn pt-to-grid
+  "take chunk-relative pt and return grid coords"
+  [pt grid-dim]
+  (list
+    (int (Math/floor (/ (first pt) grid-dim)))
+    (int (Math/ceil (/ (second pt) grid-dim)))))
+
+(defn map-relative-to-chunk-relative
+  "take pt, offsets, grid dim, determine chunk-relative"
+  [x y chunk-offset-x chunk-offset-y grid-dim]
+  (list
+    (- x (* chunk-offset-x grid-dim))
+    (- y (* chunk-offset-y grid-dim))))
+
 (defn cartesian-to-isometric-transform
   "take cartesian (x,y) and map to isometric (x,y)"
   [xy]
