@@ -2,24 +2,25 @@
   (:require [upstream.config :as config])
   (:gen-class))
 
-(defmacro defpredicate
+(defmacro defoperator
   "Macro for defining decision functions"
   [name operation]
-  (list 'def name
+  (list 'def (symbol (str name "_"))
         (list 'fn '[entity-context]
                   (list operation 'entity-context))))
 
-(defmacro defaction
-  "Macro for defining decision functions"
-  [name operation]
-  (list 'def name
-      (list 'fn '[res-map entity-context]
-              (list operation 'res-map 'entity-context))))
+(defmacro redefine
+  "Macro for redefining boolean operators"
+  [name operator]
+  (list 'def (symbol (str name "_"))
+        (list 'fn '[& operators]
+                  (list 'reduce operator 'operators))))
 
-(defpredicate and_ and)
-(defpredicate or_ or)
-(defpredicate enemy-visible?_ #(println %1))
-(defaction attack-closest_ #(println %1))
+(redefine || 'or)
+(redefine && 'and)
+
+(defoperator enemy-visible? #(println %1))
+(defoperator attack-closest #(println %1))
 
 (defn resolve-loaded-name
   "resolve action to qualified function name"
@@ -34,5 +35,5 @@
 
 (defn evaluate-actions
   "take list of actions and operate on state"
-  [actions-list entity-context] ;TODO: add res-map
+  [actions-list entity-context]
   (reduce #(%2 %1) entity-context actions-list))
