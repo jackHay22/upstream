@@ -21,6 +21,8 @@
 
 (defoperator enemy-visible? #(println %1))
 (defoperator attack-closest #(println %1))
+;:all-positions (access)
+;actions operate on :control-input
 
 (defn resolve-loaded-name
   "resolve action to qualified function name"

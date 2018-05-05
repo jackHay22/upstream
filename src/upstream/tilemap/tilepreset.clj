@@ -28,7 +28,7 @@
        :grid-dim 32
        :tiles (list (TileResource. "tiles/tree_set.png" 60 300 130 325) ;indices: 0-4
                     (TileResource. "tiles/poc_sawmill.png" 170 60 1797 1122) ;index 5
-                    (TileResource. "tiles/bunk_house.png" 727 373 1087 924)) ;index 6
+                    (TileResource. "tiles/bunk_house.png" 727 373 1087 924)) ;index 6 :TODO: shadow and more contrast
        :map-attributes (list :image-index :blocked? :height :sound)})
 
 (def layer-1-lighting-opacity 200)

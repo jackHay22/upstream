@@ -5,14 +5,12 @@
             [upstream.utilities.log :as log])
   (:gen-class))
 
-(def standard-result-map {:update-facing nil :update-action nil})
+(def result-map-default {:update-facing :south :update-action :at-rest})
 
 (defn load-entity-decisions
   "load decisions from file"
   [file]
   (if file
-    ;TODO: add prefixes to loaded decisions (predicates and actions)
-    ; TODO: load as decisions
     (with-open [reader (clojure.java.io/reader (io/resource file))]
             (map (fn [instr-pair]
                       (map (fn [instr]
@@ -22,15 +20,9 @@
     false))
 
 (defn make-player-decision
+  "make the first possible operation and return control structure"
   [entity-context]
-  {:update-facing :south :update-action :at-rest})
-
-; (defn make-player-decision
-;   "take loaded decisions and operate on first applicable
-;   --format: ((and/or & :preds) (& :actions))
-;   --context has :all-positions"
-;   [entity-context]
-;   (evaluate-actions
-;       (reduce (fn [res statement] (if (evaluate-predicates (first statement) entity-context)
-;                                       (reduced (second statement)) res))
-;       false (:decisions entity-context)) entity-context))
+  (let [loaded-decisions (:decisions entity-context)]
+      (reduce #(if (decisionlib/evaluate-predicates (first %2))
+                      (reduced (:control-input (decisionlib/evaluate-actions (second %2))))
+                      %1) result-map-default loaded-decisions)))
