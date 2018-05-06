@@ -1,6 +1,7 @@
 (ns upstream.entities.entitydecisionmanager
   (:require [upstream.config :as config]
             [upstream.entities.decisionlib :as decisionlib]
+            [upstream.utilities.spacial :as spacialutil]
             [clojure.java.io :as io]
             [upstream.utilities.log :as log])
   (:gen-class))
@@ -31,7 +32,7 @@
         (update-in entity-context [:all-positions]
           #(map
             (fn [pt]
-              (spacialutility/map-relative-to-chunk-relative
+              (spacialutil/map-relative-to-chunk-relative
                 (first pt) (second pt)
                 chunk-offset-x chunk-offset-y grid-dim))
           (filter (fn [global-pt]

@@ -46,7 +46,7 @@
   "take list of predicates and evaluate"
   [predicates-list entity-context]
   (reduce #((first predicates-list) %1 %2)
-      (map #(% entity-context) (reset predicates-list))))
+      (map #(% entity-context) (rest predicates-list))))
 
 (defn evaluate-actions
   "take list of actions and operate on state"
