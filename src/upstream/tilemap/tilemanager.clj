@@ -103,14 +103,13 @@
                           (or
                             (and (< x 0) (> (+ x w) window-width))
                             (and (< y 0) (> (+ y h) window-height))))
-        corner-visible? (fn [x y] (and (> x 0) (> y 0)
-                                       (< x window-width)
-                                       (< y window-height)))]
+        corner-visible? (fn [pt] (and (> (first pt) 0) (> (second pt) 0)
+                                       (< (first pt) window-width)
+                                       (< (second pt) window-height)))]
         (or (center-visible? x y image-width image-height)
-            (corner-visible? x y)
-            (corner-visible? (+ x image-width) y)
-            (corner-visible? x (+ y image-height))
-            (corner-visible? (+ x image-width) (+ y image-height)))))
+            (reduce or (map corner-visible?
+                      (spacialutility/get-bounds
+                        (list x y) image-width image-height))))))
 
 (defn render-layer
   "take map layer and render"

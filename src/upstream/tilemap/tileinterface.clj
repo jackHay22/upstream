@@ -30,7 +30,7 @@
   [map-resource pt collider]
     (reduce or
       (map #(= 1 (get-tile-attribute map-resource :blocked? :l1 %))
-          (spacialutility/get-bounds pt collider))))
+          (spacialutility/get-bounds pt collider collider))))
 
 (defn try-move
   "check if player can make a move to the next tile"
