@@ -58,10 +58,8 @@
 (defn get-isometric-bounds
   "take cartesian x,y dim of box, and return 4 iso pts"
   [xy bounding-dim]
-  (let [origin-x (first xy)
-        origin-y (second xy)
-        ordered-x (take 4 (cycle (list origin-x bounding-dim)))
-        ordered-y (concat (repeat 2 origin-y) (repeat 2 bounding-dim))]
+  (let [ordered-x (take 4 (cycle (list (first xy) bounding-dim)))
+        ordered-y (concat (repeat 2 (second xy)) (repeat 2 bounding-dim))]
   (map cartesian-to-isometric-transform
     (map vector ordered-x ordered-y))))
 
