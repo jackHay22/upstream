@@ -8,16 +8,21 @@
     [upstream.utilities.spacial :as spacialutility])
   (:gen-class))
 
+(defmacro defmove
+  "macro for defining a move-transform"
+  [a] (list 'fn '[x y s]
+          (list 'spacialutility/pt-at-angle 'x 'y
+              (list 'Math/toRadians a) 's)))
+
 (def update-xy
-  (let [at-angle #(spacialutility/pt-at-angle %1 %2 (Math/toRadians %4) %3)]
-       {:north (fn [x y s] (list x (- y s)))
-        :north-east (fn [x y s] (at-angle x y s 45))
-        :east (fn [x y s] (list (+ x s) y))
-        :south-east (fn [x y s] (at-angle x y s 315))
-        :south (fn [x y s] (list x (+ y s)))
-        :south-west (fn [x y s] (at-angle x y s 225))
-        :west (fn [x y s] (list (- x s) y))
-        :north-west (fn [x y s] (at-angle x y s 135))}))
+    {:north (defmove 90)
+     :north-east (defmove 45)
+     :east (defmove 0)
+     :south-east (defmove 315)
+     :south (defmove 270)
+     :south-west (defmove 225)
+     :west (defmove 180)
+     :north-west (defmove 135)})
 
 (defn get-speed
   "get animation movement vector from action"
