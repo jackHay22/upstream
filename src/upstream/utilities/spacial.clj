@@ -55,13 +55,12 @@
   (list (+ (second xy) (/ (first xy) 2))
         (- (second xy) (/ (first xy) 2))))
 
-(defn get-isometric-bounds
+(defn get-bounds
   "take cartesian x,y dim of box, and return 4 iso pts"
   [xy bounding-dim]
   (let [ordered-x (take 4 (cycle (list (first xy) bounding-dim)))
         ordered-y (concat (repeat 2 (second xy)) (repeat 2 bounding-dim))]
-  (map cartesian-to-isometric-transform
-    (map vector ordered-x ordered-y))))
+  (map vector ordered-x ordered-y)))
 
 (defn coords-equal?
   "check if two x,y pairs are equal"
