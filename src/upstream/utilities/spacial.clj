@@ -17,7 +17,7 @@
   [pt grid-dim]
   (list
     (int (Math/floor (/ (first pt) grid-dim)))
-    (int (Math/ceil (/ (second pt) grid-dim)))))
+    (int (Math/floor (/ (second pt) grid-dim)))))
 
 (defn map-relative-to-chunk-relative
   "take pt, offsets, grid dim, determine chunk-relative"
@@ -36,17 +36,34 @@
     (> (second pt) (* chunk-offset-y grid-dim))
     (> (* (+ chunk-offset-y chunk-dim) grid-dim) (second pt))))
 
-(defn cartesian-to-isometric-transform
+(defn cartesian-to-isometric-transform-clockwise
   "take cartesian (x,y) and map to isometric (x,y)"
   [xy]
   (list (- (first xy) (second xy))
         (/ (+ (first xy) (second xy)) 2)))
+
+(defn cartesian-to-isometric-transform
+  "take cartesian (x,y) and map to isometric (x,y)
+  but with counterclockwise rotation"
+  [xy]
+  (list (- (first xy) (second xy))
+        (/ (+ (- 0 (first xy)) (second xy)) 2)))
 
 (defn isometric-to-cartesian-transform
   "take isometric (x,y) and map to cartesian (x,y)"
   [xy]
   (list (+ (second xy) (/ (first xy) 2))
         (- (second xy) (/ (first xy) 2))))
+
+(defn get-isometric-bounds
+  "take cartesian x,y dim of box, and return 4 iso pts"
+  [xy bounding-dim]
+  (let [origin-x (first xy)
+        origin-y (second xy)
+        ordered-x (take 4 (cycle (list origin-x bounding-dim)))
+        ordered-y (concat (repeat 2 origin-y) (repeat 2 bounding-dim))]
+  (map cartesian-to-isometric-transform
+    (map vector ordered-x ordered-y))))
 
 (defn coords-equal?
   "check if two x,y pairs are equal"
@@ -60,3 +77,9 @@
   (list
       (+ x (* dist (Math/cos a)))
       (+ y (* dist (Math/sin a)))))
+
+(defn function-from-pts
+  "generate line function from pts"
+  [xy1 xy2]
+  (let [slope (/ (- (second xy2) (second xy1)) (- (first xy2) (first xy1)))]
+      (fn [x] (+ (* (- x (first xy1)) slope) (second xy1)))))
