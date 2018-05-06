@@ -26,6 +26,10 @@
     (- x (* chunk-offset-x grid-dim))
     (- y (* chunk-offset-y grid-dim))))
 
+(defn grid-pt-in-chunk?
+  "take pt and determine if in current chunk"
+  [pt chunk-offset-x chunk-offset-y chunk-dim grid-dim])
+
 (defn cartesian-to-isometric-transform
   "take cartesian (x,y) and map to isometric (x,y)"
   [xy]

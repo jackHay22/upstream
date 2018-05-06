@@ -25,12 +25,7 @@ _Game made by Jack Hay using Clojure. Started in Dublin, Ireland in 2018._
 ```bash
 eval $(aws ecr get-login --region us-east-2 --no-include-email) #if image stored in ecr
 docker pull 190175714341.dkr.ecr.us-west-2.amazonaws.com/upstream_server:latest #if image stored in ecr
-docker run \
-        -p 4000:4000 \
-        -p 4444:4444 \
-        --env-file ./docker/run.list \
-        --mount source=server_trace_volume,target=/gp_volume \
-        upstream_server:latest #change if pulled from ecr
+docker run --env-file ./docker/run.list upstream_server:latest #change if pulled from ecr
 ```
 - Make sure to change the server mode in ```/docker/run.list```.  This can either be ```-gp``` or ```-server```.
 - To kill all running containers: ```docker kill $(docker ps -q)``` (free up ports).
@@ -54,6 +49,9 @@ docker run \
 
 ## Map Editor Operation
 - This project has been moved to [upstream_editor](https://github.com/jackHay22/upstream_editor).
+
+## REPL
+- If using lein repl, execute ```(-main)``` to boot system.  A reliable way of resetting the game is ```(gsm/init-gsm gsm/LEVEL-STATE)``` in ```upstream.core``` ns.
 
 ## TODO:
 - [ ] Test intersection with player's width for better bounds checking

@@ -19,10 +19,31 @@
                     (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
     false))
 
+(defn convert-to-positions-in-chunk
+  "take player chunk information and filter positions and convert to chunk-relative"
+  [entity-context]
+  (let [global-positions (:all-positions entity-context)
+        corner-chunk (:corner-chunk (first (:current-maps (:map-resource entity-context))))
+        chunk-offset-x (:offset-x corner-chunk)
+        chunk-offset-y (:offset-y corner-chunk)
+        grid-dim (:grid-dim (:map-resource entity-context))
+        chunk-dim (:chunk-dim (:map-resource entity-context))]
+        (update-in entity-context [:all-positions]
+          #(map
+            (fn [pt]
+              (spacialutility/map-relative-to-chunk-relative
+                (first pt) (second pt)
+                chunk-offset-x chunk-offset-y grid-dim))
+          (filter (fn [global-pt]
+                    (spacialutil/grid-pt-in-chunk? global-pt
+                        chunk-offset-x chunk-offset-y
+                        chunk-dim grid-dim)) global-positions)))))
+
 (defn make-player-decision
   "make the first possible operation and return control structure"
   [entity-context]
-  (let [loaded-decisions (:decisions entity-context)]
-      (reduce #(if (decisionlib/evaluate-predicates (first %2))
-                      (reduced (:control-input (decisionlib/evaluate-actions (second %2))))
+  (let [loaded-decisions (:decisions entity-context)
+        entity-transform (convert-to-positions-in-chunk entity-context)]
+      (reduce #(if (decisionlib/evaluate-predicates (first %2) entity-transform)
+                      (reduced (:control-input (decisionlib/evaluate-actions (second %2) entity-transform)))
                       %1) result-map-default loaded-decisions)))

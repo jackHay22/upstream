@@ -24,7 +24,7 @@
   [map-resource attrib layer x y]
   (attrib (reduce #(if (= layer (:layer %2)) (reduced (:tile %2)) %1)
                   nil (get-player-tiles map-resource x y))))
-
+                  
 (defn blocked?
   "check if loaded tile is blocked"
   [map-resource x y collider]
