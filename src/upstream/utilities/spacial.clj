@@ -36,24 +36,40 @@
     (> (second pt) (* chunk-offset-y grid-dim))
     (> (* (+ chunk-offset-y chunk-dim) grid-dim) (second pt))))
 
-(defn cartesian-to-isometric-transform ;-clockwise
+(defn cartesian-to-isometric-transform-clockwise
   "take cartesian (x,y) and map to isometric (x,y)"
   [xy]
   (list (- (first xy) (second xy))
         (/ (+ (first xy) (second xy)) 2)))
 
-(defn cartesian-to-isometric-transform-counter-clockwise ;TODO: fix this
+(defn cartesian-to-isometric-transform-counter-clockwise
   "take cartesian (x,y) and map to isometric (x,y)
   but with counterclockwise rotation"
   [xy]
-  (list (- (first xy) (second xy))
+  (list (+ (first xy) (second xy))
         (/ (+ (- (first xy)) (second xy)) 2)))
 
-(defn isometric-to-cartesian-transform
+(defn cartesian-to-isometric-transform
+  "wrapper for toggling between transforms"
+  [xy]
+  (cartesian-to-isometric-transform-counter-clockwise xy))
+
+(defn isometric-to-cartesian-transform-clockwise
   "take isometric (x,y) and map to cartesian (x,y)"
   [xy]
   (list (+ (second xy) (/ (first xy) 2))
         (- (second xy) (/ (first xy) 2))))
+
+(defn isometric-to-cartesian-transform-counter-clockwise
+  "take isometric (x,y) and map to cartesian (x,y)"
+  [xy]
+  (list (+ (- (second xy)) (/ (first xy) 2))
+        (+ (second xy) (/ (first xy) 2))))
+
+(defn isometric-to-cartesian-transform
+  "transform wrapper"
+  [xy]
+  (isometric-to-cartesian-transform-counter-clockwise xy))
 
 (defn get-bounds
   "take cartesian x,y dim of box, and return 4 iso pts"
