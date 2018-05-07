@@ -15,14 +15,14 @@
               (list 'Math/toRadians a) 's)))
 
 (def update-xy
-    {:north (defmove 90)
-     :north-east (defmove 45)
+    {:north (defmove 270)
+     :north-east (defmove 315)
      :east (defmove 0)
-     :south-east (defmove 315)
-     :south (defmove 270)
-     :south-west (defmove 225)
+     :south-east (defmove 45)
+     :south (defmove 90)
+     :south-west (defmove 135)
      :west (defmove 180)
-     :north-west (defmove 135)})
+     :north-west (defmove 225)})
 
 (defn get-speed
   "get animation movement vector from action"
