@@ -54,6 +54,7 @@ docker run --env-file ./docker/run.list upstream_server:latest #change if pulled
 - If using lein repl, execute ```(-main)``` to boot system.  A reliable way of resetting the game is ```(gsm/init-gsm gsm/LEVEL-STATE)``` in ```upstream.core``` ns.
 
 ## TODO:
+- [ ] Fix control inversion problem (could be a transform problem)
 - [ ] Test intersection with player's width for better bounds checking
 - [x] Try additional light/depth techniques
 - [ ] Fix object-blocks-visible? fn
