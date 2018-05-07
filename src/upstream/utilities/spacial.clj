@@ -36,18 +36,18 @@
     (> (second pt) (* chunk-offset-y grid-dim))
     (> (* (+ chunk-offset-y chunk-dim) grid-dim) (second pt))))
 
-(defn cartesian-to-isometric-transform-clockwise
+(defn cartesian-to-isometric-transform ;-clockwise
   "take cartesian (x,y) and map to isometric (x,y)"
   [xy]
   (list (- (first xy) (second xy))
         (/ (+ (first xy) (second xy)) 2)))
 
-(defn cartesian-to-isometric-transform
+(defn cartesian-to-isometric-transform-counter-clockwise ;TODO: fix this
   "take cartesian (x,y) and map to isometric (x,y)
   but with counterclockwise rotation"
   [xy]
   (list (- (first xy) (second xy))
-        (/ (+ (- 0 (first xy)) (second xy)) 2)))
+        (/ (+ (- (first xy)) (second xy)) 2)))
 
 (defn isometric-to-cartesian-transform
   "take isometric (x,y) and map to cartesian (x,y)"
