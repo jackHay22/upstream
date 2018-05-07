@@ -28,7 +28,7 @@
 (defn blocked?
   "check if loaded tile is blocked"
   [map-resource pt collider]
-    (reduce or
+    (reduce #(or %1 %2)
       (map #(= 1 (get-tile-attribute map-resource :blocked? :l1 %))
           (spacialutility/get-bounds pt collider collider))))
 

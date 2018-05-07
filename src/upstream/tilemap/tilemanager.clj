@@ -104,11 +104,11 @@
                             (and (< x 0) (> (+ x w) window-width))
                             (and (< y 0) (> (+ y h) window-height))))
         corner-visible? (fn [pt] (and (> (first pt) 0) (> (second pt) 0)
-                                       (< (first pt) window-width)
-                                       (< (second pt) window-height)))]
+                                      (< (first pt) window-width)
+                                      (< (second pt) window-height)))]
                                        ;TODO: optimize
         (or (center-visible? x y image-width image-height)
-            (reduce or (map corner-visible?
+            (reduce #(or %1 %2) (map corner-visible?
                       (spacialutility/get-bounds
                         (list x y) image-width image-height))))))
 
