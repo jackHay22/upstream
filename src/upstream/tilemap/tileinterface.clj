@@ -32,6 +32,11 @@
       (map #(= 1 (get-tile-attribute map-resource :blocked? :l1 %))
           (spacialutility/get-bounds pt collider collider))))
 
+(defn get-tile-height
+  "returns tile height"
+  [map-resource pt]
+  (get-tile-attribute map-resource :height :l1 pt))
+
 (defn try-move
   "check if player can make a move to the next tile"
   [move-fn px py collision-diameter speed map-resource]

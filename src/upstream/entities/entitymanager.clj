@@ -34,7 +34,6 @@
 (defn load-entities
   "perform resource loads on list of entities, TODO: create draw-handler for each"
   [entity-list]
-  ;TODO: load decisions if added
   (let [load-image #(images/load-image %)]
     (map (fn [entity]
           (let [starting-x (:position-x entity)
@@ -116,10 +115,11 @@
                                                       (list (+ (first chunk-relative-pt) map-offset-x)
                                                             (+ (second chunk-relative-pt) map-offset-y)))
                                       iso-x (- (int (first iso-coords)) (:draw-width-offset %))
-                                      iso-y (- (int (second iso-coords)) (:draw-height-offset %))]
-
-                                      ;TODO: get height of current tile and subtract
-                                    (draw-entity gr % iso-x iso-y)))))
+                                      iso-y (- (int (second iso-coords)) (:draw-height-offset %))
+                                      tile-height (tile-interface/get-tile-height
+                                                      (:map-resource %)
+                                                      (list (:position-x %) (:position-y %)))]
+                                    (draw-entity gr % iso-x (- iso-y tile-height))))))
   entities))
 
 (defn entitykeypressed
