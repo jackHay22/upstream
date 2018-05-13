@@ -9,8 +9,7 @@
                   (take (+ %1 1) (range)) (take (+ %1 1) (range %1 -1 -1)))]
   (mapcat (fn [row remove] (take (- grid-dim remove) (drop remove (make-range-layer row))))
           (range (- (* grid-dim 2) 1))
-          (concat (repeat (- grid-dim 1) 0) (range grid-dim))
-          )))
+          (concat (repeat (- grid-dim 1) 0) (range grid-dim)))))
 
 (defn lateral-range-counterclockwise
   "create a lateral range corresponding
@@ -19,8 +18,11 @@
   (let [starting-x-range (rseq (vec (range (- grid-dim) grid-dim)))
         retain (concat (range 1 grid-dim) (repeat grid-dim))
         remove (concat (repeat (- grid-dim 1) 0) (range))]
-        (mapcat (fn [x-begin retain trim] (drop trim (take retain (iterate #(map inc %1) (vector x-begin 0)))))
-               starting-x-range retain remove)))
+        (mapcat (fn [x-begin retain trim]
+                    (drop trim
+                      (take retain
+                        (iterate #(map inc %1) (vector x-begin 0)))))
+                starting-x-range retain remove)))
 
 (def lateral-range-cached (memoize lateral-range-counterclockwise))
 
