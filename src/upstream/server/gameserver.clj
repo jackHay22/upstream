@@ -1,6 +1,5 @@
 (ns upstream.server.gameserver
-  (:require [upstream.gamestate.gsmanager :as manager]
-            [upstream.utilities.log :as logger]
+  (:require [upstream.utilities.log :as logger]
             [clojure.core.async :as async])
   (:gen-class))
 

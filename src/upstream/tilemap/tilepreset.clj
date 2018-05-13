@@ -27,8 +27,11 @@
        :chunk-dim 20
        :grid-dim 32
        :tiles (list (TileResource. "tiles/tree_set.png" 130 325 45 325) ;indices: 0-4
-                    (TileResource. "tiles/poc_sawmill.png" 1797 1122 170 60) ;index 5
-                    (TileResource. "tiles/bunk_house.png" 1087 924 727 373)) ;index 6 :TODO: shadow and more contrast
+                    (TileResource. "tiles/structures/bunkhouse_front.png" 757 741 57 554)
+                    (TileResource. "tiles/structures/bunkhouse_middle.png" 636 721 0 554)
+                    (TileResource. "tiles/structures/bunkhouse_rear.png" 669 727 0 554)
+                    (TileResource. "tiles/poc_sawmill.png" 1797 1122 170 60)
+                    )
        :map-attributes (list :image-index :blocked? :height :sound)})
 
 (def layer-1-lighting-opacity 200)

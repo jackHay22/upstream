@@ -4,7 +4,7 @@
   (:gen-class))
 
 (defmacro defoperator
-  "Macro for defining decision functions"
+  "Macro for defining decision functions (predefined)"
   [name operation]
   (list 'def (symbol (str name "_"))
         (list 'fn '[entity-context]
@@ -14,8 +14,8 @@
   "Macro for redefining boolean operators"
   [name operator]
   (list 'def (symbol (str name "_"))
-        (list 'fn '[& operators]
-              (list 'reduce operator 'operators))))
+        (list 'fn '[operator-list]
+              (list 'reduce operator 'operator-list))))
 
 (redefine || 'or)
 (redefine && 'and)
@@ -25,7 +25,7 @@
     (let [chunk-positions (:all-positions entity-context)]
 
 
-      ;returns transformed entity-context
+      ;returns boolean
     )))
 
 (defoperator attack-closest
@@ -38,15 +38,18 @@
 
 (defn resolve-loaded-name
   "resolve action to qualified function name"
-  [function-name]
+  [function-name family-marker]
   (ns-resolve *ns*
-    (symbol (str "upstream.entities.decisionlib/" function-name "_"))))
+    (symbol (str "upstream.entities.decisionlib/" function-name family-marker))))
+
+(defn load-decision-subcomponent
+  [input]
+  (resolve-loaded-name input "_"))
 
 (defn evaluate-predicates
   "take list of predicates and evaluate"
   [predicates-list entity-context]
-  (reduce #((first predicates-list) %1 %2)
-      (map #(% entity-context) (rest predicates-list))))
+  ((first predicates-list) (map #(% entity-context) (rest predicates-list))))
 
 (defn evaluate-actions
   "take list of actions and operate on state"

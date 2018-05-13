@@ -6,17 +6,16 @@
 
 (import java.io.File)
 
+(def MUTEX_LOCK (Object.))
+
 (defn prepare-for-storage
   "take entity state and extract fields to store"
   [e-state]
   {:logical-entity-id (:logical-entity-id e-state)
-   :decisions (:decisions e-state)
    :position-x (:position-x e-state)
    :position-y (:position-y e-state)
    :facing (:facing e-state)
    :current-action (:current-action e-state)})
-
-(def FILE-AVAILABLE? (atom true))
 
 (defn build-path
   "build path from sub directories"
@@ -27,22 +26,23 @@
   [save-filename]
   (let [save-dir (File. (str (System/getProperty "user.home") File/separator ".upstream"))
         save-file (File. (str (System/getProperty "user.home") File/separator ".upstream" File/separator save-filename))]
-      (.createNewFile save-file) ;will only create if doesn't exist
-      (if (not (.exists save-dir)) (.mkdir save-dir))
-      save-file))
+      (locking MUTEX_LOCK
+        (.createNewFile save-file) ;will only create if doesn't exist
+        (if (not (.exists save-dir)) (.mkdir save-dir))
+        save-file)))
 
 (defn save-state
   "save entity states to file"
   [entity-states]
   (let [save-transform (map prepare-for-storage entity-states)]
-  (with-open [save-writer (clojure.java.io/writer (get-user-save-location config/SAVE-FILE))]
-      (.write save-writer (pr-str save-transform)))))
+  (locking MUTEX_LOCK
+    (with-open [save-writer (clojure.java.io/writer (get-user-save-location config/SAVE-FILE))]
+      (.write save-writer (pr-str save-transform))))))
 
 (defn load-from-save
   "load entities state from save file, take list of config states to merge with"
   [to-merge]
   (do
-    (reset! FILE-AVAILABLE? false)
     (with-open [save-reader (clojure.java.io/reader (get-user-save-location config/SAVE-FILE))]
       (let [raw-save-state (clojure.string/join "\n" (line-seq save-reader))
             to-load (if (empty? raw-save-state)
@@ -61,10 +61,12 @@
   "start autosaver"
   [state-reference]
   (.start (Thread.
-      (loop []
-          (if @FILE-AVAILABLE? (save-state @state-reference))
+      (do
+        (Thread/sleep config/AUTO-SAVE-SLEEP)
+        (loop []
           (Thread/sleep config/AUTO-SAVE-SLEEP)
-      (recur)))))
+          (locking MUTEX_LOCK (save-state @state-reference))
+      (recur))))))
 
 (defn overwrite-save!
   "overwrite game save with config/LEVEL-ONE-ENTITIES --

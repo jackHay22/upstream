@@ -3,17 +3,22 @@
          "facing": ":north :east :south :west :northeast :northwest :southeast :southwest",
          "action": ":at-rest :walking :running :punching"
     },
-    "port": "4000",
+    "control-input-port": 4000,
+    "protocol-comm-port": 8000,
+    "state-output-port": 4001,
     "hosts": [
          {
               "address": "127.0.0.1",
-              "port": "4001",
-              "multicast-port": "4002"
+              "control-port": 4002,
+              "balancer-multicast-listen": 4003,
+              "balancer-multicast-distribute": 4004
          },
          {
               "address": "0.0.0.0",
-              "port": "4001",
-              "multicast-port": "4002"
+              "control-port": 4005,
+              "state-port": 4006,
+              "balancer-multicast-listen": 4007,
+              "balancer-multicast-distribute": 4008
          }
     ]
 }

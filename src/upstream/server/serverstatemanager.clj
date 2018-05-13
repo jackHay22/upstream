@@ -1,5 +1,16 @@
 (ns upstream.server.serverstatemanager
+  (:require [clojure.data.json :as json]
+            [upstream.server.gameserver :as server])
   (:gen-class))
+
+(defn configure
+  "take server task definition and start listening interfaces"
+  [config-file]
+  (let [task-records (json/read-str (slurp "path/to/file.json")
+                        :key-fn keyword)]
+
+    )
+  )
 
 (defn register-client-input
   "Server side: receive client

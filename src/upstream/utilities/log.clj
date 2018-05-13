@@ -1,6 +1,5 @@
 (ns upstream.utilities.log
-  (:require [clj-http.client :as httpclient]
-            [upstream.config :as config])
+  (:require [upstream.config :as config])
   (:gen-class))
 
 (import java.io.File)

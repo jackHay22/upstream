@@ -1,23 +1,27 @@
 import java.io.*;
 import java.net.*;
 import org.json.*;
+import java.util.HashMap;
 
 public class ServerBalancer {
   public static void main(String[] args) {
 
     if (args.length < 1) {
-      System.out.println("Error: specify configuration file");
+      log.write("ERROR: specify configuration file as arg1");
       return;
     }
+
     JSONParser parser = new JSONParser();
     Object obj = parser.parse(new FileReader(args[0]));
     JSONObject instance_config =  (JSONObject) obj;
 
     JSONObject verification_config = instance_config.get("verification");
     String[] facing_messages = verification_config.get("facing").split(" ");
-    String[] facing_messages = verification_config.get("action").split(" ");
+    String[] action_messages = verification_config.get("action").split(" ");
 
-    BalancedVerifier balancer = new BalancedVerifier(facing_messages, action_messages);
+    Verifier standard_verifier = new Verifier(facing_messages, action_messages);
+
+    HashMap<Integer, UpstreamInstance> routable_instances = new HashMap<Integer, UpstreamInstance>();
 
     JSONArray hosts = instance_config.getJSONArray("hosts");
     String host_addr;
@@ -25,21 +29,31 @@ public class ServerBalancer {
     for (int i = 0; i < hosts.length(); i++) {
         host_addr = hosts.getJSONObject(i).get("address");
         host_port = hosts.getJSONObject(i).get("port");
-        multicast_port = hosts.getJSONObject(i).get("multicast-port");
-        balancer.addInstance(host_addr, Integer.parseInt(host_port), Integer.parseInt(multicast_port));
+        multicast_port = hosts.getJSONObject(i).get("balancer-multicast-listen");
+        multicast_dist = hosts.getJSONObject(i).get("balancer-multicast-distribute");
+        routable_instances.put(i, new UpstreamInstance(host_addr,
+                                                       Integer.parseInt(host_port),
+                                                       Integer.parseInt(multicast_port),
+                                                       Integer.parseInt(multicast_dist),
+                                                       standard_verifier));
     }
 
     //networking
+
+    //TODO
     String listener_port = instance_config.getJSONObject("port");
     DatagramSocket balancer_connection = new DatagramSocket(Integer.parseInt(listener_port));
-    byte[] receive_input = new byte[1024];
-    byte[] send_output = new byte[1024];
+
+    Logger.write("starting balancing service...");
+    System.out.println("--------------------------------");
+    Logger.write("using verification tags: " + facing_messages + " and " + action_messages);
+    Logger.write("starting network listener on port: " + listener_port);
+    System.out.println("--------------------------------");
 
     while(true) {
-        DatagramPacket receivePacket = new DatagramPacket(receive_input, receive_input.length);
-        serverSocket.receive(receivePacket);
-        String raw_control_map = new String(receivePacket.getData());
-        balancer.routePacket(raw_control_map);
+      //listen on external port
+        DatagramPacket packet = socket.receive();
+
     }
   }
 }

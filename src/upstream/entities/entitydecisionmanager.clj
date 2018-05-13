@@ -15,7 +15,7 @@
     (with-open [reader (clojure.java.io/reader (io/resource file))]
             (map (fn [instr-pair]
                       (map (fn [instr]
-                        (map #(decisionlib/resolve-loaded-name (read-string %)) (clojure.string/split instr #" "))) instr-pair))
+                        (map #(decisionlib/load-decision-subcomponent (read-string %)) (clojure.string/split instr #" "))) instr-pair))
                 (map (fn [line] (clojure.string/split line #" : "))
                     (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))))
     false))

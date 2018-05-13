@@ -21,6 +21,8 @@
     (reset! config/COMPUTED-SCALE 1.5) ;TODO: remove
     (gsm/init-gsm gsm/LEVEL-STATE)
     (engine/start-window config/WINDOW-TITLE window-resource config/FRAMERATE)
+    ; start subsequent loads here
+    (gsm/start-pipeline-autosave gsm/LEVEL-STATE)
   )))
 
 (defn -main
