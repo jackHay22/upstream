@@ -2,15 +2,27 @@
   (:require [upstream.config :as config])
   (:gen-class))
 
-(defn lateral-range
+(defn lateral-range-clockwise
   "create a lateral range for drawing tiles at depth rather than by row"
   [grid-dim]
   (let [make-range-layer #(map vector
-                  (take (+ %1 1) (range)) (take (+ %1 1) (range %1 -1 -1)) (repeat %2))]
-  (mapcat (fn [row remove b-factor] (take (- grid-dim remove) (drop remove (make-range-layer row b-factor))))
+                  (take (+ %1 1) (range)) (take (+ %1 1) (range %1 -1 -1)))]
+  (mapcat (fn [row remove] (take (- grid-dim remove) (drop remove (make-range-layer row))))
           (range (- (* grid-dim 2) 1))
           (concat (repeat (- grid-dim 1) 0) (range grid-dim))
-          (range 0.8 1.8 (/ 0.5 grid-dim)))))
+          )))
+
+(defn lateral-range-counterclockwise
+  "create a lateral range corresponding
+  to depth sequence of counterclockwise linear transformation"
+  [grid-dim]
+  (let [starting-x-range (rseq (vec (range (- grid-dim) grid-dim)))
+        retain (concat (range 1 grid-dim) (repeat grid-dim))
+        remove (concat (repeat (- grid-dim 1) 0) (range))]
+        (mapcat (fn [x-begin retain trim] (drop trim (take retain (iterate #(map inc %1) (vector x-begin 0)))))
+               starting-x-range retain remove)))
+
+(def lateral-range-cached (memoize lateral-range-counterclockwise))
 
 (defn pt-to-grid
   "take chunk-relative pt and return grid coords"

@@ -122,8 +122,8 @@
                 (lighting/render-lighting gr
                   (/ @config/WINDOW-RESOURCE-WIDTH 2)
                   (/ @config/WINDOW-RESOURCE-HEIGHT 2) (:label current-layer))
-            (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))
-                  layer-brightness (nth tile-coords 2)]
+            (let [tile (nth (nth (:map current-layer) (second tile-coords)) (first tile-coords))]
+                  ;layer-brightness (nth tile-coords 2)]
             (if (:draw? tile)
               (let [image-set ((:label current-layer) tile-resource)
                     image-resource (nth (:images image-set) (:image-index tile))
@@ -151,7 +151,7 @@
   "take graphics object and render all map layers"
   [gr map-resource tile-resource entity-handlers]
   (let [render-map-layer (render-layer gr map-resource tile-resource
-                              (concat (spacialutility/lateral-range (* 3 (:chunk-dim map-resource))) '(:render-lighting))
+                              (concat (spacialutility/lateral-range-cached (* 3 (:chunk-dim map-resource))) '(:render-lighting))
                               (object-blocks-visible? (reduce #(if (:prevent-block? %2) (reduced %2) false) false entity-handlers)
                                                       (:draw-offset-x map-resource) (:draw-offset-y map-resource)
                                                       (:grid-dim map-resource))
