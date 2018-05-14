@@ -32,3 +32,9 @@
           (.fillRect g2d 0 0 win-width win-height)
           (.drawImage gr lighting-layer 0 0 win-width win-height nil)
           (.dispose g2d))))
+
+(defn cast-shadow
+  "draw shadow at centered pt and width"
+  [x y width]
+  ;TODO
+  )

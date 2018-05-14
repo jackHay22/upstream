@@ -54,9 +54,10 @@ docker run --env-file ./docker/run.list upstream_server:latest #change if pulled
 - If using lein repl, execute ```(-main)``` to boot system.  A reliable way of resetting the game is ```(gsm/init-gsm gsm/LEVEL-STATE)``` in ```upstream.core``` ns.
 
 ## TODO:
-- [ ] Detach entity images from state (similar for tile resource, better for server model)
-- [ ] Add USP socket registration for balancer
-- [ ] Remove ```-server``` as a run option and instead perform separate build later (with change to project.clj)
+- [ ] _Detach entity images from state (similar for tile resource, better for server model)_
+- [ ] Remove balancer code and integrate in main
+- [ ] Player jumping state?
+- [ ] Remove ```-server``` as a run option and instead perform separate build later (with change to project.clj) (eventually)
 - [x] Fix control inversion problem (could be a transform problem)
 - [ ] Test intersection with player's width for better bounds checking
 - [x] Try additional light/depth techniques

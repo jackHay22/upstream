@@ -26,7 +26,9 @@
        :prevent-view-block? true
        :chunk-dim 20
        :grid-dim 32
-       :tiles (list (TileResource. "tiles/tree_set.png" 130 325 45 325) ;indices: 0-4
+       :tiles (list (TileResource. "tiles/foliage/tree_set.png" 130 325 45 325) ;indices: 0-4
+                    (TileResource. "tiles/foliage/bushes.png" 32 40 0 40) ;indices 5-13
+                    (TileResource. "tiles/foliage/stumps.png" 64 44 0 39) ;indices 14-17
                     (TileResource. "tiles/structures/bunkhouse_front.png" 757 741 57 554)
                     (TileResource. "tiles/structures/bunkhouse_middle.png" 636 721 0 554)
                     (TileResource. "tiles/structures/bunkhouse_rear.png" 669 727 0 554)

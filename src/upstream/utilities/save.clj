@@ -31,6 +31,19 @@
         (if (not (.exists save-dir)) (.mkdir save-dir))
         save-file)))
 
+; (defn binary-writer
+;   "save state to binary file"
+;   [entity-states]
+;   (let [save-transform (map prepare-for-storage entity-states)]
+;   (locking MUTEX_LOCK
+;
+;
+;   )))
+;
+; (defn binary-reader)
+;
+; TODO
+
 (defn save-state
   "save entity states to file"
   [entity-states]
@@ -54,8 +67,6 @@
                           (log/write-log "Error loading saved game state, reverting to preset: \n\n" (pr-str to-merge))
                           (repeat nil)))))]
            (map merge to-merge to-load)))))
-           ;TODO
-    ;(reset! FILE-AVAILABLE? true))))
 
 (defn start-autosaver
   "start autosaver"

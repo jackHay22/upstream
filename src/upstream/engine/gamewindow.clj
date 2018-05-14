@@ -1,7 +1,9 @@
 (ns upstream.engine.gamewindow
   (:gen-class)
   (:require [upstream.config :as config]
+            [upstream.utilities.windowutil :as windowutil]
             [upstream.gamestate.gsmanager :as state]))
+            
 (import java.awt.event.KeyListener)
 (import java.awt.event.KeyEvent)
 (import java.awt.image.BufferedImage)
@@ -76,6 +78,7 @@
           (.setContentPane panel)
           (.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
           (.setResizable false)
+          (.setExtendedState JFrame/MAXIMIZED_BOTH) ;TODO
           (.pack)
           (.setVisible true)
           (.validate)
@@ -90,3 +93,18 @@
     (state/update-no-draw)
     (Thread/sleep frame-delay)
     (recur))))
+
+(defn enter-fullscreen
+  "try to enter fullscreen"
+  [x-default y-default]
+  (let [screendevice (windowutil/get-default-screen-device)]
+    ;TODO
+    ; if (gd.isFullScreenSupported()) {
+    ;     setUndecorated(true);
+    ;     gd.setFullScreenWindow(this);
+    ; } else {
+    ;     System.err.println("Full screen not supported");
+    ;     setSize(100, 100); // just something to let you see the window
+    ;     setVisible(true);
+    ; }
+  ))

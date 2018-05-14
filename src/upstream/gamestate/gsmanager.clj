@@ -68,6 +68,7 @@
 (defn start-pipeline-autosave
   "start the autosaver with a reference to l1 state"
   [state-to-save]
+  ;TODO: start only when level data loaded
   (save/start-autosaver (:pipeline-ref (nth STATES state-to-save))))
 
 (defn init-gsm
