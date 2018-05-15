@@ -62,10 +62,16 @@
                      :widest (reduce-map-by-factor :width all-tiles)
                      :tallest (reduce-map-by-factor :height all-tiles)})))) {} map-layers))
 
+(defn preload-map-resources!
+  "load map resources into memory"
+  [map-layers]
+  (chunkutility/load-chunk-store map-layers))
+
 (defn load-map-resource
   "load map resources for an entity"
-  [map-layers x-loc-suggestion y-loc-suggestion]
-  (chunkutility/prepare-map-chunks map-layers x-loc-suggestion y-loc-suggestion))
+  [map-layers x-loc-suggestion y-loc-suggestion all-layers?]
+  (let [to-load (if all-layers? map-layers (filter #(:context-dependent? %) map-layers))]
+    (chunkutility/prepare-map-chunks to-load x-loc-suggestion y-loc-suggestion)))
 
 (defn entity-handler
   "execute handlers at correct y value"
@@ -112,6 +118,12 @@
                       (spacialutility/get-bounds
                         (list x y) image-width image-height))))))
 
+(defn render-interpolated-layers
+  "take multiple maps and interpolate with entity-handling"
+  [gr]
+  ;TODO
+  )
+;TODO: each row should be a list
 (defn render-layer
   "take map layer and render"
   [gr map-resource tile-resource lateral-coordinate-set blocks-visible? handlers]
@@ -139,9 +151,8 @@
                                 (:image image-resource) gr iso-x iso-y 0.5)
                             (images/draw-image
                                 (:image image-resource) gr iso-x iso-y)
-                            ;(images/draw-image-brightness (:image image-resource) gr layer-brightness brightness-offset iso-x iso-y)
                                 ))))
-              (if (:entity-handler? current-layer)
+              (if (:interpolated? current-layer)
                   (entity-handler gr handlers
                       (first tile-coords) (second tile-coords)
                       (:draw-offset-x map-resource) (:draw-offset-y map-resource))))))

@@ -14,7 +14,7 @@
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
   or '(:image :sound :height :blocked?))
   returns: map of fields and :draw.  result is wrapped with :map, :tiles-across, :tiles-down"
-  [path fields]
+  [path fields encoding]
   (with-open [reader (clojure.java.io/reader (io/resource path))]
   (let [loaded-map
         (pmap (fn [line]
@@ -23,8 +23,8 @@
                           (zipmap fields (map #(Integer. %)
                             (clojure.string/split sub-line #",")))]
                   (assoc location-set :draw? (not (= -1 ((first fields) location-set))))))
-        (clojure.string/split line #" ")))
-      (clojure.string/split-lines (clojure.string/join "\n" (line-seq reader))))]
+        (clojure.string/split line (:sub-delim-re encoding))))
+      (clojure.string/split (clojure.string/join (:line-delim encoding) (line-seq reader)) (:line-delim-re encoding)))]
       {:map loaded-map
        :tiles-across (count (first loaded-map))
        :tiles-down (count loaded-map)})))
@@ -88,7 +88,7 @@
 (defn map-to-chunks
   "take map layer, return as :label chunk-store"
   [layer]
-  (let [load-map-resource (parse-map-file (:map layer) (:map-attributes layer))
+  (let [load-map-resource (parse-map-file (:map layer) (:map-attributes layer) (:encoding layer))
         chunk-loader (get-chunk-from-offset (:map load-map-resource) (:chunk-dim layer))
         chunk-dim (:chunk-dim layer)
         tiles-across (:tiles-across load-map-resource)
@@ -100,25 +100,28 @@
               :tiles-across tiles-across
               :tiles-down tiles-down)))
 
+(defn load-chunk-store
+  "load backing store with configured map layers"
+  [layers]
+  (do
+    (if (not @chunk-store-loaded?)
+      (reset! chunk-store (reduce (fn [resources next-layer]
+                                        (assoc resources (:label next-layer)
+                                            (map-to-chunks next-layer))) {} layers)))
+  (reset! chunk-store-loaded? true)))
+
 (defn prepare-map-chunks
   "take 2D array of map chunk files to be loaded dynamically to prevent system overhead
    -- loads based on starting location"
   [layers start-x start-y]
-  (do
-      (if (not @chunk-store-loaded?) ;only needs to be loaded once
-          (do
-            (reset! chunk-store (reduce (fn [resources next-layer]
-                                                  (assoc resources (:label next-layer)
-                                                      (map-to-chunks next-layer))) {} layers))
-            (reset! chunk-store-loaded? true)))
       ;perform initial chunk load cycle
       (update-entity-chunk {:current-maps (map #(hash-map :label (:label %)
                                                           :map '()
-                                                          :entity-handler? (:entity-handler? %)
+                                                          :interpolated? (:interpolated? %)
                                                           :prevent-view-block? (:prevent-view-block? %)
                                                           :corner-chunk nil) layers)
                             :chunk-dim (:chunk-dim (first layers))
                             :grid-dim (:grid-dim (first layers))
                             :draw-offset-x 0
                             :draw-offset-y 0}
-                            start-x start-y)))
+                            start-x start-y))

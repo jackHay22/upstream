@@ -35,9 +35,12 @@
   "perform resource loads on list of entities, TODO: create draw-handler for each"
   [entity-list]
   (let [load-image #(images/load-image %)]
+    ;preload map resources
+    (tile-manager/preload-map-resources! config/LEVEL-ONE-TILEMAPS)
     (map (fn [entity]
           (let [starting-x (:position-x entity)
-                starting-y (:position-y entity)]
+                starting-y (:position-y entity)
+                role (:render-as-central entity)]
           (assoc (update-in entity [:images]
               (fn [state-map]
                   (reduce (fn [all-states current-state]
@@ -49,7 +52,7 @@
                                                                     (map load-image %)))))
                                               directions-map (:all-directions entity)))))
                         state-map (:all-states entity))))
-            :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y)
+            :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y role)
             :decisions (decisions/load-entity-decisions (:decisions entity)))))
           entity-list)))
 

@@ -78,7 +78,7 @@ elif [ "$1" == "-release" ]; then
   popd
   printf "${WRENCH}  Build ${YELLOW}$VERSION${NC} release complete \n"
 elif [ "$1" == "-balancer" ]; then
-  printf "TODO"
+  printf "${WRENCH}  Note: this tool has been removed and integrated into the main system in server mode."
 elif [ "$1" == "-backup" ]; then
   printf "${WRENCH}  Note: omitting ${YELLOW}/target${NC}, ${YELLOW}/out${NC}, "
   printf  "${YELLOW}/editor/dist${NC} and ${YELLOW}/editor/resources${NC} from archive. \n"

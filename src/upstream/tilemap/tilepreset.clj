@@ -4,14 +4,20 @@
 (import java.awt.Color)
 
 (defrecord TileResource [path width height occlusion-offset-x occlusion-offset-y])
+(defrecord Encoding [line-delim line-delim-re sub-delim-re])
+
+(def binary-encoding (Encoding. ">" #">" #""))
+(def text-encoding (Encoding. "\n" #"\n" #" "))
 
 (def level-one-layer-0
     ;if images are loaded using list functionality, factor in indices of previous
     ;images in list for current
       {:map "maps/level_1-layer_0.txt"
+       :encoding text-encoding
        :label :l0
-       :entity-handler? false
+       :interpolated? false
        :prevent-view-block? false
+       :context-dependent? false
        :chunk-dim 20
        :grid-dim 32
        :tiles (list (TileResource. "tiles/test_sheet.png" 64 32 0 16))
@@ -21,9 +27,11 @@
     ;if images are loaded using list functionality, factor in indices of previous
     ;images in list for current
       {:map "maps/level_1-layer_1.txt"
+       :encoding text-encoding
        :label :l1
-       :entity-handler? true
+       :interpolated? true
        :prevent-view-block? true
+       :context-dependent? true
        :chunk-dim 20
        :grid-dim 32
        :tiles (list (TileResource. "tiles/foliage/tree_set.png" 130 325 45 325) ;indices: 0-4
@@ -35,6 +43,19 @@
                     (TileResource. "tiles/poc_sawmill.png" 1797 1122 170 60)
                     )
        :map-attributes (list :image-index :blocked? :height :sound)})
+
+(def level-one-layer-2
+  {:map "maps/foliage_sublayer.txt"
+   :encoding binary-encoding
+   :label :l2
+   :interpolated? true
+   :prevent-view-block? false
+   :context-dependent? false
+   :chunk-dim 80
+   :grid-dim 8
+   :tiles (list (TileResource. "tiles/foliage/bushes.png" 32 40 0 40))
+   :map-attributes (list :image-index)}
+  )
 
 (def layer-1-lighting-opacity 200)
 (def layer-2-lighting-opacity 100)

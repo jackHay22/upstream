@@ -32,6 +32,10 @@
       (map #(= 1 (get-tile-attribute map-resource :blocked? :l1 %))
           (spacialutility/get-bounds pt collider collider))))
 
+(defn climbable?
+  "check height differential at tile boundary"
+  [map-resource resident-x resident-y prop-x prop-y])
+
 (defn get-tile-height
   "returns tile height"
   [map-resource pt]

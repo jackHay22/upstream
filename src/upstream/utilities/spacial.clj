@@ -24,6 +24,8 @@
                         (iterate #(map inc %1) (vector x-begin 0)))))
                 starting-x-range retain remove)))
 
+                ;TODO: make each row a list
+
 (def lateral-range-cached (memoize lateral-range-counterclockwise))
 
 (defn pt-to-grid

@@ -55,8 +55,9 @@ docker run --env-file ./docker/run.list upstream_server:latest #change if pulled
 
 ## TODO:
 - [ ] _Detach entity images from state (similar for tile resource, better for server model)_
+- [ ] Climbing for large tile height differentials?
+- [ ] Second non-layer-1 layer with more granular occlusion planes that is interpolated at render with object layer
 - [ ] Remove balancer code and integrate in main
-- [ ] Player jumping state?
 - [ ] Remove ```-server``` as a run option and instead perform separate build later (with change to project.clj) (eventually)
 - [x] Fix control inversion problem (could be a transform problem)
 - [ ] Test intersection with player's width for better bounds checking
