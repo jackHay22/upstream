@@ -41,7 +41,9 @@
 (def LEVEL-ONE-TILEMAPS
   (list
     tile-preset/level-one-layer-0
-    tile-preset/level-one-layer-1))
+    tile-preset/level-one-layer-1
+    ;tile-preset/level-one-layer-2 ;NOTE: java literally runs out of heap space
+    ))
 
 (def LEVEL-ONE-ENTITIES
   ;Define render as central at front for efficiency

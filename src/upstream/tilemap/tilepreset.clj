@@ -14,6 +14,7 @@
     ;images in list for current
       {:map "maps/level_1-layer_0.txt"
        :encoding text-encoding
+       :loading-scheme :static ;TODO: make this dynamic because its only job is central render
        :label :l0
        :interpolated? false
        :prevent-view-block? false
@@ -28,6 +29,7 @@
     ;images in list for current
       {:map "maps/level_1-layer_1.txt"
        :encoding text-encoding
+       :loading-scheme :static
        :label :l1
        :interpolated? true
        :prevent-view-block? true
@@ -45,8 +47,9 @@
        :map-attributes (list :image-index :blocked? :height :sound)})
 
 (def level-one-layer-2
-  {:map "maps/foliage_sublayer.txt"
+  {:map "maps/foliage_sublayer.bin"
    :encoding binary-encoding
+   :loading-scheme :dynamic
    :label :l2
    :interpolated? true
    :prevent-view-block? false

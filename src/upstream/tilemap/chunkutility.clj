@@ -5,6 +5,8 @@
     [upstream.utilities.spacial :as spacial-utility])
   (:gen-class))
 
+(import java.io.RandomAccessFile)
+
 (def chunk-store (atom {}))
 (def chunk-store-loaded? (atom false))
 (defrecord Chunk [map offset-x offset-y])
@@ -28,6 +30,37 @@
       {:map loaded-map
        :tiles-across (count (first loaded-map))
        :tiles-down (count loaded-map)})))
+
+(defn read-row-bytes
+  "read length of bytes from offset in file"
+  [path offset length]
+  (let [reader (RandomAccessFile. (io/file (io/resource path)) "r")
+        byte-loader (byte-array length)]
+        (do
+          (doto reader
+            (.seek offset)
+            (.read byte-loader)
+            (.close))
+          (String. byte-loader))))
+
+(defn load-file-component-chunk
+  "take file, load parts to memory"
+  [path fields encoding offset-x offset-y chunk-dim resource-length-bytes]
+  ;TODO: precompute bytes across and bytes down for file (better offset calculation)
+  ;(read-row-bytes offset-x)
+  )
+
+(defn dynamic-loader-check
+  "check if more of the file needs to be loaded into memory"
+  [layers px py]
+  (map (fn [l]
+        (if (= (:loading-scheme l) :dynamic)
+
+        )
+    ))
+  ;TODO: get chunk store loaded offset, evaluate player location and spin up new thread for
+  ;random access loading (when this process finishes it overwrites chunk-store)
+  )
 
 (defn tile-to-chunk
   "take tile coordinates, return chunk coordinates"
@@ -57,6 +90,12 @@
                   chunk-array))
           (first (first chunk-array)))))
 
+(defn dynamic-file-loader
+  "load partial sections from file at runtime"
+  [path fields encoding]
+  ;TODO
+  )
+
 (defn update-entity-chunk
   "take player location, update loaded chunks
    --only swap chunks if player moves out of middle chunk
@@ -73,9 +112,12 @@
                                 (get-chunk-indices-from-corner (:corner-chunk layer) chunk-dim)
                                 (tile-to-chunk tile-x tile-y chunk-dim))) layer
                         ;else: perform reload cycle
-                        (let [new-map (build-map-from-center
-                                        (:label layer)
-                                        (tile-to-chunk tile-x tile-y chunk-dim))]
+                        (let [new-map ;(if (= (:loading-scheme layer) :static) ;TODO
+                                          (build-map-from-center
+                                            (:label layer)
+                                            (tile-to-chunk tile-x tile-y chunk-dim))
+                                            ;)
+                                            ]
                               (merge layer {:map (first new-map) :corner-chunk (second new-map)})))) %)))))
 
 (defn get-chunk-from-offset
@@ -88,6 +130,7 @@
 (defn map-to-chunks
   "take map layer, return as :label chunk-store"
   [layer]
+  (if (= (:loading-scheme layer) :static)
   (let [load-map-resource (parse-map-file (:map layer) (:map-attributes layer) (:encoding layer))
         chunk-loader (get-chunk-from-offset (:map load-map-resource) (:chunk-dim layer))
         chunk-dim (:chunk-dim layer)
@@ -98,7 +141,10 @@
                   (range 0 tiles-across chunk-dim)))
                   (range 0 tiles-down chunk-dim))
               :tiles-across tiles-across
-              :tiles-down tiles-down)))
+              :tiles-down tiles-down))
+    ;else requires partial loading
+    ;(dynamic-file-loader (:map layer) (:map-attributes layer) (:encoding layer))
+              ))
 
 (defn load-chunk-store
   "load backing store with configured map layers"

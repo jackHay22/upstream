@@ -97,6 +97,14 @@ docker run --env-file ./docker/run.list upstream_server:latest #change if pulled
 _See [documentation](doc/intro.md) for completed list_
 
 ## Planned Iteration Schedule
+- PLANNED SNAPSHOTS
+- [ ] _0.1.7_ Dynamic loader snapshot (Late May)
+  - Update to non-object maps.  Maps that only need to be graphically rendered are not loaded to memory but instead are dynamically read from files when a player nears the edge (this occurs in a different thread and updates to chunk store when completed)
+  - NOTE: this is a non-critical development branch for the "undergrowth" layer.  Current game versions don't require this update
+- [ ] _0.1.8_ Climbing snapshot (Early June)
+  - Add climbing animation and tile edge height differential detection
+
+- DELAYED Major releases
 - [ ] _0.2.0_ Minimum playable environment (Mid May 2018)
   - Acceptance Standards:
     - [x] Working tilemap system for 2 layers
