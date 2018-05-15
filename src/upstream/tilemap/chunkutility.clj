@@ -46,8 +46,12 @@
 (defn load-file-component-chunk
   "take file, load parts to memory"
   [path fields encoding offset-x offset-y chunk-dim resource-length-bytes]
+  (let [starting-offset (+ offset-x (+ offset-y (* offset-y resource-length bytes)))]
+        (read-row-bytes path starting-offset chunk-dim) ;repeatedly
+  )
   ;TODO: precompute bytes across and bytes down for file (better offset calculation)
   ;(read-row-bytes offset-x)
+  ;starting offset: :resource-byte-width * row offset + row offset (for newline chars)
   )
 
 (defn dynamic-loader-check
@@ -161,6 +165,10 @@
    -- loads based on starting location"
   [layers start-x start-y]
       ;perform initial chunk load cycle
+
+      ;TODO: if a layer is dynamically loadeded, precalculate bytes across and bytes down for offset lookup in realtime
+      ;TODO add resource byte width to final map
+
       (update-entity-chunk {:current-maps (map #(hash-map :label (:label %)
                                                           :map '()
                                                           :interpolated? (:interpolated? %)

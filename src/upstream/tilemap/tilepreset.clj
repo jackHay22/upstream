@@ -14,11 +14,11 @@
     ;images in list for current
       {:map "maps/level_1-layer_0.txt"
        :encoding text-encoding
-       :loading-scheme :static ;TODO: make this dynamic because its only job is central render
+       :loading-scheme :static
        :label :l0
-       :interpolated? false
-       :prevent-view-block? false
-       :context-dependent? false
+       :interpolated? false ;handles entities at depth
+       :prevent-view-block? false ; opacity drawing if occluded
+       :context-dependent? false ;all players retain chunks if true
        :chunk-dim 20
        :grid-dim 32
        :tiles (list (TileResource. "tiles/test_sheet.png" 64 32 0 16))
@@ -50,6 +50,7 @@
   {:map "maps/foliage_sublayer.bin"
    :encoding binary-encoding
    :loading-scheme :dynamic
+   :map-grid-dim 8000 ;not including newline characters
    :label :l2
    :interpolated? true
    :prevent-view-block? false
