@@ -24,6 +24,8 @@
 ;dynamic scale computation
 (def TILES-ACROSS 15)
 
+(def DYNAMIC-STORAGE-DIM 4) ;chunks to retain in memory from dynamically loaded file
+
 (def LOAD-SCREEN-TTL 100)
 (def LOAD-SCREEN-FADE-DIVISION 4)
 

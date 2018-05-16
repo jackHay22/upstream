@@ -31,23 +31,25 @@
        :tiles-across (count (first loaded-map))
        :tiles-down (count loaded-map)})))
 
-(defn read-row-bytes
+(defn read-dynamic-chunk
   "read length of bytes from offset in file"
-  [path offset length]
-  (let [reader (RandomAccessFile. (io/file (io/resource path)) "r")
-        byte-loader (byte-array length)]
-        (do
-          (doto reader
-            (.seek offset)
-            (.read byte-loader)
-            (.close))
-          (String. byte-loader))))
+  [path row-offset-bytes col-offset-bytes chunk-dim file-bytes-dim field]
+  (let [bytes-per-row (+ file-bytes-dim 1) ;newline
+        offsets (take chunk-dim (iterate #(+ % bytes-per-row)
+                  (+ (* row-offset-bytes bytes-per-row) col-offset-bytes)))]
+  (with-open [byte-reader (RandomAccessFile. (io/file (io/resource path)) "r")]
+      (reduce (fn [result offset]
+                (concat result (let [byte-loader (byte-array chunk-dim)]
+                                    (doto byte-reader
+                                        (.seek offset) (.read byte-loader))
+                  (list (map #(hash-map field (- % 48) :draw? true) byte-loader)))))
+              '() offsets))))
 
 (defn load-file-component-chunk
   "take file, load parts to memory"
   [path fields encoding offset-x offset-y chunk-dim resource-length-bytes]
-  (let [starting-offset (+ offset-x (+ offset-y (* offset-y resource-length bytes)))]
-        (read-row-bytes path starting-offset chunk-dim) ;repeatedly
+  (let [starting-offset (+ offset-x (+ offset-y (* offset-y resource-length-bytes)))]
+        ;(read-row-bytes path starting-offset chunk-dim) ;repeatedly
   )
   ;TODO: precompute bytes across and bytes down for file (better offset calculation)
   ;(read-row-bytes offset-x)
@@ -57,11 +59,11 @@
 (defn dynamic-loader-check
   "check if more of the file needs to be loaded into memory"
   [layers px py]
-  (map (fn [l]
-        (if (= (:loading-scheme l) :dynamic)
-
-        )
-    ))
+  ; (map (fn [l]
+  ;       (if (= (:loading-scheme l) :dynamic)
+  ;
+  ;       )
+  ;   ))
   ;TODO: get chunk store loaded offset, evaluate player location and spin up new thread for
   ;random access loading (when this process finishes it overwrites chunk-store)
   )
@@ -74,7 +76,7 @@
 (defn get-chunk-indices-from-corner
   "get the x,y chunk indices of Chunk"
   [chunk dim]
-  (map inc
+  (map inc ;empty buffer
   (list (/ (:offset-x chunk) dim)
         (/ (:offset-y chunk) dim))))
 
@@ -100,6 +102,16 @@
   ;TODO
   )
 
+(defn check-current-dynamic-loads
+  "check currently loaded dynamic chunks"
+  [entity-map-set px py]
+  ;TODO: check if player is outside center for a dynamic layer,
+  ; if true, spin up new thread to perform random access file load
+  ; and dump result in dynamic chunk storage
+  ; this will be available (eventually consistent) when an update cycle executes
+  ; build-map-from-center
+  )
+
 (defn update-entity-chunk
   "take player location, update loaded chunks
    --only swap chunks if player moves out of middle chunk
@@ -108,6 +120,8 @@
   (let [tile-x (int (/ px (:grid-dim entity-map-set)))
         tile-y (int (/ py (:grid-dim entity-map-set)))
         chunk-dim (:chunk-dim entity-map-set)]
+  (do
+    (check-current-dynamic-loads entity-map-set px py)
   (update-in entity-map-set [:current-maps]
       #(doall (map
                 (fn [layer]
@@ -122,7 +136,7 @@
                                             (tile-to-chunk tile-x tile-y chunk-dim))
                                             ;)
                                             ]
-                              (merge layer {:map (first new-map) :corner-chunk (second new-map)})))) %)))))
+                              (merge layer {:map (first new-map) :corner-chunk (second new-map)})))) %))))))
 
 (defn get-chunk-from-offset
   "returns chunk of master given offset and dim"
