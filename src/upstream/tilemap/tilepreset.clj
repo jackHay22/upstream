@@ -61,6 +61,21 @@
    :map-attributes (list :image-index)}
   )
 
+(def level-one-layer-0-v2
+  {:map "maps/level_1-layer_0.bin"
+   :encoding binary-encoding
+   :loading-scheme :dynamic
+   :map-grid-dim 2000 ;not including newline characters
+   :label :l0
+   :interpolated? false
+   :prevent-view-block? false
+   :context-dependent? false
+   :chunk-dim 20
+   :grid-dim 32
+   :tiles (list (TileResource. "tiles/test_sheet.png" 64 32 0 16))
+   :map-attributes (list :image-index)}
+  )
+
 (def layer-1-lighting-opacity 200)
 (def layer-2-lighting-opacity 100)
 

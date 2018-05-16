@@ -12,6 +12,9 @@
 (defrecord Chunk [map offset-x offset-y])
 (defn make-empty-chunk [size offset-x offset-y] (Chunk. (repeat size (repeat size {:draw? false})) offset-x offset-y))
 
+(def byte-to-int
+  (fn [b] (- b 48)))
+
 (defn parse-map-file
   "resource path, list of keywords for storing the game map as a list of maps (i.e. '(:image :sound)
   or '(:image :sound :height :blocked?))
@@ -34,7 +37,7 @@
 (defn read-dynamic-chunk
   "read length of bytes from offset in file"
   [path row-offset-bytes col-offset-bytes chunk-dim file-bytes-dim field]
-  (let [bytes-per-row (+ file-bytes-dim 1) ;newline
+  (let [bytes-per-row (+ file-bytes-dim 1) ;newline chars
         offsets (take chunk-dim (iterate #(+ % bytes-per-row)
                   (+ (* row-offset-bytes bytes-per-row) col-offset-bytes)))]
   (with-open [byte-reader (RandomAccessFile. (io/file (io/resource path)) "r")]
@@ -42,7 +45,7 @@
                 (concat result (let [byte-loader (byte-array chunk-dim)]
                                     (doto byte-reader
                                         (.seek offset) (.read byte-loader))
-                  (list (map #(hash-map field (- % 48) :draw? true) byte-loader)))))
+                  (list (map #(hash-map field (byte-to-int %) :draw? true) byte-loader)))))
               '() offsets))))
 
 (defn load-file-component-chunk
