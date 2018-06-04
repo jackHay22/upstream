@@ -1,4 +1,4 @@
-(defproject upstream "0.1.6-SNAPSHOT"
+(defproject upstream "0.1.7-SNAPSHOT"
   :description "Isometric Game by Jack Hay"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/core.async "0.3.443"]

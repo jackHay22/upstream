@@ -93,7 +93,8 @@
                                               (:collision-diameter e)
                                               (get-speed updated-action)
                                               map-resource)
-                  updated-dz (if (and (jumping? updated-action) (= p-dz 0))
+                  updated-dz (if (and (jumping? updated-action)
+                                      (= pz occupied-tile-height)) ;check player at tile surface height
                                  config/JUMP-MAGNITUDE
                                 (- p-dz config/GRAVITY-PER-FRAME))
                   updated-x (first updated-position)
