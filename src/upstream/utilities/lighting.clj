@@ -9,6 +9,7 @@
 (import java.awt.Graphics2D)
 (import java.awt.AlphaComposite)
 (import java.awt.image.BufferedImage)
+(import java.awt.MultipleGradientPaint)
 
 (defn get-lighting-profile
   "returns color given a tile and a layer"
@@ -35,6 +36,19 @@
 
 (defn cast-shadow
   "draw shadow at centered pt and width"
-  [x y width]
-  ;TODO
-  )
+  [gr x y width]
+  (let [win-width @config/WINDOW-RESOURCE-WIDTH
+        win-height @config/WINDOW-RESOURCE-HEIGHT
+        perspective-bounds (java.awt.geom.Rectangle2D$Float. (float x) (float y) (float width) (float (/ width 2)))
+        shadow-layer (BufferedImage. win-width win-height BufferedImage/TYPE_INT_ARGB)
+        g2d (cast Graphics2D (.createGraphics shadow-layer))
+        dist (float-array [0.1 1.0])
+        radial-color (into-array Color [(Color. 0 0 0 100) (Color. 0.0 0.0 0.0 0.0)])
+        gradient (RadialGradientPaint. perspective-bounds dist radial-color
+                        java.awt.MultipleGradientPaint$CycleMethod/NO_CYCLE)]
+    (do
+      (.setPaint g2d gradient)
+      (.setComposite g2d (AlphaComposite/getInstance AlphaComposite/SRC_OVER 0.95))
+      (.fillRect g2d 0 0 win-width win-height)
+      (.drawImage gr shadow-layer 0 0 win-width win-height nil)
+      (.dispose g2d))))

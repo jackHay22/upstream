@@ -70,7 +70,7 @@
    :interpolated? false
    :prevent-view-block? false
    :context-dependent? false
-   :chunk-dim 20
+   :chunk-dim 20 ;(instead use static frame dimension)
    :grid-dim 32
    :tiles (list (TileResource. "tiles/test_sheet.png" 64 32 0 16))
    :map-attributes (list :image-index)}

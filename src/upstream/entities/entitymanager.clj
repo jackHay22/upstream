@@ -5,7 +5,8 @@
     [upstream.tilemap.tilemanager :as tile-manager]
     [upstream.tilemap.tileinterface :as tile-interface]
     [upstream.entities.entitydecisionmanager :as decisions]
-    [upstream.utilities.spacial :as spacialutility])
+    [upstream.utilities.spacial :as spacialutility]
+    [upstream.utilities.lighting :as lighting])
   (:gen-class))
 
 (defmacro defmove
@@ -69,19 +70,26 @@
             (let [map-resource (:map-resource e)
                   px (:position-x e)
                   py (:position-y e)
+                  pz (:position-z e)
+                  p-dz (:height-dz e)
                   update-source (if (= (:control-input e) :decisions)
                                     (decisions/make-player-decision
                                         (merge e {:all-positions all-positions}))
                                     (:control-input e))
                   updated-facing (:update-facing update-source)
                   updated-action (:update-action update-source)
+                  updated-jumping (:update-jumping update-source)
                   updated-position (tile-interface/try-move
                                               (updated-facing update-xy) px py
                                               (:collision-diameter e)
                                               (get-speed updated-action)
                                               map-resource)
+                  updated-dz (if (and updated-jumping (= p-dz 0))
+                                 config/JUMP-MAGNITUDE
+                                (max 0 (- p-dz config/GRAVITY-PER-FRAME)))
                   updated-x (first updated-position)
                   updated-y (second updated-position)
+                  updated-z (max 0 (+ pz updated-dz))
                   updated-map (if make-graphical-adjustment?
                                   (tile-manager/set-position updated-x updated-y map-resource)
                                   (tile-manager/update-chunk-view updated-x updated-y map-resource))]
@@ -89,6 +97,8 @@
                                      :facing updated-facing
                                      :position-x updated-x
                                      :position-y updated-y
+                                     :position-z updated-z
+                                     :height-dz updated-dz
                                      :current-action updated-action))))
            entities)))
 
@@ -97,8 +107,13 @@
   [gr e x y]
   (let [action-set ((:current-action e) (:images e))
         current-image (nth ((:facing e) action-set)
-                           (:current-frame-index action-set))]
-    (images/draw-image current-image gr x y)))
+                           (:current-frame-index action-set))
+        x-correct (- x (:draw-width-offset e))
+        y-correct (- y (:draw-height-offset e))
+        current-height (:position-z e)]
+    (do
+      (lighting/cast-shadow gr x y (* 2 (:collision-diameter e)))
+      (images/draw-image current-image gr x-correct (+ y-correct current-height)))))
 
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
@@ -117,13 +132,13 @@
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ (first chunk-relative-pt) map-offset-x)
                                                             (+ (second chunk-relative-pt) map-offset-y)))
-                                      iso-x (- (int (first iso-coords)) (:draw-width-offset %))
-                                      iso-y (- (int (second iso-coords)) (:draw-height-offset %))
                                       tile-height (tile-interface/get-tile-height
                                                       (:map-resource %)
                                                       (list (:position-x %) (:position-y %)))]
-                                    (draw-entity gr % iso-x (- iso-y tile-height))))))
-  entities))
+                                    (draw-entity gr %
+                                            (int (first iso-coords))
+                                            (- (int (second iso-coords)) tile-height))))))
+        entities))
 
 (defn entitykeypressed
   "respond to key press"
@@ -141,9 +156,10 @@
                            (and
                               (= (:update-action current-control-map) :at-rest)
                               (directional? key)) :walking
-                            :else (:update-action current-control-map))]
+                           :else (:update-action current-control-map))]
   (hash-map :update-facing update-direction
-            :update-action update-speed)))
+            :update-action update-speed
+            :update-jumping (= key :space))))
 
 (defn entitykeyreleased
   "respond to key release"
@@ -161,4 +177,5 @@
                               (directional? key)) :at-rest
                             :else (:update-action current-control-map))]
   (hash-map :update-facing update-direction
-            :update-action update-speed)))
+            :update-action update-speed
+            :update-jumping false)))

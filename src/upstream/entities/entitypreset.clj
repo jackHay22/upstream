@@ -19,20 +19,23 @@
          :walking (StateImageCollection. 0 '() '() '() '() '() '() '() '())
          :running (StateImageCollection. 0 '() '() '() '() '() '() '() '())
          :punching (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
     }
-    :all-states (list :at-rest :walking :running :punching)
+    :all-states (list :at-rest :walking :running :punching :jumping)
     :all-directions (list :north :north-east
                           :east :south-east
                           :south :south-west
                           :west :north-west)
     :logical-entity-id 0
-    :control-input {:update-facing :south :update-action :at-rest} ;or :decisions
+    :control-input {:update-facing :south :update-action :at-rest :update-jumping false} ;or :decisions
     :render-as-central true
     :decisions nil ;decisions listing
     :performance {}
     :map-resource nil
     :position-x starting-x
     :position-y starting-y
+    :position-z 0
+    :height-dz 0
     :draw-height-offset 120
     :draw-width-offset 3
     :collision-diameter 30
@@ -64,6 +67,7 @@
     :map-resource nil
     :position-x 700
     :position-y 700
+    :position-z 0
     :draw-height-offset 120
     :draw-width-offset 3
     :collision-diameter 30

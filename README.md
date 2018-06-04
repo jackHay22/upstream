@@ -54,6 +54,7 @@ docker run --env-file ./docker/run.list upstream_server:latest #change if pulled
 - If using lein repl, execute ```(-main)``` to boot system.  A reliable way of resetting the game is ```(gsm/init-gsm gsm/LEVEL-STATE)``` in ```upstream.core``` ns.
 
 ## TODO:
+- [ ] Remove all non context-dependent maps from player? Figure out way to make async loading model work
 - [ ] _Detach entity images from state (similar for tile resource, better for server model)_
 - [ ] Climbing for large tile height differentials?
 - [ ] Second non-layer-1 layer with more granular occlusion planes that is interpolated at render with object layer

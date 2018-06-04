@@ -7,10 +7,16 @@
 
 (import java.io.RandomAccessFile)
 
-(def chunk-store (atom {}))
+(def chunk-store (atom {})) ;only for object layer
 (def chunk-store-loaded? (atom false))
 (defrecord Chunk [map offset-x offset-y])
 (defn make-empty-chunk [size offset-x offset-y] (Chunk. (repeat size (repeat size {:draw? false})) offset-x offset-y))
+
+(def dynamic-store-sublayer1 (atom nil)) ;foliage
+(def dynamic-store-sublayer0 (atom nil)) ;base image
+(def dynamic-layers
+  (list dynamic-store-sublayer1
+        dynamic-store-sublayer0))
 
 (def byte-to-int
   (fn [b] (- b 48)))
@@ -48,28 +54,45 @@
                   (list (map #(hash-map field (byte-to-int %) :draw? true) byte-loader)))))
               '() offsets))))
 
-(defn load-file-component-chunk
+(defn reload-component-chunk
   "take file, load parts to memory"
-  [path fields encoding offset-x offset-y chunk-dim resource-length-bytes]
-  (let [starting-offset (+ offset-x (+ offset-y (* offset-y resource-length-bytes)))]
+  [sublayer-ref cx cy]
+  (let [sublayer @sublayer-ref
+        window-radius (/ (:frame-dim sublayer) 2)
+        grid-dim (:grid-dim sublayer)
+        path (:path sublayer)
+        updated-offset-x (max 0 (int (- (/ cx grid-dim) window-radius)))
+        updated-offset-y (max 0 (int (- (/ cy grid-dim) window-radius)))
+        ;updated-map (read-dynamic-chunk path )
+        ]
         ;(read-row-bytes path starting-offset chunk-dim) ;repeatedly
-  )
+        ;TODO: use spacial utility to get player indices based on grid dimensions
+        (reset! sublayer-ref
+          (merge sublayer (hash-map
+            :offset-x updated-offset-x
+            :offset-y updated-offset-y
+            ;:map updated-map
+            )))
   ;TODO: precompute bytes across and bytes down for file (better offset calculation)
   ;(read-row-bytes offset-x)
   ;starting offset: :resource-byte-width * row offset + row offset (for newline chars)
-  )
+  ))
 
 (defn dynamic-loader-check
   "check if more of the file needs to be loaded into memory"
-  [layers px py]
-  ; (map (fn [l]
-  ;       (if (= (:loading-scheme l) :dynamic)
-  ;
-  ;       )
-  ;   ))
-  ;TODO: get chunk store loaded offset, evaluate player location and spin up new thread for
-  ;random access loading (when this process finishes it overwrites chunk-store)
-  )
+  [px py]
+  (doseq [l dynamic-layers]
+           (let [dynamic-sublayer @l
+                 loaded-offset-x (:offset-x dynamic-sublayer)
+                 loaded-offset-y (:offset-y dynamic-sublayer)
+                 loaded-grid-dim (:grid-dim dynamic-sublayer)
+                 frame-dimension (:frame-dim dynamic-sublayer)]
+                 ;TODO: check if the layer needs to be refreshed
+                 ;if needs to be refreshed
+
+                  ;(.start (Thread. (reload-component-chunk l px py))
+               )
+    ))
 
 (defn tile-to-chunk
   "take tile coordinates, return chunk coordinates"
@@ -99,22 +122,6 @@
                   chunk-array))
           (first (first chunk-array)))))
 
-(defn dynamic-file-loader
-  "load partial sections from file at runtime"
-  [path fields encoding]
-  ;TODO
-  )
-
-(defn check-current-dynamic-loads
-  "check currently loaded dynamic chunks"
-  [entity-map-set px py]
-  ;TODO: check if player is outside center for a dynamic layer,
-  ; if true, spin up new thread to perform random access file load
-  ; and dump result in dynamic chunk storage
-  ; this will be available (eventually consistent) when an update cycle executes
-  ; build-map-from-center
-  )
-
 (defn update-entity-chunk
   "take player location, update loaded chunks
    --only swap chunks if player moves out of middle chunk
@@ -124,7 +131,7 @@
         tile-y (int (/ py (:grid-dim entity-map-set)))
         chunk-dim (:chunk-dim entity-map-set)]
   (do
-    (check-current-dynamic-loads entity-map-set px py)
+    (dynamic-loader-check px py)
   (update-in entity-map-set [:current-maps]
       #(doall (map
                 (fn [layer]

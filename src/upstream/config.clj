@@ -40,6 +40,9 @@
 (def WALKING-SPEED 1)
 (def RUNNING-SPEED 2)
 
+(def GRAVITY-PER-FRAME 0.2)
+(def JUMP-MAGNITUDE 2)
+
 (def LEVEL-ONE-TILEMAPS
   (list
     tile-preset/level-one-layer-0
