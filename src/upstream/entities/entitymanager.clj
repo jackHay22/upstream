@@ -30,7 +30,14 @@
   [action]
   (cond (= action :walking) config/WALKING-SPEED
         (= action :running) config/RUNNING-SPEED
+        (= action :walk-jumping) config/WALKING-SPEED
+        (= action :run-jumping) config/RUNNING-SPEED
         :else 0))
+
+(def jumping? (fn [action]
+  (or (= action :walk-jumping)
+      (= action :run-jumping)
+      (= action :static-jumping))))
 
 (defn load-entities
   "perform resource loads on list of entities, TODO: create draw-handler for each"
@@ -70,26 +77,28 @@
             (let [map-resource (:map-resource e)
                   px (:position-x e)
                   py (:position-y e)
-                  pz (:position-z e)
-                  p-dz (:height-dz e)
+                  pz (:position-z e) ;current height
+                  p-dz (:height-dz e) ;current change-in-height
+                  occupied-tile-height (tile-interface/get-tile-height
+                                          (:map-resource e)
+                                          (list (:position-x e) (:position-y e)))
                   update-source (if (= (:control-input e) :decisions)
                                     (decisions/make-player-decision
                                         (merge e {:all-positions all-positions}))
                                     (:control-input e))
                   updated-facing (:update-facing update-source)
                   updated-action (:update-action update-source)
-                  updated-jumping (:update-jumping update-source)
                   updated-position (tile-interface/try-move
                                               (updated-facing update-xy) px py
                                               (:collision-diameter e)
                                               (get-speed updated-action)
                                               map-resource)
-                  updated-dz (if (and updated-jumping (= p-dz 0))
+                  updated-dz (if (and (jumping? updated-action) (= p-dz 0))
                                  config/JUMP-MAGNITUDE
-                                (max 0 (- p-dz config/GRAVITY-PER-FRAME)))
+                                (- p-dz config/GRAVITY-PER-FRAME))
                   updated-x (first updated-position)
                   updated-y (second updated-position)
-                  updated-z (max 0 (+ pz updated-dz))
+                  updated-z (max occupied-tile-height (+ pz updated-dz))
                   updated-map (if make-graphical-adjustment?
                                   (tile-manager/set-position updated-x updated-y map-resource)
                                   (tile-manager/update-chunk-view updated-x updated-y map-resource))]
@@ -112,7 +121,7 @@
         y-correct (- y (:draw-height-offset e))
         current-height (:position-z e)]
     (do
-      (lighting/cast-shadow gr x y (* 2 (:collision-diameter e)))
+      (lighting/cast-shadow gr x y (* 2 (:collision-diameter e))) ;TODO center shadow
       (images/draw-image current-image gr x-correct (+ y-correct current-height)))))
 
 (defn create-draw-handlers
@@ -131,13 +140,10 @@
                         :fn (fn [gr map-offset-x map-offset-y]
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ (first chunk-relative-pt) map-offset-x)
-                                                            (+ (second chunk-relative-pt) map-offset-y)))
-                                      tile-height (tile-interface/get-tile-height
-                                                      (:map-resource %)
-                                                      (list (:position-x %) (:position-y %)))]
+                                                            (+ (second chunk-relative-pt) map-offset-y)))]
                                     (draw-entity gr %
                                             (int (first iso-coords))
-                                            (- (int (second iso-coords)) tile-height))))))
+                                            (int (second iso-coords)))))))
         entities))
 
 (defn entitykeypressed
@@ -154,12 +160,20 @@
                               (= (:update-action current-control-map) :walking)
                               (= key :shift)) :running
                            (and
+                              (= (:update-action current-control-map) :walking)
+                              (= key :space)) :walk-jumping
+                           (and
+                              (= (:update-action current-control-map) :at-rest)
+                              (= key :space)) :static-jumping
+                           (and
+                              (= (:update-action current-control-map) :running)
+                              (= key :space)) :run-jumping
+                           (and
                               (= (:update-action current-control-map) :at-rest)
                               (directional? key)) :walking
                            :else (:update-action current-control-map))]
   (hash-map :update-facing update-direction
-            :update-action update-speed
-            :update-jumping (= key :space))))
+            :update-action update-speed)))
 
 (defn entitykeyreleased
   "respond to key release"
@@ -171,11 +185,19 @@
                               (= (:update-action current-control-map) :running)
                               (= key :shift)) :walking
                            (and
+                              (= (:update-action current-control-map) :walk-jumping)
+                              (= key :space)) :walking
+                           (and
+                              (= (:update-action current-control-map) :run-jumping)
+                              (= key :space)) :running
+                           (and
+                              (= (:update-action current-control-map) :static-jumping)
+                              (= key :space)) :at-rest
+                           (and
                               (or
                                 (= (:update-action current-control-map) :walking)
                                 (= (:update-action current-control-map) :running))
                               (directional? key)) :at-rest
                             :else (:update-action current-control-map))]
   (hash-map :update-facing update-direction
-            :update-action update-speed
-            :update-jumping false)))
+            :update-action update-speed)))

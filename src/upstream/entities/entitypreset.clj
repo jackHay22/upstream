@@ -19,15 +19,17 @@
          :walking (StateImageCollection. 0 '() '() '() '() '() '() '() '())
          :running (StateImageCollection. 0 '() '() '() '() '() '() '() '())
          :punching (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :static-jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :run-jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :walk-jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
     }
-    :all-states (list :at-rest :walking :running :punching :jumping)
+    :all-states (list :at-rest :walking :running :punching :walk-jumping :static-jumping :run-jumping)
     :all-directions (list :north :north-east
                           :east :south-east
                           :south :south-west
                           :west :north-west)
     :logical-entity-id 0
-    :control-input {:update-facing :south :update-action :at-rest :update-jumping false} ;or :decisions
+    :control-input {:update-facing :south :update-action :at-rest} ;or :decisions
     :render-as-central true
     :decisions nil ;decisions listing
     :performance {}
