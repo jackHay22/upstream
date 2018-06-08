@@ -49,7 +49,7 @@
                           :south :south-west
                           :west :north-west)
     :logical-entity-id 0
-    :control-input {:update-facing :south :update-action :at-rest} ;or :decisions
+    :control-input {:update-facing 4 :update-action :at-rest} ;or :decisions
     :render-as-central true
     :decisions nil ;decisions listing
     :performance {}

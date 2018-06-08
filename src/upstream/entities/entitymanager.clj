@@ -9,6 +9,12 @@
     [upstream.utilities.lighting :as lighting])
   (:gen-class))
 
+(def direction-list
+  (list :north :north-east
+        :east :south-east
+        :south :south-west
+        :west :north-west))
+
 (defmacro defmove
   "macro for defining a move-transform"
   [a] (list 'fn '[x y s]
@@ -103,7 +109,7 @@
                   update-source (if (= (:control-input e) :decisions)
                                     (decisions/make-player-decision
                                         (merge e {:all-positions all-positions}))
-                                    (:control-input e))
+                                    (update-in (:control-input e) [:update-facing] #(nth direction-list %)))
                   updated-facing (:update-facing update-source)
                   updated-action (:update-action update-source)
                   updated-position (tile-interface/try-move
@@ -172,12 +178,16 @@
   "respond to key press"
   [key current-control-map]
   (let [directional? #(or (= % :up) (= % :down) (= % :left) (= % :right))
+        current-dir (:update-facing current-control-map) ;TODO: cycle through 8 directions with four controls
+        approach-bearing #(cond (> current-dir %) (dec current-dir)
+                                (< current-dir %) (inc current-dir)
+                                :else %)
         update-direction (cond
-                            (= key :down) :south
-                            (= key :left) :west
-                            (= key :right) :east
-                            (= key :up) :north
-                            :else (:update-facing current-control-map))
+                            (= key :down) (approach-bearing 4)
+                            (= key :left) (approach-bearing 6)
+                            (= key :right) (approach-bearing 2) ;TODO: maintain course
+                            (= key :up) (approach-bearing 0)
+                            :else current-dir)
         update-speed (cond (and
                               (= (:update-action current-control-map) :walking)
                               (= key :shift)) :running
@@ -194,7 +204,7 @@
                               (= (:update-action current-control-map) :at-rest)
                               (directional? key)) :walking
                            :else (:update-action current-control-map))]
-  (hash-map :update-facing update-direction
+  (hash-map :update-facing (mod update-direction (count direction-list))
             :update-action update-speed)))
 
 (defn entitykeyreleased

@@ -17,11 +17,12 @@
         player-position-y-in-map (- py (* (:offset-y corner-chunk) (:grid-dim map-resource)))
         window-width @config/WINDOW-RESOURCE-WIDTH
         window-height @config/WINDOW-RESOURCE-HEIGHT
+        ;TODO: always the same, optimize
         grid-screen-center (spacialutility/isometric-to-cartesian-transform
                                   (list (/ window-width 2) (+ (/ window-height 2) 50)))]
         (merge updated-chunk-map
-            {:draw-offset-x (int (- (first grid-screen-center) player-position-x-in-map))
-             :draw-offset-y (int (- (second grid-screen-center) player-position-y-in-map))})))
+            {:draw-offset-x (Math/floor (- (first grid-screen-center) player-position-x-in-map))
+             :draw-offset-y (Math/floor (- (second grid-screen-center) player-position-y-in-map))})))
 
 (defn update-chunk-view
   "update an entities chunk without computing draw offsets"
