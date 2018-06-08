@@ -78,7 +78,7 @@
   (do
     (reset! current-game-state starting-state)
     (logger/write-log "Starting gamestate manager in state:" starting-state)
-    (doall (reset! (:pipeline-ref state-record) ((:init-handler state-record)))))))
+    (reset! (:pipeline-ref state-record) ((:init-handler state-record))))))
 
 (defn state-draw
   "draw current state"
