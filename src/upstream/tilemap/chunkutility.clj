@@ -190,7 +190,7 @@
   [layers start-x start-y]
       ;perform initial chunk load cycle
 
-      ;TODO: if a layer is dynamically loadeded, precalculate bytes across and bytes down for offset lookup in realtime
+      ;TODO: if a layer is dynamically loaded, precalculate bytes across and bytes down for offset lookup in realtime
       ;TODO add resource byte width to final map
 
       (update-entity-chunk {:current-maps (map #(hash-map :label (:label %)

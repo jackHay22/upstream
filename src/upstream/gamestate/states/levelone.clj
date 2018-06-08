@@ -6,6 +6,7 @@
   (:gen-class))
 
 (def tile-resource (atom nil))
+(def entity-images-resource (atom nil))
 
 (defn init-actual-state
   "load actual gamestate information"
@@ -17,6 +18,7 @@
   "load resources, return draw safe state pipeline"
   [base]
   (do (reset! tile-resource (tile-manager/load-tile-resource config/LEVEL-ONE-TILEMAPS))
+      (reset! entity-images-resource (entity-manager/load-entity-image-resources base))
       (init-actual-state base)))
 
 (defn update-level-one
@@ -29,7 +31,9 @@
   [gr entity-state-pipeline]
   (tile-manager/render-map
               gr (entity-manager/get-central-render-map entity-state-pipeline)
-              @tile-resource (entity-manager/create-draw-handlers entity-state-pipeline)))
+              @tile-resource
+              (entity-manager/create-draw-handlers
+                entity-state-pipeline @entity-images-resource)))
 
 (defn keypressed-level-one
   "key press handler for level one"

@@ -57,6 +57,6 @@
     (entity-preset/player-preset-1 PLAYER-START-X PLAYER_START-Y)
     ))
 
-(def ONLINE-ENTITIES
-  (list entity-preset/ai-preset-1)
-  )
+ (def ONLINE-ENTITIES
+  ; (list entity-preset/ai-preset-1)
+   )

@@ -1,9 +1,12 @@
 (ns upstream.entities.entitypreset
   (:gen-class))
 
-(defrecord StateImageCollection [current-frame-index
-             north north-east east south-east
-             south south-west west north-west])
+(defrecord StateCollection [north north-east
+                            east south-east
+                            south south-west
+                            west north-west])
+
+(defrecord AnimationSheet [resource resource-width offset-x offset-y])
 
 (defn player-preset-1
   "take x,y and return preset"
@@ -11,17 +14,34 @@
   ;Sample Individual Entity State:
   ;each state has a list of cycling animation frames for each of the 8 directions
   {:images {
-         :display "entities/logger_1.png" ;TODO: load as sheets rather than image lists
-         :at-rest (StateImageCollection. 0 '("entities/idle_rough_n.png") '()
-                                           '() '("entities/idle_rough_se.png")
-                                           '("entities/idle_rough_s.png") '("entities/idle_rough_sw.png")
-                                           '() '())
-         :walking (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :running (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :punching (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :static-jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :run-jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :walk-jumping (StateImageCollection. 0 '() '() '() '() '() '() '() '())
+         :walking (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
+         :at-rest (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
+         :running (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
+         :punching (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
+         :static-jumping (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
+         :run-jumping (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
+         :walk-jumping (StateCollection. (AnimationSheet. "entities/n_walk.png" 0 0 0) (AnimationSheet. "entities/ne_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/e_walk.png" 80 34 122) (AnimationSheet. "entities/se_walk.png" 80 37 115)
+                                    (AnimationSheet. "entities/s_walk.png" 0 0 0) (AnimationSheet. "entities/sw_walk.png" 0 0 0)
+                                    (AnimationSheet. "entities/w_walk.png" 0 0 0) (AnimationSheet. "entities/nw_walk.png" 0 0 0))
     }
     :all-states (list :at-rest :walking :running :punching :walk-jumping :static-jumping :run-jumping)
     :all-directions (list :north :north-east
@@ -38,41 +58,8 @@
     :position-y starting-y
     :position-z 0
     :height-dz 0
-    :draw-height-offset 120
-    :draw-width-offset 3
     :collision-diameter 30
     :facing :south-west ;TODO remove?
     :current-action :at-rest
-    :run-stamina 300 })
-
-(def ai-preset-1
-  {:images {
-         :display "entities/logger_1.png" ;TODO: load as sheets rather than image lists
-         :at-rest (StateImageCollection. 0 '("entities/idle_rough_n.png") '()
-                                           '() '("entities/idle_rough_se.png")
-                                           '("entities/idle_rough_s.png") '("entities/idle_rough_sw.png")
-                                           '() '())
-         :walking (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :running (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-         :punching (StateImageCollection. 0 '() '() '() '() '() '() '() '())
-    }
-    :all-states (list :at-rest :walking :running :punching)
-    :all-directions (list :north :north-east
-                          :east :south-east
-                          :south :south-west
-                          :west :north-west)
-    :logical-entity-id 0
-    :control-input :decisions
-    :render-as-central false
-    :decisions nil ;decisions listing (TODO)
-    :performance {}
-    :map-resource nil
-    :position-x 700
-    :position-y 700
-    :position-z 0
-    :draw-height-offset 120
-    :draw-width-offset 3
-    :collision-diameter 30
-    :facing :south-west ;TODO remove?
-    :current-action :at-rest
+    :frame-index 0
     :run-stamina 300 })

@@ -42,27 +42,44 @@
 (defn load-entities
   "perform resource loads on list of entities, TODO: create draw-handler for each"
   [entity-list]
-  (let [load-image #(images/load-image %)]
-    ;preload map resources
-    (tile-manager/preload-map-resources! config/LEVEL-ONE-TILEMAPS)
-    (map (fn [entity]
+  ;preload map resources
+  (tile-manager/preload-map-resources! config/LEVEL-ONE-TILEMAPS)
+  (map (fn [entity]
           (let [starting-x (:position-x entity)
                 starting-y (:position-y entity)
                 role (:render-as-central entity)]
-          (assoc (update-in entity [:images]
-              (fn [state-map]
-                  (reduce (fn [all-states current-state]
-                            (update-in all-states [current-state]
-                                   (fn [directions-map]
-                                      (reduce (fn [all-directions current-direction]
-                                                  (update-in all-directions [current-direction]
-                                                        #(doall (if (not (empty? %))
-                                                                    (map load-image %)))))
-                                              directions-map (:all-directions entity)))))
-                        state-map (:all-states entity))))
-            :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y role)
-            :decisions (decisions/load-entity-decisions (:decisions entity)))))
-          entity-list)))
+            (assoc (dissoc entity :images)
+              :map-resource (tile-manager/load-map-resource config/LEVEL-ONE-TILEMAPS starting-x starting-y role)
+              :decisions (decisions/load-entity-decisions (:decisions entity)))))
+          entity-list))
+
+(defn load-animation
+  "take animation record and load"
+  [animation-sheet]
+  (let [width-division (:resource-width animation-sheet)
+        loader (images/sub-image-loader (:resource animation-sheet))
+        sub-image-range (range 0 (* width-division (:resource-width loader)) width-division)]
+        (hash-map
+          :images (doall (map #((:load-fn loader) %1 0 width-division (:resource-height loader))
+                    sub-image-range))
+          :offset-x (:offset-x animation-sheet)
+          :offset-y (:offset-y animation-sheet))))
+
+(defn load-entity-image-resources
+  "load entity image collections"
+  [entity-list]
+  (map (fn [e]
+        (let [images (:images e)
+              states-to-load (:all-states e)
+              directions-to-load (:all-directions e)]
+              (reduce (fn [states-loaded next-action]
+                        (update-in states-loaded [next-action]
+                          (fn [state-collection]
+                            (reduce (fn [sheets-loaded next-direction]
+                              (update-in sheets-loaded [next-direction]
+                                #(load-animation %1))) state-collection directions-to-load))))
+                        images states-to-load)))
+  entity-list))
 
 (defn get-central-render-map
   "take entity list and return the map of the player"
@@ -114,12 +131,12 @@
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
-  [gr e x y]
-  (let [action-set ((:current-action e) (:images e))
+  [gr e g-collection x y]
+  (let [action-set ((:current-action e) (:images g-collection))
         current-image (nth ((:facing e) action-set)
-                           (:current-frame-index action-set))
-        x-correct (- x (:draw-width-offset e))
-        y-correct (- y (:draw-height-offset e))
+                           (:frame-index e))
+        x-correct (- x (:offset-x g-collection))
+        y-correct (- y (:offset-y g-collection))
         current-height (:position-z e)]
     (do
       (lighting/cast-shadow gr x y (* 2 (:collision-diameter e))) ;TODO center shadow
@@ -127,25 +144,26 @@
 
 (defn create-draw-handlers
   "take all entities in list and create a list of draw handlers"
-  [entities]
-  (map #(let [corner-chunk (:corner-chunk (first (:current-maps (:map-resource %))))
-              grid-dim (:grid-dim (:map-resource %))
+  [entities graphics]
+  (map (fn [e g]
+        (let [corner-chunk (:corner-chunk (first (:current-maps (:map-resource e))))
+              grid-dim (:grid-dim (:map-resource e))
               chunk-relative-pt (spacialutility/map-relative-to-chunk-relative
-                                    (:position-x %) (:position-y %)
+                                    (:position-x e) (:position-y e)
                                     (:offset-x corner-chunk) (:offset-y corner-chunk)
                                     grid-dim)
               tile-location-pt (spacialutility/pt-to-grid chunk-relative-pt grid-dim)]
               (hash-map :x (first tile-location-pt)
                         :y (second tile-location-pt)
-                        :prevent-block? (:render-as-central %)
+                        :prevent-block? (:render-as-central e)
                         :fn (fn [gr map-offset-x map-offset-y]
                                 (let [iso-coords (spacialutility/cartesian-to-isometric-transform
                                                       (list (+ (first chunk-relative-pt) map-offset-x)
                                                             (+ (second chunk-relative-pt) map-offset-y)))]
-                                    (draw-entity gr %
+                                    (draw-entity gr e g
                                             (int (first iso-coords))
-                                            (int (second iso-coords)))))))
-        entities))
+                                            (int (second iso-coords))))))))
+        entities graphics))
 
 (defn entitykeypressed
   "respond to key press"
@@ -181,7 +199,6 @@
   [key current-control-map]
   (let [directional? #(or (= % :up) (= % :down) (= % :left) (= % :right))
         update-direction (:update-facing current-control-map)
-        ;TODO: make sure both sprint and directional key releases registered
         update-speed (cond (and
                               (= (:update-action current-control-map) :running)
                               (= key :shift)) :walking
