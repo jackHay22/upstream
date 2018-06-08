@@ -16,14 +16,14 @@
               (list 'Math/toRadians a) 's)))
 
 (def update-xy
-    {:north (defmove 270)
-     :north-east (defmove 315)
-     :east (defmove 0)
-     :south-east (defmove 45)
-     :south (defmove 90)
-     :south-west (defmove 135)
-     :west (defmove 180)
-     :north-west (defmove 225)})
+    {:north (defmove 315)
+     :north-east (defmove 0)
+     :east (defmove 45)
+     :south-east (defmove 90)
+     :south (defmove 135)
+     :south-west (defmove 180)
+     :west (defmove 225)
+     :north-west (defmove 270)})
 
 (defn get-speed
   "get animation movement vector from action"
@@ -58,7 +58,7 @@
   [animation-sheet]
   (let [width-division (:resource-width animation-sheet)
         loader (images/sub-image-loader (:resource animation-sheet))
-        sub-image-range (range 0 (* width-division (:resource-width loader)) width-division)]
+        sub-image-range (range 0 (:resource-width loader) width-division)]
         (hash-map
           :images (doall (map #((:load-fn loader) %1 0 width-division (:resource-height loader))
                     sub-image-range))
@@ -96,6 +96,7 @@
                   py (:position-y e)
                   pz (:position-z e) ;current height
                   p-dz (:height-dz e) ;current change-in-height
+                  update-animation-frame (mod (+ (:frame-index e) (/ 1 config/ANIMATION-FRAME-DELAY)) config/FRAMERATE)
                   occupied-tile-height (tile-interface/get-tile-height
                                           (:map-resource e)
                                           (list (:position-x e) (:position-y e)))
@@ -126,17 +127,19 @@
                                      :position-y updated-y
                                      :position-z updated-z
                                      :height-dz updated-dz
+                                     :frame-index update-animation-frame
                                      :current-action updated-action))))
            entities)))
 
 (defn draw-entity
   "draw given entity (should be used as draw handler in tilemap ns)"
   [gr e g-collection x y]
-  (let [action-set ((:current-action e) (:images g-collection))
-        current-image (nth ((:facing e) action-set)
-                           (:frame-index e))
-        x-correct (- x (:offset-x g-collection))
-        y-correct (- y (:offset-y g-collection))
+  (let [action-set ((:facing e) ((:current-action e) g-collection))
+        images (:images action-set)
+        current-image (nth images
+                        (mod (Math/floor (:frame-index e)) (count images)))
+        x-correct (- x (:offset-x action-set))
+        y-correct (- y (:offset-y action-set))
         current-height (:position-z e)]
     (do
       (lighting/cast-shadow gr x y (* 2 (:collision-diameter e))) ;TODO center shadow

@@ -21,6 +21,7 @@
 (def ORIGINAL-TILE-WIDTH 64)
 (def COMPUTED-SCALE (atom 1))
 (def FRAMERATE 60)
+(def ANIMATION-FRAME-DELAY 6)
 ;dynamic scale computation
 (def TILES-ACROSS 15)
 
